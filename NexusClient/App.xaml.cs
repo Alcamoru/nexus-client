@@ -43,6 +43,19 @@ namespace NexusClient
         {
             m_window = new MainWindow();
             m_window.Activate();
+            
+            var rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            rootFrame.Navigate(typeof(WelcomePage), args.Arguments);
+
+            m_window.Content = rootFrame;
+
+            m_window.Activate();
+        }
+
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            throw new Exception("Failed to load page" + e.SourcePageType.FullName);
         }
 
         private Window m_window;
