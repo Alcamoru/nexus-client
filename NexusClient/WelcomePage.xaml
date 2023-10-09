@@ -11,12 +11,45 @@
 
     <StackPanel Orientation="Vertical">
         <TextBlock x:Name="WelcomeTitleTextBlock"
-                   Foreground="Black"
-                   FontSize="64"
+                   Margin="0, 20, 0, 0"
+                   Foreground="#34495E"
+                   FontSize="36"
+                   CharacterSpacing="0.8"
                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
                    Text="Bienvenue">
         </TextBlock>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+            <TextBox
+                x:Name="SummonerNameTextBox"
+                PlaceholderText="Nom d'invocateur"
+                     HorizontalAlignment="Center"
+                     PlaceholderForeground="#34495E"
+                Background="#EEEEEE"></TextBox>
+            <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                <Button
+                    Background="#EEEEEE">
+                    <TextBlock Text="NA"
+                               FontWeight="Bold"
+                               Foreground="#34495E"></TextBlock>
+                </Button>
+                <ListView x:Name="RegionListView">
+                    <ListViewItem
+                        x:Name="EuwListViewItem"
+                        Background="#EEEEEE">
+                        <TextBlock Text="EUW"
+                                   Foreground="#34495E"></TextBlock>
+                    </ListViewItem>
+                    <ListViewItem x:Name="NaListViewItem"
+                                  Background="#EEEEEE">
+                        <TextBlock Text="NA"
+                                   Foreground="#34495E"></TextBlock>
+                    </ListViewItem>
+                </ListView>
+            </StackPanel>
+        </StackPanel>
+        <Image Source="Assets/media/entry.png" Width="300"></Image>
+
     </StackPanel>
 </Page>
