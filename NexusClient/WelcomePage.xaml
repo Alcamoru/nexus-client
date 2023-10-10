@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Page
     x:Class="NexusClient.WelcomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:NexusClient"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="White">
 
-    <StackPanel Orientation="Vertical">
+    <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
         <TextBlock x:Name="WelcomeTitleTextBlock"
-                   Margin="0, 20, 0, 0"
+                   Margin="0, 20, 0, 200"
                    Foreground="#34495E"
                    FontSize="36"
-                   CharacterSpacing="0.8"
+                   CharacterSpacing="-50"
                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
-                   FontWeight="Bold"
+                   FontWeight="ExtraBlack"
                    HorizontalAlignment="Center"
-                   Text="Bienvenue">
-        </TextBlock>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                   Text="Bienvenue" />
+        <StackPanel
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center" Orientation="Horizontal">
             <TextBox
+                AllowFocusOnInteraction="True"
+                BorderThickness="0"
+                IsFocusEngagementEnabled="False"
+                IsFocusEngaged="False"
+                Padding="10, 15, 10, 15"
+                Width="400"
+                VerticalAlignment="Center"
+                Foreground="#34495E"
+                FontWeight="Bold"
                 x:Name="SummonerNameTextBox"
                 PlaceholderText="Nom d'invocateur"
-                     HorizontalAlignment="Center"
-                     PlaceholderForeground="#34495E"
-                Background="#EEEEEE"></TextBox>
-            <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                HorizontalAlignment="Center"
+                PlaceholderForeground="#34495E"
+                Background="#EEEEEE" />
+            <StackPanel Orientation="Vertical">
                 <Button
                     Background="#EEEEEE">
                     <TextBlock Text="NA"
                                FontWeight="Bold"
-                               Foreground="#34495E"></TextBlock>
+                               Foreground="#34495E" />
                 </Button>
                 <ListView x:Name="RegionListView">
                     <ListViewItem
                         x:Name="EuwListViewItem"
                         Background="#EEEEEE">
                         <TextBlock Text="EUW"
-                                   Foreground="#34495E"></TextBlock>
+                                   Foreground="#34495E" />
                     </ListViewItem>
                     <ListViewItem x:Name="NaListViewItem"
                                   Background="#EEEEEE">
                         <TextBlock Text="NA"
-                                   Foreground="#34495E"></TextBlock>
+                                   Foreground="#34495E" />
                     </ListViewItem>
                 </ListView>
             </StackPanel>
         </StackPanel>
-        <Image Source="Assets/media/entry.png" Width="300"></Image>
+        <Image Source="Assets/media/entry.png" Width="300" />
 
     </StackPanel>
 </Page>
