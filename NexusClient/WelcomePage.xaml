@@ -16,20 +16,21 @@
                    FontSize="36"
                    CharacterSpacing="-50"
                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
-                   FontWeight="ExtraBlack"
+                   FontWeight="ExtraBold"
                    HorizontalAlignment="Center"
                    Text="Bienvenue" />
         <StackPanel
             VerticalAlignment="Center"
             HorizontalAlignment="Center" Orientation="Horizontal">
             <TextBox
+                Margin="0 0 30 0"
+                CornerRadius="10"
+                FontSize="22"
                 AllowFocusOnInteraction="True"
                 BorderThickness="0"
-                IsFocusEngagementEnabled="False"
-                IsFocusEngaged="False"
-                Padding="10, 15, 10, 15"
-                Width="400"
-                VerticalAlignment="Center"
+                Padding="25, 15, 25, 15"
+                Width="450"
+                VerticalAlignment="Top"
                 Foreground="#34495E"
                 FontWeight="Bold"
                 x:Name="SummonerNameTextBox"
@@ -37,10 +38,16 @@
                 HorizontalAlignment="Center"
                 PlaceholderForeground="#34495E"
                 Background="#EEEEEE" />
-            <StackPanel Orientation="Vertical">
+            <StackPanel
+                Orientation="Vertical"
+                Margin="20 0 0 0">
                 <Button
-                    Background="#EEEEEE">
+                    CornerRadius="10"
+                    Background="#EEEEEE"
+                    Padding="25, 15, 25, 15"
+                    >
                     <TextBlock Text="NA"
+                               FontSize="22"
                                FontWeight="Bold"
                                Foreground="#34495E" />
                 </Button>
