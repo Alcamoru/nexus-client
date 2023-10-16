@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Application
     x:Class="NexusClient.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:NexusClient">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -11,9 +11,9 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
-            <SolidColorBrush x:Key="BackgroundWhite" Color="#EEEEEE"></SolidColorBrush>
-            <SolidColorBrush x:Key="Grey" Color="#34495E"></SolidColorBrush>
-            
+            <SolidColorBrush x:Key="BackgroundWhite" Color="#EEEEEE" />
+            <SolidColorBrush x:Key="Grey" Color="#34495E" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
