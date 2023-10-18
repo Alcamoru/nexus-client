@@ -11,20 +11,20 @@
     mc:Ignorable="d"
     Background="White"
     NavigationCacheMode="Enabled">
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="6*"></RowDefinition>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="6*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#34495E" x:Name="MenuStackGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <Button Grid.Column="0" Click="ButtonBase_OnClick">
                 <TextBlock
                     Text="Retour"
@@ -54,126 +54,124 @@
                     Foreground="White" />
             </HyperlinkButton>
 
-            
+
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" ></ColumnDefinition>
-                <ColumnDefinition Width="3*" ></ColumnDefinition>
-                <ColumnDefinition Width="3*" ></ColumnDefinition>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel
                 Margin="20"
                 CornerRadius="8"
                 Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Orientation="Vertical"
-                        Background="#34495E">
+                Background="#34495E">
                 <TextBlock
                     Margin="10"
                     Text="Meilleurs champions" Foreground="White" FontSize="18" TextAlignment="Center"
-                           FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"></TextBlock>
-                <Line Stroke="Black" StrokeThickness="2"></Line>
+                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                <Line Stroke="Black" StrokeThickness="2" />
 
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60"></Image>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                               FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                               FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
-                </Grid>
-
-                <Grid Grid.Row="1" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60"></Image>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
-                </Grid>
-
-                <Grid Grid.Row="2" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60"></Image>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
-                </Grid>
-                    <Grid Grid.Row="3" Margin="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60"></Image>
+                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
                         <TextBlock
                             VerticalAlignment="Center"
                             Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
                         <TextBlock
                             VerticalAlignment="Center"
                             Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" ></TextBlock>
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                    </Grid>
+
+                    <Grid Grid.Row="2" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                    </Grid>
+                    <Grid Grid.Row="3" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
+                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
                     </Grid>
 
                 </Grid>
 
 
-
             </StackPanel>
             <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
             </Grid>
-            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" />
         </Grid>
-        
+
     </Grid>
 </Page>
