@@ -157,7 +157,7 @@
 
 
             </StackPanel>
-            <Grid Padding="20" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1" Grid.Column="1"
+            <Grid x:Name="MatchListGrid" Padding="20" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1" Grid.Column="1"
                   Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

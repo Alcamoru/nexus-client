@@ -1,9 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Windows.System;
 using Camille.RiotGames;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -15,13 +19,21 @@ namespace NexusClient;
 /// </summary>
 public sealed partial class WelcomePage : Page
 {
-    public RiotGamesApi RiotGamesApi = RiotGamesApi.NewInstance("");
+    private RiotGamesApi Api { get; set; }
 
     public WelcomePage()
     {
+        StreamReader sr =
+            new StreamReader(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
+        string token = sr.ReadLine();
         InitializeComponent();
+        Api = RiotGamesApi.NewInstance(token!);
+
     }
 
+
+    // Pour sélectionner la région
     private void RegionListButton_OnClick(object sender, RoutedEventArgs e)
     {
         RegionListView.Visibility = RegionListView.Visibility == Visibility.Collapsed
@@ -43,16 +55,27 @@ public sealed partial class WelcomePage : Page
 
     private void SendSummonerNameButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var summonerName = SummonerNameTextBox.Text;
-        if (summonerName.Length != 0) Frame.Navigate(typeof(SummonerInfoPage), summonerName);
+        NavigateToSummonerInfoPage();
     }
 
     private void SummonerNameTextBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (e.Key == VirtualKey.Enter)
         {
-            var summonerName = SummonerNameTextBox.Text;
-            if (summonerName.Length != 0) Frame.Navigate(typeof(SummonerInfoPage), summonerName);
+            NavigateToSummonerInfoPage();
         }
+    }
+
+    private void NavigateToSummonerInfoPage()
+    {
+        var summonerName = SummonerNameTextBox.Text;
+
+        List<Object> parametersList = new List<object>()
+        {
+            Api,
+            summonerName
+        };
+
+        if (summonerName.Length != 0) Frame.Navigate(typeof(SummonerInfoPage), parametersList);
     }
 }
