@@ -153,7 +153,43 @@ public sealed partial class SummonerInfoPage : Page
                     StackPanel titlesChampionStackPanel = new StackPanel();
                     titlesChampionStackPanel.Children.Add(titleChampionTextBlock);
                     titlesChampionStackPanel.Children.Add(matchWasChampionTextBlock);
-                    
+
+                    Grid.SetColumn(titlesChampionStackPanel, 2);
+                    Grid.SetRow(titlesChampionStackPanel, 0);
+                    Grid.SetColumnSpan(titlesChampionStackPanel, 2);
+
+                    Image roleLogo = new Image()
+                    {
+                        Width = 40,
+                        Source = new BitmapImage(new Uri($"ms-appx:///Assets/media/roles-icons/{participant.Role}"))
+                    };
+                    Grid.SetRow(roleLogo, 0);
+                    Grid.SetColumn(roleLogo, 4);
+                    Grid.SetColumnSpan(roleLogo, 2);
+
+                    TextBlock kdaChampionTextBlock = new TextBlock()
+                    {
+                        TextAlignment = TextAlignment.Center,
+                        Text = $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+                        FontSize = 20,
+                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                    };
+
+                    Grid.SetColumn(kdaChampionTextBlock, 0);
+                    Grid.SetRow(kdaChampionTextBlock, 1);
+                    Grid.SetColumnSpan(kdaChampionTextBlock, 2);
+
+                    TextBlock kpChampionTextBlock = new TextBlock()
+                    {
+                        TextAlignment = TextAlignment.Center,
+                        Text = $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+                        FontSize = 20,
+                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                    };
+
+                    Grid.SetColumn(kdaChampionTextBlock, 0);
+                    Grid.SetRow(kdaChampionTextBlock, 1);
+                    Grid.SetColumnSpan(kdaChampionTextBlock, 2);
 
                 }
             }
