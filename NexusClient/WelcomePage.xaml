@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Page
+
+
     x:Class="NexusClient.WelcomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="White">
+
 
     <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
         <TextBlock x:Name="WelcomeTitleTextBlock"
@@ -23,8 +26,9 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center" Orientation="Horizontal"
             Height="200"
-            Width="600">
+            Width="670">
             <TextBox
+                KeyDown="SummonerNameTextBox_OnKeyDown"
                 Margin="0 0 30 0"
                 CornerRadius="10"
                 FontSize="22"
@@ -44,27 +48,28 @@
                 Orientation="Vertical"
                 Margin="20 0 0 0">
                 <Button
+
                     Width="120"
                     x:Name="RegionListButton"
                     Click="RegionListButton_OnClick"
                     LostFocus="RegionListButton_OnLostFocus"
-                    
+
                     CornerRadius="10"
                     Background="#EEEEEE"
-                    Padding="25, 15, 25, 15"
-                    >
-                    <TextBlock 
+                    Padding="25, 15, 25, 15">
+
+
+                    <TextBlock
                         x:Name="RegionListButtonTextBlock"
                         Text="NA"
-                               FontSize="22"
-                               FontWeight="Bold"
-                               Foreground="#34495E" />
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="#34495E" />
                 </Button>
                 <ListView
                     SelectionChanged="RegionListView_OnSelectionChanged"
                     x:Name="RegionListView"
-                    Visibility="Collapsed"
-                    >
+                    Visibility="Collapsed">
                     <!-- ReSharper disable once InconsistentNaming -->
                     <ListViewItem
                         x:Name="EUWViewItem"
@@ -80,29 +85,15 @@
                                    Foreground="#34495E" />
                     </ListViewItem>
                 </ListView>
-                <!-- <StackPanel -->
-                <!--     x:Name="RegionListStackPanel" -->
-                <!--     Visibility="Collapsed" -->
-                <!--     Orientation="Vertical"> -->
-                <!--     <Button -->
-                <!--         Background="#EEEEEE"> -->
-                <!--         <TextBlock Text="EUW" -->
-                <!--                    Foreground="#34495E" /> -->
-                <!--     </Button> -->
-                <!--     <Button -->
-                <!--         Background="#EEEEEE"> -->
-                <!--         <TextBlock Text="NA" -->
-                <!--                    Foreground="#34495E" /> -->
-                <!--     </Button> -->
-                <!-- </StackPanel> -->
             </StackPanel>
         </StackPanel>
         <Button
+            x:Name="SendSummonerNameButton"
+            Click="SendSummonerNameButton_OnClick"
             HorizontalAlignment="Center"
             CornerRadius="10"
             Background="#EEEEEE"
-            Padding="25, 15, 25, 15"
-        >
+            Padding="25, 15, 25, 15">
             <TextBlock Text="Entrer"
                        FontSize="22"
                        FontWeight="Bold"
