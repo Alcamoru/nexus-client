@@ -56,6 +56,7 @@ public sealed partial class SummonerInfoPage : Page
     private void SetLastMatches()
     {
         List<Match> matches = GetLastMatches();
+        int i = 0;
         foreach (Match match in matches)
         {
             
@@ -375,8 +376,13 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetColumn(itemsChampionStackPanel, 3);
                     Grid.SetRow(itemsChampionStackPanel, 2);
                     Grid.SetColumnSpan(itemsChampionStackPanel, 3);
+
+                    MatchListGrid.Children.Add(matchGrid);
+                    Grid.SetColumn(matchGrid, i);
                 }
             }
+
+            i++;
         }
     }
 
