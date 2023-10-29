@@ -64,9 +64,10 @@ public sealed partial class SummonerInfoPage : Page
             
             Grid matchGrid = new Grid()
             {
+                Margin = new Thickness(10),
                 BorderBrush = new SolidColorBrush(Colors.Black),
                 BorderThickness = new Thickness(1),
-                HorizontalAlignment = HorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
                 CornerRadius = new CornerRadius(10)
             };
 
@@ -104,6 +105,7 @@ public sealed partial class SummonerInfoPage : Page
                     {
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235,47,6));
                     }
+                    Debug.WriteLine(participant.Role);
 
                     Image championIcon = new Image()
                     {
@@ -113,15 +115,13 @@ public sealed partial class SummonerInfoPage : Page
 
                     Border summonerIconBorder = new Border()
                     {
-                        Padding = new Thickness(8),
                         HorizontalAlignment = HorizontalAlignment.Center,
                         CornerRadius = new CornerRadius(10),
-
                     };
                     summonerIconBorder.Child = championIcon;
                     Grid.SetColumn(summonerIconBorder, 0);
                     Grid.SetRow(summonerIconBorder, 0);
-                    Grid.SetColumnSpan(summonerIconBorder, 3);
+                    Grid.SetColumnSpan(summonerIconBorder, 2);
                     matchGrid.Children.Add(summonerIconBorder);
 
                     TextBlock titleChampionTextBlock = new TextBlock()
@@ -142,11 +142,11 @@ public sealed partial class SummonerInfoPage : Page
                         string matchWasChampionString = "Il y a \n";
                         if (gameTimeStampDuration.Days != 0)
                         {
-                            matchWasChampionString += $"{gameTimeStampDuration.Days} jours\n";
+                            matchWasChampionString += $"{gameTimeStampDuration.Days} jours ";
                         }
                         if (gameTimeStampDuration.Hours != 0)
                         {
-                            matchWasChampionString += $"{gameTimeStampDuration.Hours} heures\n";
+                            matchWasChampionString += $"{gameTimeStampDuration.Hours} heures";
                         }
                     TextBlock matchWasChampionTextBlock = new TextBlock()
                     {
@@ -167,7 +167,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     Grid.SetColumn(titlesChampionStackPanel, 2);
                     Grid.SetRow(titlesChampionStackPanel, 0);
-                    Grid.SetColumnSpan(titlesChampionStackPanel, 3);
+                    Grid.SetColumnSpan(titlesChampionStackPanel, 2);
 
                     matchGrid.Children.Add(titlesChampionStackPanel);
 
@@ -180,24 +180,30 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetColumn(roleLogo, 4);
                     Grid.SetColumnSpan(roleLogo, 2);
                     matchGrid.Children.Add(roleLogo);
+                    Border kdaChampionBorder = new Border()
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        BorderBrush = new SolidColorBrush(Colors.White),
+                        BorderThickness = new Thickness(0, 1, 0, 1),
+                        Padding = new Thickness(15),
+                    };
 
                     TextBlock kdaChampionTextBlock = new TextBlock()
                     {
-                        VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
-                        Padding = new Thickness(8),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
                         Text = $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
                         FontSize = 15,
                         FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                     };
+                    kdaChampionBorder.Child = kdaChampionTextBlock;
 
-                    Grid.SetColumn(kdaChampionTextBlock, 0);
-                    Grid.SetRow(kdaChampionTextBlock, 1);
-                    Grid.SetColumnSpan(kdaChampionTextBlock, 3);
+                    Grid.SetColumn(kdaChampionBorder, 0);
+                    Grid.SetRow(kdaChampionBorder, 1);
+                    Grid.SetColumnSpan(kdaChampionBorder, 3);
 
-                    matchGrid.Children.Add(kdaChampionTextBlock);
+                    matchGrid.Children.Add(kdaChampionBorder);
 
                     int teamKills = 1;
                     foreach (Team team in match.Info.Teams)
@@ -208,11 +214,17 @@ public sealed partial class SummonerInfoPage : Page
                         }
                     }
 
-                    TextBlock kpChampionTextBlock = new TextBlock()
+                    Border kpChampionBorder = new Border()
                     {
                         VerticalAlignment = VerticalAlignment.Center,
+                        Padding = new Thickness(15),
+                        BorderBrush = new SolidColorBrush(Colors.White),
+                        BorderThickness = new Thickness(0, 1, 0, 1)
+                    };
+
+                    TextBlock kpChampionTextBlock = new TextBlock()
+                    {
                         Foreground = new SolidColorBrush(Colors.White),
-                        Padding = new Thickness(8),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
                         Text = $"{(participant.Kills + participant.Assists) / teamKills}",
@@ -220,16 +232,24 @@ public sealed partial class SummonerInfoPage : Page
                         FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                     };
 
-                    Grid.SetColumn(kpChampionTextBlock, 2);
-                    Grid.SetRow(kpChampionTextBlock, 1);
-                    Grid.SetColumnSpan(kpChampionTextBlock, 3);
-                    matchGrid.Children.Add(kpChampionTextBlock);
+                    kpChampionBorder.Child = kpChampionTextBlock;
+
+                    Grid.SetColumn(kpChampionBorder, 2);
+                    Grid.SetRow(kpChampionBorder, 1);
+                    Grid.SetColumnSpan(kpChampionBorder, 3);
+                    matchGrid.Children.Add(kpChampionBorder);
+
+                    Border csChampionBorder = new Border()
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Padding = new Thickness(15),
+                        BorderBrush = new SolidColorBrush(Colors.White),
+                        BorderThickness = new Thickness(0, 1, 0, 1)
+                    };
 
                     TextBlock csChampionTextBlock = new TextBlock()
                     {
-                        VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
-                        Padding = new Thickness(8),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
                         Text = $"{participant.TotalMinionsKilled} cs",
@@ -237,11 +257,13 @@ public sealed partial class SummonerInfoPage : Page
                         FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                     };
 
-                    Grid.SetColumn(csChampionTextBlock, 4);
-                    Grid.SetRow(csChampionTextBlock, 1);
-                    Grid.SetColumnSpan(csChampionTextBlock, 3);
+                    csChampionBorder.Child = csChampionTextBlock;
 
-                    matchGrid.Children.Add(csChampionTextBlock);
+                    Grid.SetColumn(csChampionBorder, 4);
+                    Grid.SetRow(csChampionBorder, 1);
+                    Grid.SetColumnSpan(csChampionBorder, 3);
+
+                    matchGrid.Children.Add(csChampionBorder);
 
 
                     StackPanel summonersStackPanel = new StackPanel();
