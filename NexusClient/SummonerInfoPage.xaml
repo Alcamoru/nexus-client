@@ -157,7 +157,7 @@
 
 
             </StackPanel>
-            <Grid x:Name="MatchListGrid" Padding="20" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1" Grid.Column="1"
+            <Grid x:Name="MatchListGrid" Padding="10" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1" Grid.Column="1"
                   Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -165,7 +165,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Grid HorizontalAlignment="Center" Grid.Column="0" Background="#2980B9" CornerRadius="10">
+                <!--<Grid HorizontalAlignment="Center" Grid.Column="0" Background="#2980B9" CornerRadius="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -392,7 +392,7 @@
                         </Grid>
                     </StackPanel>
 
-                </Grid>
+                </Grid>-->
 
             </Grid>
             <Grid Background="#EEEEEE" Margin="20" CornerRadius="15" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
