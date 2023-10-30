@@ -157,7 +157,8 @@
 
 
             </StackPanel>
-            <Grid x:Name="MatchListGrid" Padding="10" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1" Grid.Column="1"
+            <Grid x:Name="MatchListGrid" Padding="10" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1"
+                  Grid.Column="1"
                   Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -414,7 +415,8 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Grid Margin="20 20 0 20" CornerRadius="8" Background="#27AE60" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+                    <Grid Margin="20 20 0 20" CornerRadius="8" Background="#27AE60" Grid.Row="0" Grid.Column="0"
+                          Grid.RowSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -478,7 +480,7 @@
 
                     </Grid>
 
-                    <Grid Margin="20 10 20 20"  CornerRadius="8" Background="#F1C40F" Grid.Row="1" Grid.Column="1">
+                    <Grid Margin="20 10 20 20" CornerRadius="8" Background="#F1C40F" Grid.Row="1" Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />

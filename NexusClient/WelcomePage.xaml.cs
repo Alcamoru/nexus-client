@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +6,6 @@ using Camille.RiotGames;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,18 +17,17 @@ namespace NexusClient;
 /// </summary>
 public sealed partial class WelcomePage : Page
 {
-    private RiotGamesApi Api { get; set; }
-
     public WelcomePage()
     {
-        StreamReader sr =
+        var sr =
             new StreamReader(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
-        string token = sr.ReadLine();
+        var token = sr.ReadLine();
         InitializeComponent();
         Api = RiotGamesApi.NewInstance(token!);
-
     }
+
+    private RiotGamesApi Api { get; }
 
 
     // Pour sélectionner la région
@@ -60,17 +57,14 @@ public sealed partial class WelcomePage : Page
 
     private void SummonerNameTextBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == VirtualKey.Enter)
-        {
-            NavigateToSummonerInfoPage();
-        }
+        if (e.Key == VirtualKey.Enter) NavigateToSummonerInfoPage();
     }
 
     private void NavigateToSummonerInfoPage()
     {
         var summonerName = SummonerNameTextBox.Text;
 
-        List<Object> parametersList = new List<object>()
+        var parametersList = new List<object>
         {
             Api,
             summonerName
