@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Windows.System;
+using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -28,6 +31,7 @@ public sealed partial class WelcomePage : Page
     }
 
     private RiotGamesApi Api { get; }
+    private Summoner LolSummoner { get; set; }
 
 
     // Pour sélectionner la région
@@ -52,24 +56,54 @@ public sealed partial class WelcomePage : Page
 
     private void SendSummonerNameButton_OnClick(object sender, RoutedEventArgs e)
     {
-        NavigateToSummonerInfoPage();
+        CheckIfExists();
     }
 
     private void SummonerNameTextBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == VirtualKey.Enter) NavigateToSummonerInfoPage();
+        if (e.Key == VirtualKey.Enter) CheckIfExists();
+    }
+
+    private void CheckIfExists()
+    {
+        WelcomePageProgressRing.IsEnabled = true;
+        try
+        {
+            LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, SummonerNameTextBox.Text)!;
+
+            if (LolSummoner is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            NavigateToSummonerInfoPage();
+
+        }
+        catch (Exception e)
+        {
+            if (e is ArgumentNullException)
+            {
+                ErrorTextBlock.Text = "L'invocateur recherché est invalide";
+            }
+
+            if (e is AggregateException)
+            {
+                ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
+            }
+
+            Debug.WriteLine(e);
+        }
     }
 
     private void NavigateToSummonerInfoPage()
     {
-        var summonerName = SummonerNameTextBox.Text;
 
         var parametersList = new List<object>
         {
             Api,
-            summonerName
+            LolSummoner
         };
 
-        if (summonerName.Length != 0) Frame.Navigate(typeof(SummonerInfoPage), parametersList);
+        Frame.Navigate(typeof(SummonerInfoPage), parametersList);
     }
 }

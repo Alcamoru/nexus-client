@@ -37,7 +37,7 @@ public sealed partial class SummonerInfoPage : Page
         base.OnNavigatedTo(e);
         if (e.Parameter is not List<object> parameters) return;
         Api = (RiotGamesApi)parameters.ElementAt(0);
-        LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, parameters.ElementAt(1).ToString()!);
+        LolSummoner = (Summoner)parameters.ElementAt(1);
         SetLastMatches();
     }
 

@@ -87,7 +87,13 @@
                 </ListView>
             </StackPanel>
         </StackPanel>
-        <ProgressRing IsEnabled="False" x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="True" />
+        <TextBlock x:Name="ErrorTextBlock"
+                   Foreground="Red"
+                   FontSize="24"
+                   FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
+                   FontWeight="ExtraBold"
+                   HorizontalAlignment="Center"></TextBlock>
+        <ProgressRing x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="True" />
         <Button
             x:Name="SendSummonerNameButton"
             Click="SendSummonerNameButton_OnClick"
