@@ -29,7 +29,7 @@ public sealed partial class SummonerInfoPage : Page
         InitializeComponent();
     }
 
-    private Summoner Summoner { get; set; }
+    private Summoner LolSummoner { get; set; }
     private RiotGamesApi Api { get; set; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -37,15 +37,14 @@ public sealed partial class SummonerInfoPage : Page
         base.OnNavigatedTo(e);
         if (e.Parameter is not List<object> parameters) return;
         Api = (RiotGamesApi)parameters.ElementAt(0);
-        var summonerName = parameters.ElementAt(1).ToString();
-        Summoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, summonerName!);
+        LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, parameters.ElementAt(1).ToString()!);
         SetLastMatches();
     }
 
     private List<Match> GetLastMatches()
     {
         var matches = new List<Match>();
-        var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(RegionalRoute.EUROPE, Summoner.Puuid, 3);
+        var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(RegionalRoute.EUROPE, LolSummoner.Puuid, 3);
         foreach (var matchListId in matchListIds)
             matches.Add(Api.MatchV5().GetMatch(RegionalRoute.EUROPE, matchListId));
 
@@ -90,7 +89,7 @@ public sealed partial class SummonerInfoPage : Page
             matchGrid.RowDefinitions.Add(row3);
 
             foreach (var participant in match.Info.Participants)
-                if (participant.SummonerName == Summoner.Name)
+                if (participant.SummonerName == LolSummoner.Name)
                 {
                     if (participant.Win)
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
