@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Page
+
+
+    x:Class="NexusClient.MatchDetail"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="White">
+
+
+    <Grid x:Name="SummonerInfoPageGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="6*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#34495E" x:Name="MenuStackGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Click="ButtonBack_OnClick">
+                <TextBlock
+                    Text="Retour"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="White" />
+            </Button>
+            <HyperlinkButton Grid.Column="1" x:Name="ChampionsHyperlinkButton">
+                <TextBlock
+                    Text="Champions"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="White" />
+            </HyperlinkButton>
+            <HyperlinkButton Grid.Column="2" x:Name="ProfileHyperlinkButton">
+                <TextBlock
+                    Text="Profil"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="White" />
+            </HyperlinkButton>
+            <HyperlinkButton Grid.Column="3" x:Name="ScoreboardHyperlinkButton">
+                <TextBlock
+                    Text="Scoreboard"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="White" />
+            </HyperlinkButton>
+        </Grid>
+
+    </Grid>
+</Page>

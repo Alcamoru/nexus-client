@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Windows.UI;
+using Windows.UI.Core;
 using Camille.Enums;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
@@ -68,6 +71,12 @@ public sealed partial class SummonerInfoPage : Page
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 CornerRadius = new CornerRadius(10)
             };
+
+            matchGrid.PointerPressed += Match_OnPointerPressed;
+            matchGrid.PointerEntered += MatchGridOnPointerEntered;
+            matchGrid.PointerExited += MatchGridOnPointerExited;
+
+            matchGrid.Tag = match;
 
             var col1 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
             var col2 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
@@ -520,8 +529,24 @@ public sealed partial class SummonerInfoPage : Page
         }
     }
 
+    private void MatchGridOnPointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Arrow, 1));
+    }
+
+    private void MatchGridOnPointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Hand, 1));
+    }
+
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
         Frame.Navigate(typeof(WelcomePage));
+    }
+
+    private void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        Grid matchGrid = e.OriginalSource as Grid;
+        Frame.Navigate(typeof(MatchDetail), matchGrid!.Tag);
     }
 }
