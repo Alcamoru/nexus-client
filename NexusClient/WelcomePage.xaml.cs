@@ -66,7 +66,7 @@ public sealed partial class WelcomePage : Page
 
     private void CheckIfExists()
     {
-        WelcomePageProgressRing.IsEnabled = true;
+        WelcomePageProgressRing.Visibility = Visibility.Visible;
         try
         {
             LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, SummonerNameTextBox.Text)!;
@@ -91,7 +91,8 @@ public sealed partial class WelcomePage : Page
                 ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
             }
 
-            Debug.WriteLine(e);
+
+            WelcomePageProgressRing.Visibility = Visibility.Collapsed;
         }
     }
 

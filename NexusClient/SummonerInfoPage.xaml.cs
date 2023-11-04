@@ -46,7 +46,10 @@ public sealed partial class SummonerInfoPage : Page
         var matches = new List<Match>();
         var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(RegionalRoute.EUROPE, LolSummoner.Puuid, 3);
         foreach (var matchListId in matchListIds)
+        {
+            Debug.WriteLine(matchListId);
             matches.Add(Api.MatchV5().GetMatch(RegionalRoute.EUROPE, matchListId));
+        }
 
         return matches;
     }
