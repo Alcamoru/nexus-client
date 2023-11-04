@@ -14,7 +14,7 @@
 
     <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
         <TextBlock x:Name="WelcomeTitleTextBlock"
-                   Margin="0, 20, 0, 200"
+                   Margin="0, 20, 0, 150"
                    Foreground="#34495E"
                    FontSize="36"
                    CharacterSpacing="-50"
@@ -87,6 +87,13 @@
                 </ListView>
             </StackPanel>
         </StackPanel>
+        <TextBlock x:Name="ErrorTextBlock"
+                   Foreground="Red"
+                   FontSize="24"
+                   FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
+                   FontWeight="ExtraBold"
+                   HorizontalAlignment="Center"></TextBlock>
+        <ProgressRing Visibility="Collapsed" x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="True" />
         <Button
             x:Name="SendSummonerNameButton"
             Click="SendSummonerNameButton_OnClick"

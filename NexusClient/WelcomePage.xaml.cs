@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Windows.System;
+using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -19,18 +20,18 @@ namespace NexusClient;
 /// </summary>
 public sealed partial class WelcomePage : Page
 {
-    private RiotGamesApi Api { get; set; }
-
     public WelcomePage()
     {
-        StreamReader sr =
+        var sr =
             new StreamReader(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
-        string token = sr.ReadLine();
+        var token = sr.ReadLine();
         InitializeComponent();
         Api = RiotGamesApi.NewInstance(token!);
-
     }
+
+    private RiotGamesApi Api { get; }
+    private Summoner LolSummoner { get; set; }
 
 
     // Pour sélectionner la région
@@ -55,27 +56,55 @@ public sealed partial class WelcomePage : Page
 
     private void SendSummonerNameButton_OnClick(object sender, RoutedEventArgs e)
     {
-        NavigateToSummonerInfoPage();
+        CheckIfExists();
     }
 
     private void SummonerNameTextBox_OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
-        if (e.Key == VirtualKey.Enter)
+        if (e.Key == VirtualKey.Enter) CheckIfExists();
+    }
+
+    private void CheckIfExists()
+    {
+        WelcomePageProgressRing.Visibility = Visibility.Visible;
+        try
         {
+            LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, SummonerNameTextBox.Text)!;
+
+            if (LolSummoner is null)
+            {
+                throw new ArgumentNullException();
+            }
+
             NavigateToSummonerInfoPage();
+
+        }
+        catch (Exception e)
+        {
+            if (e is ArgumentNullException)
+            {
+                ErrorTextBlock.Text = "L'invocateur recherché est invalide";
+            }
+
+            if (e is AggregateException)
+            {
+                ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
+            }
+
+
+            WelcomePageProgressRing.Visibility = Visibility.Collapsed;
         }
     }
 
     private void NavigateToSummonerInfoPage()
     {
-        var summonerName = SummonerNameTextBox.Text;
 
-        List<Object> parametersList = new List<object>()
+        var parametersList = new List<object>
         {
             Api,
-            summonerName
+            LolSummoner
         };
 
-        if (summonerName.Length != 0) Frame.Navigate(typeof(SummonerInfoPage), parametersList);
+        Frame.Navigate(typeof(SummonerInfoPage), parametersList);
     }
 }
