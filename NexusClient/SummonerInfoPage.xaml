@@ -54,6 +54,8 @@
                     Foreground="White" />
             </HyperlinkButton>
 
+            
+            
 
         </Grid>
         <Grid x:Name="SummonerInfoPageContentGrid" Grid.Row="1">
@@ -167,13 +169,6 @@
                 </Grid.ColumnDefinitions>
 
             </Grid>
-            
-            
-            
-            
-            
-            
-            
             
             <Grid Background="#EEEEEE" Margin="20" CornerRadius="15" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>

@@ -54,6 +54,55 @@
                     Foreground="White" />
             </HyperlinkButton>
         </Grid>
+        
+        <Grid Grid.Row="1" Padding="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="4*"></RowDefinition>
+                <RowDefinition Height="4*"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel x:Name="MatchTimelineStackPanel" CornerRadius="10" Grid.Row="1" Grid.Column="0" >
+                <TextBlock
+                    Margin="10"
+                    Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
+                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                <Grid x:Name="MatchTimelineGrid" Background="#34495E">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="6*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="75"></RowDefinition>
+                        <RowDefinition Height="75"></RowDefinition>
+                        <RowDefinition Height="75"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Border Width="40"></Border>
+                        <Image Grid.Column="0" Width="40" Source="Assets/media/bouton-de-lecture-video.png" />
+                        <TextBlock Grid.Column="1"
+                                   VerticalAlignment="Center"
+                                   Foreground="White" FontSize="18" TextAlignment="Center"
+                                   FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" Text="Début du match"></TextBlock>
+                    </Grid>
+
+                    <Ellipse Fill="#27AE60"  Width="7" Height="7" Grid.Column="0" Grid.Row="0"></Ellipse>
+                    <Rectangle Fill="#27AE60"  Width="7" Height="7" Grid.Column="0" Grid.Row="0"></Rectangle>
+
+                </Grid>
+            </StackPanel>
+            
+        </Grid>
 
     </Grid>
 </Page>
