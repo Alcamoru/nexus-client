@@ -22,86 +22,89 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Click="ButtonBack_OnClick">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Button
+                Margin="8"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Column="1" Grid.Row="1" Click="ButtonBack_OnClick">
                 <TextBlock
                     Text="Retour"
                     FontSize="22"
                     FontWeight="Bold"
                     Foreground="White" />
             </Button>
-            <HyperlinkButton Grid.Column="1" x:Name="ChampionsHyperlinkButton">
+            <HyperlinkButton
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Row="0" Grid.Column="0" x:Name="ChampionsHyperlinkButton">
                 <TextBlock
                     Text="Champions"
                     FontSize="22"
                     FontWeight="Bold"
                     Foreground="White" />
             </HyperlinkButton>
-            <HyperlinkButton Grid.Column="2" x:Name="ProfileHyperlinkButton">
+            <HyperlinkButton
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Row="0" Grid.Column="1" x:Name="ProfileHyperlinkButton">
                 <TextBlock
                     Text="Profil"
                     FontSize="22"
                     FontWeight="Bold"
                     Foreground="White" />
             </HyperlinkButton>
-            <HyperlinkButton Grid.Column="3" x:Name="ScoreboardHyperlinkButton">
+            <HyperlinkButton
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Grid.Row="0" Grid.Column="2" x:Name="ScoreboardHyperlinkButton">
                 <TextBlock
                     Text="Scoreboard"
                     FontSize="22"
                     FontWeight="Bold"
                     Foreground="White" />
             </HyperlinkButton>
+
         </Grid>
-        
+
         <Grid Grid.Row="1" Padding="30">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="4*"></RowDefinition>
-                <RowDefinition Height="4*"></RowDefinition>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="4*" />
+                <RowDefinition Height="4*" />
             </Grid.RowDefinitions>
-            
+
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"></ColumnDefinition>
-                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
-            
-            <StackPanel x:Name="MatchTimelineStackPanel" CornerRadius="10" Grid.Row="1" Grid.Column="0" >
-                <TextBlock
-                    Margin="10"
-                    Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
-                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                <Grid x:Name="MatchTimelineGrid" Background="#34495E">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="6*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="75"></RowDefinition>
-                        <RowDefinition Height="75"></RowDefinition>
-                        <RowDefinition Height="75"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="1">
+
+            <ScrollViewer Grid.Row="1" Grid.Column="0">
+                <StackPanel x:Name="MatchTimelineStackPanel">
+                    <TextBlock
+                        Margin="10"
+                        Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
+                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                    <Grid x:Name="MatchTimelineGrid" Background="#34495E" CornerRadius="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="6*" />
                         </Grid.ColumnDefinitions>
-                        <Border Width="40"></Border>
-                        <Image Grid.Column="0" Width="40" Source="Assets/media/bouton-de-lecture-video.png" />
-                        <TextBlock Grid.Column="1"
-                                   VerticalAlignment="Center"
-                                   Foreground="White" FontSize="18" TextAlignment="Center"
-                                   FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" Text="Début du match"></TextBlock>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="75" />
+                        </Grid.RowDefinitions>
+
+
                     </Grid>
+                </StackPanel>
+            </ScrollViewer>
 
-                    <Ellipse Fill="#27AE60"  Width="7" Height="7" Grid.Column="0" Grid.Row="0"></Ellipse>
-                    <Rectangle Fill="#27AE60"  Width="7" Height="7" Grid.Column="0" Grid.Row="0"></Rectangle>
-
-                </Grid>
-            </StackPanel>
-            
         </Grid>
 
     </Grid>
