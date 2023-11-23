@@ -105,7 +105,8 @@
             </ScrollViewer>
 
             <Grid x:Name="ParticipantsGrid" Grid.Row="0" Grid.Column="1"
-                  Background="#EEEEEE" Padding="15" Margin="15">
+                  CornerRadius="10"
+                  Background="#EEEEEE" Padding="8" Margin="15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -118,6 +119,13 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="4*" />
                 </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="5"
+                    Margin="10"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Text="VS" Foreground="#34495E" FontSize="28" TextAlignment="Center"
+                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
             </Grid>
 
         </Grid>
