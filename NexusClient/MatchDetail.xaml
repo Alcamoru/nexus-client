@@ -76,8 +76,7 @@
         <Grid Grid.Row="1" Padding="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="4*" />
-                <RowDefinition Height="4*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
@@ -85,7 +84,7 @@
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer Grid.Row="1" Grid.Column="0">
+            <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                 <StackPanel x:Name="MatchTimelineStackPanel">
                     <TextBlock
                         Margin="10"
@@ -104,6 +103,21 @@
                     </Grid>
                 </StackPanel>
             </ScrollViewer>
+
+            <Grid x:Name="participantsGrid" Grid.Row="0" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+            </Grid>
 
         </Grid>
 

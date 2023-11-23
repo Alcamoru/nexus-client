@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Windows.UI;
 using Camille.Enums;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
@@ -12,6 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Team = Camille.RiotGames.Enums.Team;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -42,6 +44,7 @@ public sealed partial class MatchDetail : Page
         MatchInfo = (Match)parameters.ElementAt(1);
         LolSummoner = (Summoner)parameters.ElementAt(2);
         SetMatchTimeline();
+        SetParticipantsGrid();
         base.OnNavigatedTo(e);
     }
 
@@ -58,6 +61,215 @@ public sealed partial class MatchDetail : Page
                 championName = participant.ChampionName;
 
         return championName;
+    }
+
+    private void SetParticipantsGrid()
+    {
+
+        List<Participant> team1 = new List<Participant>();
+        List<Participant> team2 = new List<Participant>();
+
+        foreach (Participant participant in MatchInfo.Info.Participants)
+        {
+            if (participant.TeamId == Team.Blue)
+            {
+                team1.Add(participant);
+            }
+            else
+            {
+                team2.Add(participant);
+            }
+        }
+
+        int row = 0;
+        foreach (Participant participant in team1)
+        {
+            switch (participant.Role)
+            {
+                case "SOLO":
+                    row = 0;
+                    break;
+                case "NONE":
+                    row = 1;
+                    break;
+                case "MIDDLE":
+                    row = 2;
+                    break;
+                case "CARRY":
+                    row = 3;
+                    break;
+                case "SUPPORT":
+                    row = 4;
+                    break;
+
+            }
+
+            Grid participantGrid = new Grid()
+            {
+                Background = new SolidColorBrush(Color.FromArgb(255, 217, 217, 217)),
+                CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(10)
+            };
+
+            ColumnDefinition col1 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+            ColumnDefinition col2 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+            ColumnDefinition col3 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+            ColumnDefinition col4 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+            ColumnDefinition col5 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+            ColumnDefinition col6 = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
+            participantGrid.ColumnDefinitions.Add(col1);
+            participantGrid.ColumnDefinitions.Add(col2);
+            participantGrid.ColumnDefinitions.Add(col3);
+            participantGrid.ColumnDefinitions.Add(col4);
+            participantGrid.ColumnDefinitions.Add(col5);
+            participantGrid.ColumnDefinitions.Add(col6);
+
+            var championIcon = new Image
+            {
+                Source = new BitmapImage(new Uri(
+                    $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png")),
+                Width = 40
+            };
+
+            var championNameTextBlock = new TextBlock
+            {
+                Foreground = new SolidColorBrush(Colors.White),
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Text = participant.ChampionName,
+                FontSize = 20,
+                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+            };
+
+            Grid.SetColumn(championIcon, 0);
+            participantGrid.Children.Add(championIcon);
+
+            Grid.SetColumn(championNameTextBlock, 1);
+            participantGrid.Children.Add(championNameTextBlock);
+
+            var summonerChampionGrid = new Grid
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    var summonerChampionGridColumn1 = new ColumnDefinition
+                        { Width = new GridLength(30, GridUnitType.Pixel) };
+                    var summonerChampionGridColumn2 = new ColumnDefinition
+                        { Width = new GridLength(30, GridUnitType.Pixel) };
+
+                    summonerChampionGrid.ColumnDefinitions.Add(summonerChampionGridColumn1);
+                    summonerChampionGrid.ColumnDefinitions.Add(summonerChampionGridColumn2);
+
+                    var summonerChampionGridRow1 = new RowDefinition
+                        { Height = new GridLength(30, GridUnitType.Pixel) };
+                    var summonerChampionGridRow2 = new RowDefinition
+                        { Height = new GridLength(30, GridUnitType.Pixel) };
+
+                    summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow1);
+                    summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow2);
+
+                    var sumsCorrespondences = new Dictionary<string, string>
+                    {
+                        { "21", "SummonerBarrier" },
+                        { "1", "SummonerBoost" },
+                        { "2202", "SummonerCherryFlash" },
+                        { "2201", "SummonerCherryHold" },
+                        { "14", "SummonerDot" },
+                        { "3", "SummonerExhaust" },
+                        { "4", "SummonerFlash" },
+                        { "6", "SummonerHaste" },
+                        { "7", "SummonerHeal" },
+                        { "13", "SummonerMana" },
+                        { "30", "SummonerPoroRecall" },
+                        { "31", "SummonerPoroThrow" },
+                        { "11", "SummonerSmite" },
+                        { "39", "SummonerSnowURFSnowball_Mark" },
+                        { "32", "SummonerSnowball" },
+                        { "12", "SummonerTeleport" },
+                        { "54", "Summoner_UltBookPlaceholder" },
+                        { "55", "Summoner_UltBookSmitePlaceholder" }
+                    };
+
+                    var mainPerksCorrespondences = new Dictionary<string, List<string>>
+                    {
+                        { "8112", new List<string> { "Domination", "Electrocute" } },
+                        { "8124", new List<string> { "Domination", "Predator" } },
+                        { "8128", new List<string> { "Domination", "DarkHarvest" } },
+                        { "9923", new List<string> { "Domination", "HailOfBlades" } },
+                        { "8351", new List<string> { "Inspiration", "GlacialAugment" } },
+                        { "8360", new List<string> { "Inspiration", "UnsealedSpellbook" } },
+                        { "8369", new List<string> { "Inspiration", "FirstStrike" } },
+                        { "8005", new List<string> { "Precision", "PressTheAttack" } },
+                        { "8008", new List<string> { "Precision", "LethalTempo" } },
+                        { "8021", new List<string> { "Precision", "FleetFootwork" } },
+                        { "8010", new List<string> { "Precision", "Conqueror" } },
+                        { "8437", new List<string> { "Resolve", "GraspOfTheUndying" } },
+                        { "8439", new List<string> { "Resolve", "VeteranAftershock" } },
+                        { "8465", new List<string> { "Resolve", "Guardian" } },
+                        { "8214", new List<string> { "Sorcery", "SummonAery" } },
+                        { "8229", new List<string> { "Sorcery", "ArcaneComet" } },
+                        { "8230", new List<string> { "Sorcery", "PhaseRush" } }
+                    };
+
+                    var perksCategories = new Dictionary<string, string>
+                    {
+                        { "8100", "perk-images/Styles/7200_Domination.png" },
+                        { "8300", "perk-images/Styles/7203_Whimsy.png" },
+                        { "8000", "perk-images/Styles/7201_Precision.png" },
+                        { "8400", "perk-images/Styles/7204_Resolve.png" },
+                        { "8200", "perk-images/Styles/7202_Sorcery.png" }
+                    };
+
+
+                    var firstSummonerSpellImage = new Image
+                    {
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
+                    };
+
+                    Grid.SetColumn(firstSummonerSpellImage, 0);
+                    Grid.SetRow(firstSummonerSpellImage, 0);
+                    summonerChampionGrid.Children.Add(firstSummonerSpellImage);
+
+                    var secondSummonerSpellImage = new Image
+                    {
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
+                    };
+
+                    Grid.SetColumn(secondSummonerSpellImage, 0);
+                    Grid.SetRow(secondSummonerSpellImage, 1);
+                    summonerChampionGrid.Children.Add(secondSummonerSpellImage);
+
+
+                    var mainRune = new Image
+                    {
+                        Source = new BitmapImage(new Uri(
+                            $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                    };
+
+                    Grid.SetColumn(mainRune, 1);
+                    Grid.SetRow(mainRune, 0);
+                    summonerChampionGrid.Children.Add(mainRune);
+
+
+                    var secondaryRune = new Image
+                    {
+                        Source = new BitmapImage(new Uri(
+                            $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                    };
+
+                    Grid.SetColumn(secondaryRune, 1);
+                    Grid.SetRow(secondaryRune, 1);
+                    summonerChampionGrid.Children.Add(secondaryRune);
+
+            Grid.SetColumn(summonerChampionGrid, 2);
+            participantGrid.Children.Add(summonerChampionGrid);
+
+            Grid.SetColumn(participantGrid, 0);
+            Grid.SetRow(participantGrid, row);
+            participantsGrid.Children.Add(participantGrid);
+        }
     }
 
     private void SetMatchTimeline()
