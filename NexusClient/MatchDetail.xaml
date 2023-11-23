@@ -121,11 +121,11 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="5"
-                    Margin="10"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Text="VS" Foreground="#34495E" FontSize="28" TextAlignment="Center"
-                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                           Margin="10"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Text="VS" Foreground="#34495E" FontSize="28" TextAlignment="Center"
+                           FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
             </Grid>
 
         </Grid>

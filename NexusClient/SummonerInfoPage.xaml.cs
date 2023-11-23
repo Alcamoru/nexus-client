@@ -106,9 +106,9 @@ public sealed partial class SummonerInfoPage : Page
 
                     var championIcon = new Image
                     {
+                        Width = 50,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png")),
-                        Width = 40
+                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png"))
                     };
 
                     var summonerIconBorder = new Border
@@ -181,16 +181,10 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetColumn(roleLogo, 4);
                     Grid.SetColumnSpan(roleLogo, 2);
                     matchGrid.Children.Add(roleLogo);
-                    var kdaChampionBorder = new Border
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        BorderBrush = new SolidColorBrush(Colors.White),
-                        BorderThickness = new Thickness(0, 1, 0, 1),
-                        Padding = new Thickness(15)
-                    };
 
                     var kdaChampionTextBlock = new TextBlock
                     {
+                        VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
@@ -201,11 +195,11 @@ public sealed partial class SummonerInfoPage : Page
 
                     var kdaChampionViewbox = new Viewbox
                     {
-                        Child = kdaChampionBorder,
+                        MaxWidth = 60,
+                        MaxHeight = 30,
+                        Child = kdaChampionTextBlock,
                         Stretch = Stretch.Uniform
                     };
-
-                    kdaChampionBorder.Child = kdaChampionTextBlock;
 
                     Grid.SetColumn(kdaChampionViewbox, 0);
                     Grid.SetRow(kdaChampionViewbox, 1);
@@ -218,16 +212,9 @@ public sealed partial class SummonerInfoPage : Page
                         if (team.TeamId == participant.TeamId)
                             teamKills = team.Objectives.Champion.Kills;
 
-                    var kpChampionBorder = new Border
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Padding = new Thickness(15),
-                        BorderBrush = new SolidColorBrush(Colors.White),
-                        BorderThickness = new Thickness(0, 1, 0, 1)
-                    };
-
                     var kpChampionTextBlock = new TextBlock
                     {
+                        VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
@@ -238,27 +225,21 @@ public sealed partial class SummonerInfoPage : Page
 
                     var kpChampionViewbox = new Viewbox
                     {
-                        Child = kpChampionBorder,
+                        MaxWidth = 60,
+                        MaxHeight = 30,
+                        Child = kpChampionTextBlock,
                         Stretch = Stretch.Uniform
                     };
-
-                    kpChampionBorder.Child = kpChampionTextBlock;
 
                     Grid.SetColumn(kpChampionViewbox, 2);
                     Grid.SetRow(kpChampionViewbox, 1);
                     Grid.SetColumnSpan(kpChampionViewbox, 2);
                     matchGrid.Children.Add(kpChampionViewbox);
 
-                    var csChampionBorder = new Border
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Padding = new Thickness(15),
-                        BorderBrush = new SolidColorBrush(Colors.White),
-                        BorderThickness = new Thickness(0, 1, 0, 1)
-                    };
 
                     var csChampionTextBlock = new TextBlock
                     {
+                        VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
@@ -269,20 +250,23 @@ public sealed partial class SummonerInfoPage : Page
 
                     var csChampionViewbox = new Viewbox
                     {
+                        MaxWidth = 60,
+                        MaxHeight = 30,
                         Child = csChampionTextBlock,
                         Stretch = Stretch.Uniform
                     };
 
-                    csChampionBorder.Child = csChampionViewbox;
+                    Grid.SetColumn(csChampionViewbox, 4);
+                    Grid.SetRow(csChampionViewbox, 1);
+                    Grid.SetColumnSpan(csChampionViewbox, 2);
 
-                    Grid.SetColumn(csChampionBorder, 4);
-                    Grid.SetRow(csChampionBorder, 1);
-                    Grid.SetColumnSpan(csChampionBorder, 2);
-
-                    matchGrid.Children.Add(csChampionBorder);
+                    matchGrid.Children.Add(csChampionViewbox);
 
 
-                    var summonersStackPanel = new StackPanel();
+                    var summonersStackPanel = new StackPanel
+                    {
+                        Margin = new Thickness(10)
+                    };
                     var visionChampionTextBlock = new TextBlock
                     {
                         Foreground = new SolidColorBrush(Colors.White),
@@ -373,10 +357,15 @@ public sealed partial class SummonerInfoPage : Page
                         Source = new BitmapImage(new Uri(
                             $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
                     };
+                    var firstSummonerSpellBorder = new Border
+                    {
+                        CornerRadius = new CornerRadius(7, 7, 0, 0),
+                        Child = firstSummonerSpellImage
+                    };
 
-                    Grid.SetColumn(firstSummonerSpellImage, 0);
-                    Grid.SetRow(firstSummonerSpellImage, 0);
-                    summonerChampionGrid.Children.Add(firstSummonerSpellImage);
+                    Grid.SetColumn(firstSummonerSpellBorder, 0);
+                    Grid.SetRow(firstSummonerSpellBorder, 0);
+                    summonerChampionGrid.Children.Add(firstSummonerSpellBorder);
 
                     var secondSummonerSpellImage = new Image
                     {
@@ -384,9 +373,15 @@ public sealed partial class SummonerInfoPage : Page
                             $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
                     };
 
-                    Grid.SetColumn(secondSummonerSpellImage, 0);
-                    Grid.SetRow(secondSummonerSpellImage, 1);
-                    summonerChampionGrid.Children.Add(secondSummonerSpellImage);
+                    var secondSummonerSpellBorder = new Border
+                    {
+                        CornerRadius = new CornerRadius(0, 0, 7, 7),
+                        Child = secondSummonerSpellImage
+                    };
+
+                    Grid.SetColumn(secondSummonerSpellBorder, 0);
+                    Grid.SetRow(secondSummonerSpellBorder, 1);
+                    summonerChampionGrid.Children.Add(secondSummonerSpellBorder);
 
 
                     var mainRune = new Image

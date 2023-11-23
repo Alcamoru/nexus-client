@@ -104,13 +104,9 @@ public sealed partial class MatchDetail : Page
             };
 
             if (participant.SummonerName == LolSummoner.Name)
-            {
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96));
-            }
             else
-            {
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
-            }
 
             participantGrid.BorderThickness = new Thickness(2);
 
@@ -346,6 +342,7 @@ public sealed partial class MatchDetail : Page
             Grid.SetRow(participantGrid, row);
             ParticipantsGrid.Children.Add(participantGrid);
         }
+
         foreach (var participant in team2)
         {
             switch (participant.TeamPosition)
@@ -376,13 +373,9 @@ public sealed partial class MatchDetail : Page
             };
 
             if (participant.SummonerName == LolSummoner.Name)
-            {
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96));
-            }
             else
-            {
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
-            }
 
             participantGrid.BorderThickness = new Thickness(2);
 
@@ -620,7 +613,6 @@ public sealed partial class MatchDetail : Page
             Grid.SetRow(participantGrid, row);
             ParticipantsGrid.Children.Add(participantGrid);
         }
-
     }
 
     private void SetMatchTimeline()
