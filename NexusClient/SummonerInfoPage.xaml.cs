@@ -174,7 +174,8 @@ public sealed partial class SummonerInfoPage : Page
                     var roleLogo = new Image
                     {
                         Width = 40,
-                        Source = new BitmapImage(new Uri($"ms-appx:///Assets/media/roles-icons/{participant.Role}.png"))
+                        Source = new BitmapImage(
+                            new Uri($"ms-appx:///Assets/media/roles-icons/{participant.TeamPosition}.png"))
                     };
                     Grid.SetRow(roleLogo, 0);
                     Grid.SetColumn(roleLogo, 4);

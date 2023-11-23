@@ -104,18 +104,19 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <Grid x:Name="participantsGrid" Grid.Row="0" Grid.Column="1">
+            <Grid x:Name="ParticipantsGrid" Grid.Row="0" Grid.Column="1"
+                  Background="#EEEEEE" Padding="15" Margin="15">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4*" />
                 </Grid.ColumnDefinitions>
             </Grid>
 
