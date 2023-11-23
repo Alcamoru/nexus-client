@@ -71,25 +71,15 @@ public sealed partial class WelcomePage : Page
         {
             LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, SummonerNameTextBox.Text)!;
 
-            if (LolSummoner is null)
-            {
-                throw new ArgumentNullException();
-            }
+            if (LolSummoner is null) throw new ArgumentNullException();
 
             NavigateToSummonerInfoPage();
-
         }
         catch (Exception e)
         {
-            if (e is ArgumentNullException)
-            {
-                ErrorTextBlock.Text = "L'invocateur recherché est invalide";
-            }
+            if (e is ArgumentNullException) ErrorTextBlock.Text = "L'invocateur recherché est invalide";
 
-            if (e is AggregateException)
-            {
-                ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
-            }
+            if (e is AggregateException) ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
 
 
             WelcomePageProgressRing.Visibility = Visibility.Collapsed;
@@ -98,7 +88,6 @@ public sealed partial class WelcomePage : Page
 
     private void NavigateToSummonerInfoPage()
     {
-
         var parametersList = new List<object>
         {
             Api,

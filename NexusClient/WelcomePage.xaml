@@ -92,7 +92,7 @@
                    FontSize="24"
                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
                    FontWeight="ExtraBold"
-                   HorizontalAlignment="Center"></TextBlock>
+                   HorizontalAlignment="Center" />
         <ProgressRing Visibility="Collapsed" x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="True" />
         <Button
             x:Name="SendSummonerNameButton"
