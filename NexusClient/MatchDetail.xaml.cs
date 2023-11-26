@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Windows.UI;
 using Camille.Enums;
@@ -12,6 +13,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using Team = Camille.RiotGames.Enums.Team;
 
 
@@ -74,6 +76,21 @@ public sealed partial class MatchDetail : Page
                 team2.Add(participant);
 
         var row = 0;
+
+        int team1Damages = 0;
+        foreach (Participant participant in team1)
+        {
+            team1Damages += participant.TotalDamageDealtToChampions;
+        }
+        int team2Damages = 0;
+        foreach (Participant participant in team2)
+        {
+            team2Damages += participant.TotalDamageDealtToChampions;
+        }
+
+        Debug.WriteLine(team1Damages);
+        Debug.WriteLine(team2Damages);
+
         foreach (var participant in team1)
         {
             switch (participant.TeamPosition)
@@ -319,6 +336,55 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(csChampionViewbox, 3);
             participantGrid.Children.Add(csChampionViewbox);
 
+            Canvas damagesCanvas = new Canvas()
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            Rectangle teamRectangle = new Rectangle()
+            {
+                Width = 50,
+                Fill = new SolidColorBrush(Colors.White),
+                Height = 7,
+            };
+
+            Border teamBorder = new Border() {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Child = teamRectangle,
+                CornerRadius = new CornerRadius(5)
+            };
+
+            
+            Debug.WriteLine(participant.TotalDamageDealtToChampions);
+
+            float width = participant.TotalDamageDealtToChampions / (float)team1Damages * 50;
+            
+            Debug.WriteLine(width);
+            
+            Rectangle participantRectangle = new Rectangle()
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Width = width,
+                Fill = new SolidColorBrush(Color.FromArgb(255, 39,174,96)),
+                Height = 7
+            };
+
+            Border participantBorder = new Border() {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Child = participantRectangle,
+                CornerRadius = new CornerRadius(5)
+            };
+            
+            Grid.SetColumn(teamBorder, 4);
+            participantGrid.Children.Add(teamBorder);
+            Grid.SetColumn(participantBorder, 4);
+            participantGrid.Children.Add(participantBorder);
+
+            
             var kdaChampionTextBlock = new TextBlock
             {
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),

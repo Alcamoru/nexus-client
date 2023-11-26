@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Core;
@@ -211,6 +212,7 @@ public sealed partial class SummonerInfoPage : Page
                     foreach (var team in match.Info.Teams)
                         if (team.TeamId == participant.TeamId)
                             teamKills = team.Objectives.Champion.Kills;
+                    
 
                     var kpChampionTextBlock = new TextBlock
                     {
