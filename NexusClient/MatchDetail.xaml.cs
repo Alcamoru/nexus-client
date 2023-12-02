@@ -77,19 +77,10 @@ public sealed partial class MatchDetail : Page
 
         var row = 0;
 
-        int team1Damages = 0;
-        foreach (Participant participant in team1)
-        {
-            team1Damages += participant.TotalDamageDealtToChampions;
-        }
-        int team2Damages = 0;
-        foreach (Participant participant in team2)
-        {
-            team2Damages += participant.TotalDamageDealtToChampions;
-        }
-
-        Debug.WriteLine(team1Damages);
-        Debug.WriteLine(team2Damages);
+        var team1Damages = 0;
+        foreach (var participant in team1) team1Damages += participant.TotalDamageDealtToChampions;
+        var team2Damages = 0;
+        foreach (var participant in team2) team2Damages += participant.TotalDamageDealtToChampions;
 
         foreach (var participant in team1)
         {
@@ -324,6 +315,7 @@ public sealed partial class MatchDetail : Page
                 FontSize = 15,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
+            Debug.WriteLine(participant.NeutralMinionsKilled);
 
             var csChampionViewbox = new Viewbox
             {
@@ -336,14 +328,15 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(csChampionViewbox, 3);
             participantGrid.Children.Add(csChampionViewbox);
 
-            Rectangle team1Rectangle = new Rectangle()
+            var team1Rectangle = new Rectangle
             {
                 Width = 50,
                 Fill = new SolidColorBrush(Colors.White),
-                Height = 7,
+                Height = 7
             };
 
-            Border team1Border = new Border() {
+            var team1Border = new Border
+            {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Child = team1Rectangle,
@@ -351,25 +344,26 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            float width = participant.TotalDamageDealtToChampions / (float)team1Damages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)team1Damages * 50;
 
-            Rectangle participant1Rectangle = new Rectangle()
+            var participant1Rectangle = new Rectangle
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Width = width,
-                Fill = new SolidColorBrush(Color.FromArgb(255, 39,174,96)),
+                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
                 Height = 7
             };
 
-            Border participant1Border = new Border() {
+            var participant1Border = new Border
+            {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Child = participant1Rectangle,
                 CornerRadius = new CornerRadius(3)
             };
 
-            Grid innerGrid1 = new Grid()
+            var innerGrid1 = new Grid
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
@@ -381,7 +375,7 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid1, 4);
             participantGrid.Children.Add(innerGrid1);
 
-            
+
             var kdaChampionTextBlock = new TextBlock
             {
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
@@ -630,14 +624,15 @@ public sealed partial class MatchDetail : Page
             participantGrid.Children.Add(summonersViewbox);
 
 
-            Rectangle team2Rectangle = new Rectangle()
+            var team2Rectangle = new Rectangle
             {
                 Width = 50,
                 Fill = new SolidColorBrush(Colors.White),
-                Height = 7,
+                Height = 7
             };
 
-            Border team2Border = new Border() {
+            var team2Border = new Border
+            {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Child = team2Rectangle,
@@ -645,25 +640,26 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            float width = participant.TotalDamageDealtToChampions / (float)team2Damages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)team2Damages * 50;
 
-            Rectangle participant2Rectangle = new Rectangle()
+            var participant2Rectangle = new Rectangle
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Width = width,
-                Fill = new SolidColorBrush(Color.FromArgb(255, 39,174,96)),
+                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
                 Height = 7
             };
 
-            Border participant2Border = new Border() {
+            var participant2Border = new Border
+            {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Child = participant2Rectangle,
                 CornerRadius = new CornerRadius(3)
             };
 
-            Grid innerGrid2 = new Grid()
+            var innerGrid2 = new Grid
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
@@ -674,7 +670,6 @@ public sealed partial class MatchDetail : Page
 
             Grid.SetColumn(innerGrid2, 4);
             participantGrid.Children.Add(innerGrid2);
-
 
 
             var csChampionTextBlock = new TextBlock
@@ -826,7 +821,7 @@ public sealed partial class MatchDetail : Page
                         Width = 40
                     };
 
-                    var wardPlacedTextBlock = new TextBlock
+                    var eliminatedTextBlock = new TextBlock
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
@@ -836,7 +831,59 @@ public sealed partial class MatchDetail : Page
                     };
 
                     frameInfoStackPanel.Children.Add(killerChampionIcon);
-                    frameInfoStackPanel.Children.Add(wardPlacedTextBlock);
+                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
+                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoStackPanel, 1);
+                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+                    elementNumber += 1;
+
+                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
+                    MatchTimelineGrid.RowDefinitions.Add(row);
+                }
+
+            if (e.AssistingParticipantIds != null)
+                if (e.AssistingParticipantIds.Contains(summonerParticipantId))
+                {
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal
+                    };
+
+                    var victimPuuid = "";
+
+                    foreach (var participant in timeline.Info.Participants)
+                        if (participant.ParticipantId == e.VictimId)
+                            victimPuuid = participant.Puuid;
+
+
+                    var summonerChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                        Width = 40
+                    };
+
+                    var victimChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                        Width = 40
+                    };
+
+                    var eliminatedTextBlock = new TextBlock
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Foreground = new SolidColorBrush(Colors.White),
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        Text = " a participé à l'élimination de ",
+                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                    };
+
+                    frameInfoStackPanel.Children.Add(summonerChampionIcon);
+                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
                     frameInfoStackPanel.Children.Add(victimChampionIcon);
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
