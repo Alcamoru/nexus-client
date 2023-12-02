@@ -336,53 +336,50 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(csChampionViewbox, 3);
             participantGrid.Children.Add(csChampionViewbox);
 
-            Canvas damagesCanvas = new Canvas()
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-
-            Rectangle teamRectangle = new Rectangle()
+            Rectangle team1Rectangle = new Rectangle()
             {
                 Width = 50,
                 Fill = new SolidColorBrush(Colors.White),
                 Height = 7,
             };
 
-            Border teamBorder = new Border() {
+            Border team1Border = new Border() {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Child = teamRectangle,
-                CornerRadius = new CornerRadius(5)
+                Child = team1Rectangle,
+                CornerRadius = new CornerRadius(3)
             };
 
-            
-            Debug.WriteLine(participant.TotalDamageDealtToChampions);
 
             float width = participant.TotalDamageDealtToChampions / (float)team1Damages * 50;
-            
-            Debug.WriteLine(width);
-            
-            Rectangle participantRectangle = new Rectangle()
+
+            Rectangle participant1Rectangle = new Rectangle()
             {
                 VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
                 Width = width,
                 Fill = new SolidColorBrush(Color.FromArgb(255, 39,174,96)),
                 Height = 7
             };
 
-            Border participantBorder = new Border() {
+            Border participant1Border = new Border() {
                 VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Child = participantRectangle,
-                CornerRadius = new CornerRadius(5)
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Child = participant1Rectangle,
+                CornerRadius = new CornerRadius(3)
             };
-            
-            Grid.SetColumn(teamBorder, 4);
-            participantGrid.Children.Add(teamBorder);
-            Grid.SetColumn(participantBorder, 4);
-            participantGrid.Children.Add(participantBorder);
+
+            Grid innerGrid1 = new Grid()
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            innerGrid1.Children.Add(team1Border);
+            innerGrid1.Children.Add(participant1Border);
+
+            Grid.SetColumn(innerGrid1, 4);
+            participantGrid.Children.Add(innerGrid1);
 
             
             var kdaChampionTextBlock = new TextBlock
@@ -631,6 +628,54 @@ public sealed partial class MatchDetail : Page
 
             Grid.SetColumn(summonersViewbox, 2);
             participantGrid.Children.Add(summonersViewbox);
+
+
+            Rectangle team2Rectangle = new Rectangle()
+            {
+                Width = 50,
+                Fill = new SolidColorBrush(Colors.White),
+                Height = 7,
+            };
+
+            Border team2Border = new Border() {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Child = team2Rectangle,
+                CornerRadius = new CornerRadius(3)
+            };
+
+
+            float width = participant.TotalDamageDealtToChampions / (float)team2Damages * 50;
+
+            Rectangle participant2Rectangle = new Rectangle()
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = width,
+                Fill = new SolidColorBrush(Color.FromArgb(255, 39,174,96)),
+                Height = 7
+            };
+
+            Border participant2Border = new Border() {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Child = participant2Rectangle,
+                CornerRadius = new CornerRadius(3)
+            };
+
+            Grid innerGrid2 = new Grid()
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            innerGrid2.Children.Add(team2Border);
+            innerGrid2.Children.Add(participant2Border);
+
+            Grid.SetColumn(innerGrid2, 4);
+            participantGrid.Children.Add(innerGrid2);
+
+
 
             var csChampionTextBlock = new TextBlock
             {
