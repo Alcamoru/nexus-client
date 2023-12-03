@@ -49,8 +49,8 @@ public sealed partial class MatchDetail : Page
         Api = (RiotGamesApi)parameters.ElementAt(0);
         MatchInfo = (Match)parameters.ElementAt(1);
         LolSummoner = (Summoner)parameters.ElementAt(2);
-        SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
-        SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
+        SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(3);
+        SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(4);
         SetMatchTimeline();
         SetParticipantsGrid();
         base.OnNavigatedTo(e);

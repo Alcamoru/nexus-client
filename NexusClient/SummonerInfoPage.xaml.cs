@@ -603,7 +603,9 @@ public sealed partial class SummonerInfoPage : Page
             {
                 Api,
                 matchGrid.Tag,
-                LolSummoner
+                LolSummoner,
+                SummonerRegionalRoute,
+                SummonerPlatformRoute
             };
             Frame.Navigate(typeof(MatchDetail), parameters);
         }
