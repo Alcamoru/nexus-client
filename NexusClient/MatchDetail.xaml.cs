@@ -730,10 +730,9 @@ public sealed partial class MatchDetail : Page
 
     private void SetMatchTimeline()
     {
+        var precedentEventIsPositive = true;
 
-        bool precedentEventIsPositive = true;
-
-        Ellipse ellipseGreen = new Ellipse()
+        var ellipseGreen = new Ellipse
         {
             Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
             Height = 10,
@@ -741,24 +740,24 @@ public sealed partial class MatchDetail : Page
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        Ellipse ellipseRed = new Ellipse()
+        var ellipseRed = new Ellipse
         {
-            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
             Height = 10,
             Width = 10,
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        Rectangle rectangleGreenBot = new Rectangle()
+        var rectangleGreenBot = new Rectangle
         {
-            Margin = new Thickness(0,37, 0, 0),
+            Margin = new Thickness(0, 37, 0, 0),
             Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
             Height = 75,
             Width = 4,
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        Rectangle rectangleGreenTop = new Rectangle()
+        var rectangleGreenTop = new Rectangle
         {
             Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
             Height = 75,
@@ -766,16 +765,16 @@ public sealed partial class MatchDetail : Page
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        Rectangle rectangleRedBot = new Rectangle()
+        var rectangleRedBot = new Rectangle
         {
-            Margin = new Thickness(0,37, 0, 0),
+            Margin = new Thickness(0, 37, 0, 0),
             Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
             Height = 75,
             Width = 4,
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        Rectangle rectangleRedTop = new Rectangle()
+        var rectangleRedTop = new Rectangle
         {
             Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
             Height = 75,
@@ -800,46 +799,149 @@ public sealed partial class MatchDetail : Page
 
         var elementNumber = 1;
         foreach (var timelineInfoFrame in timeline.Info.Frames)
+        foreach (var e in timelineInfoFrame.Events)
         {
-            foreach (var e in timelineInfoFrame.Events)
+            var infoStackPanel = new StackPanel
             {
+                Orientation = Orientation.Horizontal
+            };
 
-                var infoStackPanel = new StackPanel
+            var startIcon = new Image
+            {
+                Width = 40,
+                Source = new BitmapImage(
+                    new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+            };
+
+            var startTextBlock = new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.White),
+                HorizontalTextAlignment = TextAlignment.Center,
+                Text = " début du match",
+                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+            };
+
+            infoStackPanel.Children.Add(startIcon);
+            infoStackPanel.Children.Add(startTextBlock);
+            Grid.SetColumn(infoStackPanel, 1);
+            Grid.SetRow(infoStackPanel, 0);
+
+            MatchTimelineGrid.Children.Add(infoStackPanel);
+            MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
+
+
+            if (e.Type == "WARD_PLACED" && e.CreatorId == summonerParticipantId)
+            {
+                if (precedentEventIsPositive)
+                {
+                    rectangleGreenTop = new Rectangle
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+                    Grid.SetColumn(rectangleGreenTop, 0);
+                    Grid.SetRow(rectangleGreenTop, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleGreenTop);
+                }
+                else
+                {
+                    rectangleRedTop = new Rectangle
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+                    Grid.SetColumn(rectangleRedTop, 0);
+                    Grid.SetRow(rectangleRedTop, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleRedTop);
+                }
+
+                var frameInfoStackPanel = new StackPanel
                 {
                     Orientation = Orientation.Horizontal
                 };
 
-                Image startIcon = new Image()
+                var creatorPuuid = "";
+
+                foreach (var participant in timeline.Info.Participants)
+                    if (participant.ParticipantId == e.CreatorId)
+                        creatorPuuid = participant.Puuid;
+
+
+                var championIcon = new Image
                 {
-                    Width = 40,
-                    Source = new BitmapImage(
-                        new Uri($"ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Source = new BitmapImage(new Uri(
+                        $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
+                    Width = 40
                 };
 
-                TextBlock startTextBlock = new TextBlock()
+                var wardImage = new Image
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Width = 40,
+                    Source = new BitmapImage(new Uri("https://opgg-static.akamaized.net/meta/images/lol/item/3340.png"))
+                };
+
+                var wardPlacedTextBlock = new TextBlock
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     Foreground = new SolidColorBrush(Colors.White),
                     HorizontalTextAlignment = TextAlignment.Center,
-                    Text = " début du match",
+                    Text = " a placé une balise",
                     FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                 };
 
-                infoStackPanel.Children.Add(startIcon);
-                infoStackPanel.Children.Add(startTextBlock);
-                Grid.SetColumn(infoStackPanel, 1);
-                Grid.SetRow(infoStackPanel, 0);
-
-                MatchTimelineGrid.Children.Add(infoStackPanel);
-                MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
+                frameInfoStackPanel.Children.Add(championIcon);
+                frameInfoStackPanel.Children.Add(wardPlacedTextBlock);
+                frameInfoStackPanel.Children.Add(wardImage);
+                Grid.SetColumn(frameInfoStackPanel, 1);
+                Grid.SetRow(frameInfoStackPanel, elementNumber);
 
 
-                if (e.Type == "WARD_PLACED" && e.CreatorId == summonerParticipantId)
+                ellipseGreen = new Ellipse
                 {
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 10,
+                    Width = 10,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
 
+                rectangleGreenBot = new Rectangle
+                {
+                    Margin = new Thickness(0, 37, 0, 0),
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 75,
+                    Width = 4,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+
+                Grid.SetColumn(ellipseGreen, 0);
+                Grid.SetRow(ellipseGreen, elementNumber);
+                MatchTimelineGrid.Children.Add(ellipseGreen);
+                Grid.SetColumn(rectangleGreenBot, 0);
+                Grid.SetRow(rectangleGreenBot, elementNumber);
+                MatchTimelineGrid.Children.Add(rectangleGreenBot);
+
+                elementNumber += 1;
+
+                MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
+                MatchTimelineGrid.RowDefinitions.Add(row);
+                precedentEventIsPositive = true;
+            }
+
+            if (e.Type == "CHAMPION_KILL")
+            {
+                if (e.KillerId == summonerParticipantId)
+                {
                     if (precedentEventIsPositive)
                     {
-                        rectangleGreenTop = new Rectangle()
+                        rectangleGreenTop = new Rectangle
                         {
                             Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
                             Height = 75,
@@ -850,51 +952,68 @@ public sealed partial class MatchDetail : Page
                         Grid.SetRow(rectangleGreenTop, elementNumber);
                         MatchTimelineGrid.Children.Add(rectangleGreenTop);
                     }
+                    else
+                    {
+                        rectangleRedTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleRedTop, 0);
+                        Grid.SetRow(rectangleRedTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleRedTop);
+                    }
 
                     var frameInfoStackPanel = new StackPanel
                     {
                         Orientation = Orientation.Horizontal
                     };
 
-                    var creatorPuuid = "";
+                    var killerPuuid = "";
+                    var victimPuuid = "";
 
                     foreach (var participant in timeline.Info.Participants)
-                        if (participant.ParticipantId == e.CreatorId)
-                            creatorPuuid = participant.Puuid;
+                    {
+                        if (participant.ParticipantId == e.KillerId) killerPuuid = participant.Puuid;
+
+                        if (participant.ParticipantId == e.VictimId) victimPuuid = participant.Puuid;
+                    }
 
 
-                    var championIcon = new Image
+                    var killerChampionIcon = new Image
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
                         Width = 40
                     };
 
-                    var wardImage = new Image
+                    var victimChampionIcon = new Image
                     {
                         VerticalAlignment = VerticalAlignment.Center,
-                        Width = 40,
-                        Source = new BitmapImage(new Uri("https://opgg-static.akamaized.net/meta/images/lol/item/3340.png"))
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                        Width = 40
                     };
 
-                    var wardPlacedTextBlock = new TextBlock
+                    var eliminatedTextBlock = new TextBlock
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
                         HorizontalTextAlignment = TextAlignment.Center,
-                        Text = " a placé une balise",
+                        Text = " a eliminé",
                         FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                     };
 
-                    frameInfoStackPanel.Children.Add(championIcon);
-                    frameInfoStackPanel.Children.Add(wardPlacedTextBlock);
-                    frameInfoStackPanel.Children.Add(wardImage);
+                    frameInfoStackPanel.Children.Add(killerChampionIcon);
+                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
+                    frameInfoStackPanel.Children.Add(victimChampionIcon);
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
-
-                    ellipseGreen = new Ellipse()
+                    ellipseGreen = new Ellipse
                     {
                         Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
                         Height = 10,
@@ -902,9 +1021,9 @@ public sealed partial class MatchDetail : Page
                         HorizontalAlignment = HorizontalAlignment.Center
                     };
 
-                    rectangleGreenBot = new Rectangle()
+                    rectangleGreenBot = new Rectangle
                     {
-                        Margin = new Thickness(0,37, 0, 0),
+                        Margin = new Thickness(0, 37, 0, 0),
                         Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
                         Height = 75,
                         Width = 4,
@@ -923,198 +1042,220 @@ public sealed partial class MatchDetail : Page
                     MatchTimelineGrid.Children.Add(frameInfoStackPanel);
                     var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                     MatchTimelineGrid.RowDefinitions.Add(row);
+                    precedentEventIsPositive = true;
                 }
 
-                if (e.Type == "CHAMPION_KILL")
-                    if (e.KillerId == summonerParticipantId)
+                if (e.VictimId == summonerParticipantId)
+                {
+                    if (precedentEventIsPositive)
                     {
-
-                        if (precedentEventIsPositive)
+                        rectangleGreenTop = new Rectangle
                         {
-                            rectangleGreenTop = new Rectangle()
-                            {
-                                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                                Height = 75,
-                                Width = 4,
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            };
-                            Grid.SetColumn(rectangleGreenTop, 0);
-                            Grid.SetRow(rectangleGreenTop, elementNumber);
-                            MatchTimelineGrid.Children.Add(rectangleGreenTop);
-                        }
-                        var frameInfoStackPanel = new StackPanel
-                        {
-                            Orientation = Orientation.Horizontal
-                        };
-
-                        var killerPuuid = "";
-                        var victimPuuid = "";
-
-                        foreach (var participant in timeline.Info.Participants)
-                        {
-                            if (participant.ParticipantId == e.KillerId) killerPuuid = participant.Puuid;
-
-                            if (participant.ParticipantId == e.VictimId) victimPuuid = participant.Puuid;
-                        }
-
-
-                        var killerChampionIcon = new Image
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Source = new BitmapImage(new Uri(
-                                $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
-                            Width = 40
-                        };
-
-                        var victimChampionIcon = new Image
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Source = new BitmapImage(new Uri(
-                                $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
-                            Width = 40
-                        };
-
-                        var eliminatedTextBlock = new TextBlock
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Foreground = new SolidColorBrush(Colors.White),
-                            HorizontalTextAlignment = TextAlignment.Center,
-                            Text = " a eliminé",
-                            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-                        };
-
-                        frameInfoStackPanel.Children.Add(killerChampionIcon);
-                        frameInfoStackPanel.Children.Add(eliminatedTextBlock);
-                        frameInfoStackPanel.Children.Add(victimChampionIcon);
-                        Grid.SetColumn(frameInfoStackPanel, 1);
-                        Grid.SetRow(frameInfoStackPanel, elementNumber);
-
-                        ellipseGreen = new Ellipse()
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                            Height = 10,
-                            Width = 10,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-
-                        rectangleGreenBot = new Rectangle()
-                        {
-                            Margin = new Thickness(0,37, 0, 0),
                             Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
                             Height = 75,
                             Width = 4,
                             HorizontalAlignment = HorizontalAlignment.Center
                         };
-
-                        Grid.SetColumn(ellipseGreen, 0);
-                        Grid.SetRow(ellipseGreen, elementNumber);
-                        MatchTimelineGrid.Children.Add(ellipseGreen);
-                        Grid.SetColumn(rectangleGreenBot, 0);
-                        Grid.SetRow(rectangleGreenBot, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleGreenBot);
-
-                        elementNumber += 1;
-
-                        MatchTimelineGrid.Children.Add(frameInfoStackPanel);
-                        var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
-                        MatchTimelineGrid.RowDefinitions.Add(row);
-
+                        Grid.SetColumn(rectangleGreenTop, 0);
+                        Grid.SetRow(rectangleGreenTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
                     }
-
-                if (e.AssistingParticipantIds != null)
-                    if (e.AssistingParticipantIds.Contains(summonerParticipantId))
+                    else
                     {
-
-                        if (precedentEventIsPositive)
+                        rectangleRedTop = new Rectangle
                         {
-                            rectangleGreenTop = new Rectangle()
-                            {
-                                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                                Height = 75,
-                                Width = 4,
-                                HorizontalAlignment = HorizontalAlignment.Center
-                            };
-                            Grid.SetColumn(rectangleGreenTop, 0);
-                            Grid.SetRow(rectangleGreenTop, elementNumber);
-                            MatchTimelineGrid.Children.Add(rectangleGreenTop);
-                        }
-                        var frameInfoStackPanel = new StackPanel
-                        {
-                            Orientation = Orientation.Horizontal
-                        };
-
-                        var victimPuuid = "";
-
-                        foreach (var participant in timeline.Info.Participants)
-                            if (participant.ParticipantId == e.VictimId)
-                                victimPuuid = participant.Puuid;
-
-
-                        var summonerChampionIcon = new Image
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Source = new BitmapImage(new Uri(
-                                $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
-                            Width = 40
-                        };
-
-                        var victimChampionIcon = new Image
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Source = new BitmapImage(new Uri(
-                                $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
-                            Width = 40
-                        };
-
-                        var eliminatedTextBlock = new TextBlock
-                        {
-                            VerticalAlignment = VerticalAlignment.Center,
-                            Foreground = new SolidColorBrush(Colors.White),
-                            HorizontalTextAlignment = TextAlignment.Center,
-                            Text = " a participé à l'élimination de ",
-                            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-                        };
-
-                        frameInfoStackPanel.Children.Add(summonerChampionIcon);
-                        frameInfoStackPanel.Children.Add(eliminatedTextBlock);
-                        frameInfoStackPanel.Children.Add(victimChampionIcon);
-                        Grid.SetColumn(frameInfoStackPanel, 1);
-                        Grid.SetRow(frameInfoStackPanel, elementNumber);
-
-
-                        ellipseGreen = new Ellipse()
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                            Height = 10,
-                            Width = 10,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-
-                        rectangleGreenBot = new Rectangle()
-                        {
-                            Margin = new Thickness(0,37, 0, 0),
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
                             Height = 75,
                             Width = 4,
                             HorizontalAlignment = HorizontalAlignment.Center
                         };
-
-                        Grid.SetColumn(ellipseGreen, 0);
-                        Grid.SetRow(ellipseGreen, elementNumber);
-                        MatchTimelineGrid.Children.Add(ellipseGreen);
-                        Grid.SetColumn(rectangleGreenBot, 0);
-                        Grid.SetRow(rectangleGreenBot, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleGreenBot);
-
-                        elementNumber += 1;
-
-                        MatchTimelineGrid.Children.Add(frameInfoStackPanel);
-                        var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
-                        MatchTimelineGrid.RowDefinitions.Add(row);
-
-
+                        Grid.SetColumn(rectangleRedTop, 0);
+                        Grid.SetRow(rectangleRedTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleRedTop);
                     }
+
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal
+                    };
+
+                    var killerPuuid = "";
+
+                    foreach (var participant in timeline.Info.Participants)
+                        if (participant.ParticipantId == e.KillerId)
+                            killerPuuid = participant.Puuid;
+
+
+                    var killerChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
+                        Width = 40
+                    };
+
+                    var victimChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                        Width = 40
+                    };
+
+                    var eliminatedTextBlock = new TextBlock
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Foreground = new SolidColorBrush(Colors.White),
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        Text = " a eliminé",
+                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                    };
+
+                    frameInfoStackPanel.Children.Add(killerChampionIcon);
+                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
+                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoStackPanel, 1);
+                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+
+                    ellipseRed = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                        Height = 10,
+                        Width = 10,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    rectangleRedBot = new Rectangle
+                    {
+                        Margin = new Thickness(0, 37, 0, 0),
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    Grid.SetColumn(ellipseRed, 0);
+                    Grid.SetRow(ellipseRed, elementNumber);
+                    MatchTimelineGrid.Children.Add(ellipseRed);
+                    Grid.SetColumn(rectangleRedBot, 0);
+                    Grid.SetRow(rectangleRedBot, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleRedBot);
+
+                    elementNumber += 1;
+
+                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
+                    MatchTimelineGrid.RowDefinitions.Add(row);
+                    precedentEventIsPositive = false;
+                }
             }
+
+
+            if (e.AssistingParticipantIds != null)
+                if (e.AssistingParticipantIds.Contains(summonerParticipantId))
+                {
+                    if (precedentEventIsPositive)
+                    {
+                        rectangleGreenTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleGreenTop, 0);
+                        Grid.SetRow(rectangleGreenTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
+                    }
+                    else
+                    {
+                        rectangleRedTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleRedTop, 0);
+                        Grid.SetRow(rectangleRedTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleRedTop);
+                    }
+
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal
+                    };
+
+                    var victimPuuid = "";
+
+                    foreach (var participant in timeline.Info.Participants)
+                        if (participant.ParticipantId == e.VictimId)
+                            victimPuuid = participant.Puuid;
+
+
+                    var summonerChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                        Width = 40
+                    };
+
+                    var victimChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                        Width = 40
+                    };
+
+                    var eliminatedTextBlock = new TextBlock
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Foreground = new SolidColorBrush(Colors.White),
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        Text = " a participé à l'élimination de ",
+                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                    };
+
+                    frameInfoStackPanel.Children.Add(summonerChampionIcon);
+                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
+                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoStackPanel, 1);
+                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+
+
+                    ellipseGreen = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 10,
+                        Width = 10,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    rectangleGreenBot = new Rectangle
+                    {
+                        Margin = new Thickness(0, 37, 0, 0),
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    Grid.SetColumn(ellipseGreen, 0);
+                    Grid.SetRow(ellipseGreen, elementNumber);
+                    MatchTimelineGrid.Children.Add(ellipseGreen);
+                    Grid.SetColumn(rectangleGreenBot, 0);
+                    Grid.SetRow(rectangleGreenBot, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleGreenBot);
+
+                    elementNumber += 1;
+
+                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
+                    MatchTimelineGrid.RowDefinitions.Add(row);
+                    precedentEventIsPositive = true;
+                }
         }
     }
 }
