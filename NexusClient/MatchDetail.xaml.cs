@@ -49,8 +49,8 @@ public sealed partial class MatchDetail : Page
         Api = (RiotGamesApi)parameters.ElementAt(0);
         MatchInfo = (Match)parameters.ElementAt(1);
         LolSummoner = (Summoner)parameters.ElementAt(2);
-        SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
-        SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
+        SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(3);
+        SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(4);
         SetMatchTimeline();
         SetParticipantsGrid();
         base.OnNavigatedTo(e);
@@ -730,6 +730,64 @@ public sealed partial class MatchDetail : Page
 
     private void SetMatchTimeline()
     {
+        var precedentEventIsPositive = true;
+
+        var ellipseGreen = new Ellipse
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 10,
+            Width = 10,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        var ellipseRed = new Ellipse
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+            Height = 10,
+            Width = 10,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        var rectangleGreenBot = new Rectangle
+        {
+            Margin = new Thickness(0, 37, 0, 0),
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 75,
+            Width = 4,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        var rectangleGreenTop = new Rectangle
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 75,
+            Width = 4,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        var rectangleRedBot = new Rectangle
+        {
+            Margin = new Thickness(0, 37, 0, 0),
+            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+            Height = 75,
+            Width = 4,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+        var rectangleRedTop = new Rectangle
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+            Height = 75,
+            Width = 4,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+
+
+        Grid.SetColumn(ellipseGreen, 0);
+        MatchTimelineGrid.Children.Add(ellipseGreen);
+        Grid.SetColumn(rectangleGreenBot, 0);
+        MatchTimelineGrid.Children.Add(rectangleGreenBot);
+
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId);
         var summonerParticipantId = 0;
         foreach (var participant in timeline!.Info.Participants!)
@@ -739,12 +797,69 @@ public sealed partial class MatchDetail : Page
         }
 
 
-        var elementNumber = 0;
+        var elementNumber = 1;
         foreach (var timelineInfoFrame in timeline.Info.Frames)
         foreach (var e in timelineInfoFrame.Events)
         {
+            var infoStackPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal
+            };
+
+            var startIcon = new Image
+            {
+                Width = 40,
+                Source = new BitmapImage(
+                    new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+            };
+
+            var startTextBlock = new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.White),
+                HorizontalTextAlignment = TextAlignment.Center,
+                Text = " début du match",
+                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+            };
+
+            infoStackPanel.Children.Add(startIcon);
+            infoStackPanel.Children.Add(startTextBlock);
+            Grid.SetColumn(infoStackPanel, 1);
+            Grid.SetRow(infoStackPanel, 0);
+
+            MatchTimelineGrid.Children.Add(infoStackPanel);
+            MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
+
+
             if (e.Type == "WARD_PLACED" && e.CreatorId == summonerParticipantId)
             {
+                if (precedentEventIsPositive)
+                {
+                    rectangleGreenTop = new Rectangle
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+                    Grid.SetColumn(rectangleGreenTop, 0);
+                    Grid.SetRow(rectangleGreenTop, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleGreenTop);
+                }
+                else
+                {
+                    rectangleRedTop = new Rectangle
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+                    Grid.SetColumn(rectangleRedTop, 0);
+                    Grid.SetRow(rectangleRedTop, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleRedTop);
+                }
+
                 var frameInfoStackPanel = new StackPanel
                 {
                     Orientation = Orientation.Horizontal
@@ -786,16 +901,71 @@ public sealed partial class MatchDetail : Page
                 frameInfoStackPanel.Children.Add(wardImage);
                 Grid.SetColumn(frameInfoStackPanel, 1);
                 Grid.SetRow(frameInfoStackPanel, elementNumber);
+
+
+                ellipseGreen = new Ellipse
+                {
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 10,
+                    Width = 10,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+
+                rectangleGreenBot = new Rectangle
+                {
+                    Margin = new Thickness(0, 37, 0, 0),
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 75,
+                    Width = 4,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+
+                Grid.SetColumn(ellipseGreen, 0);
+                Grid.SetRow(ellipseGreen, elementNumber);
+                MatchTimelineGrid.Children.Add(ellipseGreen);
+                Grid.SetColumn(rectangleGreenBot, 0);
+                Grid.SetRow(rectangleGreenBot, elementNumber);
+                MatchTimelineGrid.Children.Add(rectangleGreenBot);
+
                 elementNumber += 1;
 
                 MatchTimelineGrid.Children.Add(frameInfoStackPanel);
                 var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                 MatchTimelineGrid.RowDefinitions.Add(row);
+                precedentEventIsPositive = true;
             }
 
             if (e.Type == "CHAMPION_KILL")
+            {
                 if (e.KillerId == summonerParticipantId)
                 {
+                    if (precedentEventIsPositive)
+                    {
+                        rectangleGreenTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleGreenTop, 0);
+                        Grid.SetRow(rectangleGreenTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
+                    }
+                    else
+                    {
+                        rectangleRedTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleRedTop, 0);
+                        Grid.SetRow(rectangleRedTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleRedTop);
+                    }
+
                     var frameInfoStackPanel = new StackPanel
                     {
                         Orientation = Orientation.Horizontal
@@ -842,16 +1012,175 @@ public sealed partial class MatchDetail : Page
                     frameInfoStackPanel.Children.Add(victimChampionIcon);
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
+
+                    ellipseGreen = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 10,
+                        Width = 10,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    rectangleGreenBot = new Rectangle
+                    {
+                        Margin = new Thickness(0, 37, 0, 0),
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    Grid.SetColumn(ellipseGreen, 0);
+                    Grid.SetRow(ellipseGreen, elementNumber);
+                    MatchTimelineGrid.Children.Add(ellipseGreen);
+                    Grid.SetColumn(rectangleGreenBot, 0);
+                    Grid.SetRow(rectangleGreenBot, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleGreenBot);
+
                     elementNumber += 1;
 
                     MatchTimelineGrid.Children.Add(frameInfoStackPanel);
                     var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                     MatchTimelineGrid.RowDefinitions.Add(row);
+                    precedentEventIsPositive = true;
                 }
+
+                if (e.VictimId == summonerParticipantId)
+                {
+                    if (precedentEventIsPositive)
+                    {
+                        rectangleGreenTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleGreenTop, 0);
+                        Grid.SetRow(rectangleGreenTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
+                    }
+                    else
+                    {
+                        rectangleRedTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleRedTop, 0);
+                        Grid.SetRow(rectangleRedTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleRedTop);
+                    }
+
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal
+                    };
+
+                    var killerPuuid = "";
+
+                    foreach (var participant in timeline.Info.Participants)
+                        if (participant.ParticipantId == e.KillerId)
+                            killerPuuid = participant.Puuid;
+
+
+                    var killerChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
+                        Width = 40
+                    };
+
+                    var victimChampionIcon = new Image
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Source = new BitmapImage(new Uri(
+                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                        Width = 40
+                    };
+
+                    var eliminatedTextBlock = new TextBlock
+                    {
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Foreground = new SolidColorBrush(Colors.White),
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        Text = " a eliminé",
+                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                    };
+
+                    frameInfoStackPanel.Children.Add(killerChampionIcon);
+                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
+                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoStackPanel, 1);
+                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+
+                    ellipseRed = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                        Height = 10,
+                        Width = 10,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    rectangleRedBot = new Rectangle
+                    {
+                        Margin = new Thickness(0, 37, 0, 0),
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    Grid.SetColumn(ellipseRed, 0);
+                    Grid.SetRow(ellipseRed, elementNumber);
+                    MatchTimelineGrid.Children.Add(ellipseRed);
+                    Grid.SetColumn(rectangleRedBot, 0);
+                    Grid.SetRow(rectangleRedBot, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleRedBot);
+
+                    elementNumber += 1;
+
+                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
+                    MatchTimelineGrid.RowDefinitions.Add(row);
+                    precedentEventIsPositive = false;
+                }
+            }
+
 
             if (e.AssistingParticipantIds != null)
                 if (e.AssistingParticipantIds.Contains(summonerParticipantId))
                 {
+                    if (precedentEventIsPositive)
+                    {
+                        rectangleGreenTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleGreenTop, 0);
+                        Grid.SetRow(rectangleGreenTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
+                    }
+                    else
+                    {
+                        rectangleRedTop = new Rectangle
+                        {
+                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                            Height = 75,
+                            Width = 4,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+                        Grid.SetColumn(rectangleRedTop, 0);
+                        Grid.SetRow(rectangleRedTop, elementNumber);
+                        MatchTimelineGrid.Children.Add(rectangleRedTop);
+                    }
+
                     var frameInfoStackPanel = new StackPanel
                     {
                         Orientation = Orientation.Horizontal
@@ -894,11 +1223,38 @@ public sealed partial class MatchDetail : Page
                     frameInfoStackPanel.Children.Add(victimChampionIcon);
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
+
+
+                    ellipseGreen = new Ellipse
+                    {
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 10,
+                        Width = 10,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    rectangleGreenBot = new Rectangle
+                    {
+                        Margin = new Thickness(0, 37, 0, 0),
+                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                        Height = 75,
+                        Width = 4,
+                        HorizontalAlignment = HorizontalAlignment.Center
+                    };
+
+                    Grid.SetColumn(ellipseGreen, 0);
+                    Grid.SetRow(ellipseGreen, elementNumber);
+                    MatchTimelineGrid.Children.Add(ellipseGreen);
+                    Grid.SetColumn(rectangleGreenBot, 0);
+                    Grid.SetRow(rectangleGreenBot, elementNumber);
+                    MatchTimelineGrid.Children.Add(rectangleGreenBot);
+
                     elementNumber += 1;
 
                     MatchTimelineGrid.Children.Add(frameInfoStackPanel);
                     var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                     MatchTimelineGrid.RowDefinitions.Add(row);
+                    precedentEventIsPositive = true;
                 }
         }
     }
