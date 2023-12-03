@@ -574,13 +574,29 @@ public sealed partial class SummonerInfoPage : Page
 
     private void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
-        var matchGrid = e.OriginalSource as Grid;
-        var parameters = new List<object>
+        var originalSource = e.OriginalSource as FrameworkElement;
+
+        Grid matchGrid = null;
+
+        while (originalSource != null)
         {
-            Api,
-            matchGrid!.Tag,
-            LolSummoner
-        };
-        Frame.Navigate(typeof(MatchDetail), parameters);
+            if (originalSource is Grid)
+            {
+                matchGrid = originalSource as Grid;
+                break;
+            }
+
+            originalSource = originalSource.Parent as FrameworkElement;
+        }
+        if (matchGrid != null)
+        {
+            var parameters = new List<object>
+            {
+                Api,
+                matchGrid.Tag,
+                LolSummoner
+            };
+            Frame.Navigate(typeof(MatchDetail), parameters);
+        }
     }
 }
