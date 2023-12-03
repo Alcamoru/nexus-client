@@ -58,10 +58,9 @@
                     Background="#EEEEEE"
                     Padding="25, 15, 25, 15">
 
-
                     <TextBlock
                         x:Name="RegionListButtonTextBlock"
-                        Text="NA"
+                        Text="EUW"
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="#34495E" />
@@ -93,7 +92,7 @@
                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
                    FontWeight="ExtraBold"
                    HorizontalAlignment="Center" />
-        <ProgressRing Visibility="Collapsed" x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="True" />
+        <ProgressRing x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="False" />
         <Button
             x:Name="SendSummonerNameButton"
             Click="SendSummonerNameButton_OnClick"

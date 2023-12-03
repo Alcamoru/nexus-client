@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.System;
 using Camille.Enums;
 using Camille.RiotGames;
@@ -22,6 +24,8 @@ public sealed partial class WelcomePage : Page
 {
     public WelcomePage()
     {
+        SummonerRegionalRoute = RegionalRoute.EUROPE;
+        SummonerPlatformRoute = PlatformRoute.EUW1;
         var sr =
             new StreamReader(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
@@ -32,6 +36,10 @@ public sealed partial class WelcomePage : Page
 
     private RiotGamesApi Api { get; }
     private Summoner LolSummoner { get; set; }
+
+    private RegionalRoute SummonerRegionalRoute { get; set; }
+
+    private PlatformRoute SummonerPlatformRoute { get; set; }
 
 
     // Pour sélectionner la région
@@ -51,7 +59,19 @@ public sealed partial class WelcomePage : Page
     {
         var item = (ListViewItem)e.AddedItems[0];
         Debug.WriteLine(item.Name);
-        RegionListButtonTextBlock.Text = item.Name.Substring(0, 3);
+        var itemContent = (TextBlock)item.Content;
+        RegionListButtonTextBlock.Text = itemContent.Text;
+        switch (itemContent.Text)
+        {
+            case "EUW":
+                SummonerRegionalRoute = RegionalRoute.EUROPE;
+                SummonerPlatformRoute = PlatformRoute.EUW1;
+                break;
+            case "NA":
+                SummonerRegionalRoute = RegionalRoute.AMERICAS;
+                SummonerPlatformRoute = PlatformRoute.NA1;
+                break;
+        }
     }
 
     private void SendSummonerNameButton_OnClick(object sender, RoutedEventArgs e)
@@ -64,14 +84,17 @@ public sealed partial class WelcomePage : Page
         if (e.Key == VirtualKey.Enter) CheckIfExists();
     }
 
-    private void CheckIfExists()
+    private async void CheckIfExists()
     {
-        WelcomePageProgressRing.Visibility = Visibility.Visible;
+        WelcomePageProgressRing.IsActive = true;
         try
         {
-            LolSummoner = Api.SummonerV4().GetBySummonerName(PlatformRoute.EUW1, SummonerNameTextBox.Text)!;
+            LolSummoner =
+                (await Api.SummonerV4().GetBySummonerNameAsync(SummonerPlatformRoute, SummonerNameTextBox.Text))!;
 
             if (LolSummoner is null) throw new ArgumentNullException();
+
+            await Task.Run(() => { Thread.Sleep(1); });
 
             NavigateToSummonerInfoPage();
         }
@@ -82,7 +105,7 @@ public sealed partial class WelcomePage : Page
             if (e is AggregateException) ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
 
 
-            WelcomePageProgressRing.Visibility = Visibility.Collapsed;
+            WelcomePageProgressRing.IsActive = false;
         }
     }
 
@@ -91,7 +114,9 @@ public sealed partial class WelcomePage : Page
         var parametersList = new List<object>
         {
             Api,
-            LolSummoner
+            LolSummoner,
+            SummonerRegionalRoute,
+            SummonerPlatformRoute
         };
 
         Frame.Navigate(typeof(SummonerInfoPage), parametersList);
