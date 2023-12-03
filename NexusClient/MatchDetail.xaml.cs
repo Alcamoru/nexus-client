@@ -84,10 +84,15 @@ public sealed partial class MatchDetail : Page
 
         var row = 0;
 
-        var team1Damages = 0;
-        foreach (var participant in team1) team1Damages += participant.TotalDamageDealtToChampions;
-        var team2Damages = 0;
-        foreach (var participant in team2) team2Damages += participant.TotalDamageDealtToChampions;
+        var team1BestDamages = 0;
+        foreach (var participant in team1)
+            if (participant.TotalDamageDealtToChampions > team1BestDamages)
+                team1BestDamages = participant.TotalDamageDealtToChampions;
+        var team2BestDamages = 0;
+        foreach (var participant in team2)
+            if (participant.TotalDamageDealtToChampions > team2BestDamages)
+                team2BestDamages = participant.TotalDamageDealtToChampions;
+        ;
 
         foreach (var participant in team1)
         {
@@ -318,7 +323,8 @@ public sealed partial class MatchDetail : Page
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
-                Text = $"{participant.TotalMinionsKilled} CS",
+                Text =
+                    $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                 FontSize = 15,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
@@ -351,7 +357,7 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            var width = participant.TotalDamageDealtToChampions / (float)team1Damages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)team1BestDamages * 50;
 
             var participant1Rectangle = new Rectangle
             {
@@ -647,7 +653,7 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            var width = participant.TotalDamageDealtToChampions / (float)team2Damages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)team2BestDamages * 50;
 
             var participant2Rectangle = new Rectangle
             {
@@ -685,7 +691,8 @@ public sealed partial class MatchDetail : Page
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
-                Text = $"{participant.TotalMinionsKilled} CS",
+                Text =
+                    $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                 FontSize = 15,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
@@ -866,7 +873,6 @@ public sealed partial class MatchDetail : Page
         foreach (var timelineInfoFrame in timeline.Info.Frames)
         foreach (var e in timelineInfoFrame.Events)
         {
-
             if (e.Type == "WARD_PLACED" && e.CreatorId == summonerParticipantId)
             {
                 SetPrecedentEvent();
