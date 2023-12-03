@@ -834,40 +834,38 @@ public sealed partial class MatchDetail : Page
             MatchTimelineGrid.Children.Add(rectangleRedBot);
         }
 
-        ;
+        var startStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal
+        };
+
+        var startIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(
+                new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+        };
+
+        var startTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = new SolidColorBrush(Colors.White),
+            HorizontalTextAlignment = TextAlignment.Center,
+            Text = " début du match",
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        startStackPanel.Children.Add(startIcon);
+        startStackPanel.Children.Add(startTextBlock);
+        Grid.SetColumn(startStackPanel, 1);
+        Grid.SetRow(startStackPanel, 0);
+
+        MatchTimelineGrid.Children.Add(startStackPanel);
+        MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
 
         foreach (var timelineInfoFrame in timeline.Info.Frames)
         foreach (var e in timelineInfoFrame.Events)
         {
-            var infoStackPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal
-            };
-
-            var startIcon = new Image
-            {
-                Width = 40,
-                Source = new BitmapImage(
-                    new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
-            };
-
-            var startTextBlock = new TextBlock
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(Colors.White),
-                HorizontalTextAlignment = TextAlignment.Center,
-                Text = " début du match",
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
-
-            infoStackPanel.Children.Add(startIcon);
-            infoStackPanel.Children.Add(startTextBlock);
-            Grid.SetColumn(infoStackPanel, 1);
-            Grid.SetRow(infoStackPanel, 0);
-
-            MatchTimelineGrid.Children.Add(infoStackPanel);
-            MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
-
 
             if (e.Type == "WARD_PLACED" && e.CreatorId == summonerParticipantId)
             {
