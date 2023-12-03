@@ -34,8 +34,13 @@ public sealed partial class MatchDetail : Page
 
     private RiotGamesApi Api { get; set; }
 
-    private Match MatchInfo { get; set; }
     private Summoner LolSummoner { get; set; }
+
+    private Match MatchInfo { get; set; }
+
+    private RegionalRoute SummonerRegionalRoute { get; set; }
+
+    private PlatformRoute SummonerPlatformRoute { get; set; }
 
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -44,6 +49,8 @@ public sealed partial class MatchDetail : Page
         Api = (RiotGamesApi)parameters.ElementAt(0);
         MatchInfo = (Match)parameters.ElementAt(1);
         LolSummoner = (Summoner)parameters.ElementAt(2);
+        SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
+        SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
         SetMatchTimeline();
         SetParticipantsGrid();
         base.OnNavigatedTo(e);
@@ -723,7 +730,7 @@ public sealed partial class MatchDetail : Page
 
     private void SetMatchTimeline()
     {
-        var timeline = Api.MatchV5().GetTimeline(RegionalRoute.EUROPE, MatchInfo.Metadata.MatchId);
+        var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId);
         var summonerParticipantId = 0;
         foreach (var participant in timeline!.Info.Participants!)
         {

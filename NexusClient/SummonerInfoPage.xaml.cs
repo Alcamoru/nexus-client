@@ -31,8 +31,13 @@ public sealed partial class SummonerInfoPage : Page
         InitializeComponent();
     }
 
-    private Summoner LolSummoner { get; set; }
     private RiotGamesApi Api { get; set; }
+
+    private Summoner LolSummoner { get; set; }
+
+    private RegionalRoute SummonerRegionalRoute { get; set; }
+
+    private PlatformRoute SummonerPlatformRoute { get; set; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -40,15 +45,18 @@ public sealed partial class SummonerInfoPage : Page
         if (e.Parameter is not List<object> parameters) return;
         Api = (RiotGamesApi)parameters.ElementAt(0);
         LolSummoner = (Summoner)parameters.ElementAt(1);
+
+        SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
+        SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
         SetLastMatches();
     }
 
     private List<Match> GetLastMatches()
     {
         var matches = new List<Match>();
-        var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(RegionalRoute.EUROPE, LolSummoner.Puuid, 3);
+        var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(SummonerRegionalRoute, LolSummoner.Puuid, 3);
         foreach (var matchListId in matchListIds)
-            matches.Add(Api.MatchV5().GetMatch(RegionalRoute.EUROPE, matchListId));
+            matches.Add(Api.MatchV5().GetMatch(SummonerRegionalRoute, matchListId));
 
         return matches;
     }
@@ -588,6 +596,7 @@ public sealed partial class SummonerInfoPage : Page
 
             originalSource = originalSource.Parent as FrameworkElement;
         }
+
         if (matchGrid != null)
         {
             var parameters = new List<object>

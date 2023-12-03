@@ -36,41 +36,54 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Column="1" Grid.Row="1" Click="ButtonBase_OnClick">
-                <TextBlock
-                    Text="Retour"
-                    FontSize="22"
-                    FontWeight="Bold"
-                    Foreground="White" />
+                <Viewbox>
+                    <TextBlock
+                        Text="Retour"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                </Viewbox>
             </Button>
             <HyperlinkButton
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Row="0" Grid.Column="0" x:Name="ChampionsHyperlinkButton">
-                <TextBlock
-                    Text="Champions"
-                    FontSize="22"
-                    FontWeight="Bold"
-                    Foreground="White" />
+
+                <Viewbox>
+                    <TextBlock
+                        Text="Champions"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                </Viewbox>
+
             </HyperlinkButton>
             <HyperlinkButton
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Row="0" Grid.Column="1" x:Name="ProfileHyperlinkButton">
-                <TextBlock
-                    Text="Profil"
-                    FontSize="22"
-                    FontWeight="Bold"
-                    Foreground="White" />
+
+                <Viewbox>
+                    <TextBlock
+                        Text="Profil"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                </Viewbox>
+
             </HyperlinkButton>
             <HyperlinkButton
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Row="0" Grid.Column="2" x:Name="ScoreboardHyperlinkButton">
-                <TextBlock
-                    Text="Scoreboard"
-                    FontSize="22"
-                    FontWeight="Bold"
-                    Foreground="White" />
+                <Viewbox>
+                    <TextBlock
+                        Text="Scoreboard"
+                        FontSize="22"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                </Viewbox>
+
             </HyperlinkButton>
 
 

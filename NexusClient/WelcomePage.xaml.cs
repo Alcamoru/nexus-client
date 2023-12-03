@@ -24,6 +24,8 @@ public sealed partial class WelcomePage : Page
 {
     public WelcomePage()
     {
+        SummonerRegionalRoute = RegionalRoute.EUROPE;
+        SummonerPlatformRoute = PlatformRoute.EUW1;
         var sr =
             new StreamReader(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
@@ -34,6 +36,10 @@ public sealed partial class WelcomePage : Page
 
     private RiotGamesApi Api { get; }
     private Summoner LolSummoner { get; set; }
+
+    private RegionalRoute SummonerRegionalRoute { get; set; }
+
+    private PlatformRoute SummonerPlatformRoute { get; set; }
 
 
     // Pour sélectionner la région
@@ -53,7 +59,19 @@ public sealed partial class WelcomePage : Page
     {
         var item = (ListViewItem)e.AddedItems[0];
         Debug.WriteLine(item.Name);
-        RegionListButtonTextBlock.Text = item.Name.Substring(0, 3);
+        var itemContent = (TextBlock)item.Content;
+        RegionListButtonTextBlock.Text = itemContent.Text;
+        switch (itemContent.Text)
+        {
+            case "EUW":
+                SummonerRegionalRoute = RegionalRoute.EUROPE;
+                SummonerPlatformRoute = PlatformRoute.EUW1;
+                break;
+            case "NA":
+                SummonerRegionalRoute = RegionalRoute.AMERICAS;
+                SummonerPlatformRoute = PlatformRoute.NA1;
+                break;
+        }
     }
 
     private void SendSummonerNameButton_OnClick(object sender, RoutedEventArgs e)
@@ -72,7 +90,7 @@ public sealed partial class WelcomePage : Page
         try
         {
             LolSummoner =
-                (await Api.SummonerV4().GetBySummonerNameAsync(PlatformRoute.EUW1, SummonerNameTextBox.Text))!;
+                (await Api.SummonerV4().GetBySummonerNameAsync(SummonerPlatformRoute, SummonerNameTextBox.Text))!;
 
             if (LolSummoner is null) throw new ArgumentNullException();
 
@@ -96,7 +114,9 @@ public sealed partial class WelcomePage : Page
         var parametersList = new List<object>
         {
             Api,
-            LolSummoner
+            LolSummoner,
+            SummonerRegionalRoute,
+            SummonerPlatformRoute
         };
 
         Frame.Navigate(typeof(SummonerInfoPage), parametersList);

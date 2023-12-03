@@ -58,10 +58,9 @@
                     Background="#EEEEEE"
                     Padding="25, 15, 25, 15">
 
-
                     <TextBlock
                         x:Name="RegionListButtonTextBlock"
-                        Text="NA"
+                        Text="EUW"
                         FontSize="22"
                         FontWeight="Bold"
                         Foreground="#34495E" />
