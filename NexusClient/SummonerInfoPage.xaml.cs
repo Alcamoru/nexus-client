@@ -116,7 +116,7 @@ public sealed partial class SummonerInfoPage : Page
                     {
                         Width = 50,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
                     };
 
                     var summonerIconBorder = new Border
@@ -392,11 +392,12 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetRow(secondSummonerSpellBorder, 1);
                     summonerChampionGrid.Children.Add(secondSummonerSpellBorder);
 
+                    string mainRuneUrl=
+                        $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png";
 
                     var mainRune = new Image
                     {
-                        Source = new BitmapImage(new Uri(
-                            $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                        Source = new BitmapImage(new Uri(mainRuneUrl))
                     };
 
                     Grid.SetColumn(mainRune, 1);
@@ -468,7 +469,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage0 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item0}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item0}.png"))
                     };
 
                     Grid.SetColumn(itemImage0, 0);
@@ -478,7 +479,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage1 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item1}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item1}.png"))
                     };
 
                     Grid.SetColumn(itemImage1, 1);
@@ -489,7 +490,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage2 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item2}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item2}.png"))
                     };
 
                     Grid.SetColumn(itemImage2, 2);
@@ -500,7 +501,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage3 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item3}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item3}.png"))
                     };
 
                     Grid.SetColumn(itemImage3, 3);
@@ -511,7 +512,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage4 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item4}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item4}.png"))
                     };
 
                     Grid.SetColumn(itemImage4, 0);
@@ -522,7 +523,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage5 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item5}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item5}.png"))
                     };
 
                     Grid.SetColumn(itemImage5, 1);
@@ -533,7 +534,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage6 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item6}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item6}.png"))
                     };
 
                     Grid.SetColumn(itemImage6, 2);

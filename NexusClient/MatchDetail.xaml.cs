@@ -328,7 +328,6 @@ public sealed partial class MatchDetail : Page
                 FontSize = 15,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
-            Debug.WriteLine(participant.NeutralMinionsKilled);
 
             var csChampionViewbox = new Viewbox
             {
@@ -893,7 +892,7 @@ public sealed partial class MatchDetail : Page
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     Source = new BitmapImage(new Uri(
-                        $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
                     Width = 40
                 };
 
@@ -956,7 +955,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
                         Width = 40
                     };
 
@@ -964,7 +963,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
                         Width = 40
                     };
 
@@ -1013,7 +1012,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
                         Width = 40
                     };
 
@@ -1021,7 +1020,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
                         Width = 40
                     };
 
@@ -1073,7 +1072,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
                         Width = 40
                     };
 
@@ -1081,7 +1080,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
                         Width = 40
                     };
 
@@ -1111,5 +1110,32 @@ public sealed partial class MatchDetail : Page
                     precedentEventIsPositive = true;
                 }
         }
+        var endStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal
+        };
+
+        var endIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(
+                new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+        };
+
+        var endTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = new SolidColorBrush(Colors.White),
+            HorizontalTextAlignment = TextAlignment.Center,
+            Text = " début du match",
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        startStackPanel.Children.Add(endIcon);
+        startStackPanel.Children.Add(endTextBlock);
+        Grid.SetColumn(endStackPanel, 1);
+        Debug.WriteLine(elementNumber);
+        Grid.SetRow(endStackPanel, elementNumber);
+
     }
 }
