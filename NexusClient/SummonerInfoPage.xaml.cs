@@ -332,41 +332,11 @@ public sealed partial class SummonerInfoPage : Page
                         { 55, "Summoner_UltBookSmitePlaceholder" }
                     };
 
-                    var mainPerksCorrespondences = new Dictionary<string, List<string>>
-                    {
-                        { "8112", new List<string> { "Domination", "Electrocute" } },
-                        { "8124", new List<string> { "Domination", "Predator" } },
-                        { "8128", new List<string> { "Domination", "DarkHarvest" } },
-                        { "9923", new List<string> { "Domination", "HailOfBlades" } },
-                        { "8351", new List<string> { "Inspiration", "GlacialAugment" } },
-                        { "8360", new List<string> { "Inspiration", "UnsealedSpellbook" } },
-                        { "8369", new List<string> { "Inspiration", "FirstStrike" } },
-                        { "8005", new List<string> { "Precision", "PressTheAttack" } },
-                        { "8008", new List<string> { "Precision", "LethalTempo" } },
-                        { "8021", new List<string> { "Precision", "FleetFootwork" } },
-                        { "8010", new List<string> { "Precision", "Conqueror" } },
-                        { "8437", new List<string> { "Resolve", "GraspOfTheUndying" } },
-                        { "8439", new List<string> { "Resolve", "VeteranAftershock" } },
-                        { "8465", new List<string> { "Resolve", "Guardian" } },
-                        { "8214", new List<string> { "Sorcery", "SummonAery" } },
-                        { "8229", new List<string> { "Sorcery", "ArcaneComet" } },
-                        { "8230", new List<string> { "Sorcery", "PhaseRush" } }
-                    };
-
-                    var perksCategories = new Dictionary<string, string>
-                    {
-                        { "8100", "perk-images/Styles/7200_Domination.png" },
-                        { "8300", "perk-images/Styles/7203_Whimsy.png" },
-                        { "8000", "perk-images/Styles/7201_Precision.png" },
-                        { "8400", "perk-images/Styles/7204_Resolve.png" },
-                        { "8200", "perk-images/Styles/7202_Sorcery.png" }
-                    };
-
 
                     var firstSummonerSpellImage = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png"))
                     };
                     var firstSummonerSpellBorder = new Border
                     {
@@ -381,7 +351,7 @@ public sealed partial class SummonerInfoPage : Page
                     var secondSummonerSpellImage = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png"))
                     };
 
                     var secondSummonerSpellBorder = new Border
@@ -395,31 +365,22 @@ public sealed partial class SummonerInfoPage : Page
                     summonerChampionGrid.Children.Add(secondSummonerSpellBorder);
 
 
-                    string perksJson =
+                    var perksJson =
                         File.ReadAllText(
                             @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
-                    List<PerksClass.Root> runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+                    var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
-                    string firstPerkIcon = "";
-                    string secondPerkIcon = "";
+                    var firstPerkIcon = "";
+                    var secondPerkIcon = "";
 
-                    foreach (PerksClass.Root root in runesClass)
+                    foreach (var root in runesClass)
                     {
                         if (root.id == participant.Perks.Styles[0].Style)
-                        {
-                            foreach (PerksClass.Rune rune in root.slots[0].runes)
-                            {
+                            foreach (var rune in root.slots[0].runes)
                                 if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
-                                {
                                     firstPerkIcon = rune.icon;
-                                }
-                            }
-                        }
 
-                        if (root.id == participant.Perks.Styles[1].Style)
-                        {
-                            secondPerkIcon = root.icon;
-                        }
+                        if (root.id == participant.Perks.Styles[1].Style) secondPerkIcon = root.icon;
                     }
 
 
