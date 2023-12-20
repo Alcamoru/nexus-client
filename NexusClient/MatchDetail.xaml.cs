@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Windows.UI;
 using Camille.Enums;
@@ -14,6 +15,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Newtonsoft.Json;
 using Team = Camille.RiotGames.Enums.Team;
 
 
@@ -291,10 +293,40 @@ public sealed partial class MatchDetail : Page
             summonerChampionGrid.Children.Add(secondSummonerSpellImage);
 
 
+            string perksJson =
+                File.ReadAllText(
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+            List<PerksClass.Root> runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+
+            string firstPerkIcon = "";
+            string secondPerkIcon = "";
+
+            foreach (PerksClass.Root root in runesClass)
+            {
+                if (root.id == participant.Perks.Styles[0].Style)
+                {
+                    foreach (PerksClass.Rune rune in root.slots[0].runes)
+                    {
+                        if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
+                        {
+                            firstPerkIcon = rune.icon;
+                        }
+                    }
+                }
+
+                if (root.id == participant.Perks.Styles[1].Style)
+                {
+                    secondPerkIcon = root.icon;
+                }
+            }
+
+
+
+
             var mainRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}.png"))
             };
 
             Grid.SetColumn(mainRune, 1);
@@ -305,7 +337,7 @@ public sealed partial class MatchDetail : Page
             var secondaryRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
             };
 
             Grid.SetColumn(secondaryRune, 1);
@@ -609,10 +641,40 @@ public sealed partial class MatchDetail : Page
             summonerChampionGrid.Children.Add(secondSummonerSpellImage);
 
 
+            string perksJson =
+                File.ReadAllText(
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+            List<PerksClass.Root> runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+
+            string firstPerkIcon = "";
+            string secondPerkIcon = "";
+
+            foreach (PerksClass.Root root in runesClass)
+            {
+                if (root.id == participant.Perks.Styles[0].Style)
+                {
+                    foreach (PerksClass.Rune rune in root.slots[0].runes)
+                    {
+                        if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
+                        {
+                            firstPerkIcon = rune.icon;
+                        }
+                    }
+                }
+
+                if (root.id == participant.Perks.Styles[1].Style)
+                {
+                    secondPerkIcon = root.icon;
+                }
+            }
+
+
+            var mainRuneUrl =
+                $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
+
             var mainRune = new Image
             {
-                Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                Source = new BitmapImage(new Uri(mainRuneUrl))
             };
 
             Grid.SetColumn(mainRune, 1);
@@ -623,7 +685,7 @@ public sealed partial class MatchDetail : Page
             var secondaryRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
             };
 
             Grid.SetColumn(secondaryRune, 1);
@@ -1110,6 +1172,7 @@ public sealed partial class MatchDetail : Page
                     precedentEventIsPositive = true;
                 }
         }
+
         var endStackPanel = new StackPanel
         {
             Orientation = Orientation.Horizontal
@@ -1136,6 +1199,5 @@ public sealed partial class MatchDetail : Page
         Grid.SetColumn(endStackPanel, 1);
         Debug.WriteLine(elementNumber);
         Grid.SetRow(endStackPanel, elementNumber);
-
     }
 }

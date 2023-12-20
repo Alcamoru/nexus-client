@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Core;
@@ -15,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Newtonsoft.Json;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -308,26 +310,26 @@ public sealed partial class SummonerInfoPage : Page
                     summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow1);
                     summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow2);
 
-                    var sumsCorrespondences = new Dictionary<string, string>
+                    var sumsCorrespondences = new Dictionary<int, string>
                     {
-                        { "21", "SummonerBarrier" },
-                        { "1", "SummonerBoost" },
-                        { "2202", "SummonerCherryFlash" },
-                        { "2201", "SummonerCherryHold" },
-                        { "14", "SummonerDot" },
-                        { "3", "SummonerExhaust" },
-                        { "4", "SummonerFlash" },
-                        { "6", "SummonerHaste" },
-                        { "7", "SummonerHeal" },
-                        { "13", "SummonerMana" },
-                        { "30", "SummonerPoroRecall" },
-                        { "31", "SummonerPoroThrow" },
-                        { "11", "SummonerSmite" },
-                        { "39", "SummonerSnowURFSnowball_Mark" },
-                        { "32", "SummonerSnowball" },
-                        { "12", "SummonerTeleport" },
-                        { "54", "Summoner_UltBookPlaceholder" },
-                        { "55", "Summoner_UltBookSmitePlaceholder" }
+                        { 21, "SummonerBarrier" },
+                        { 1, "SummonerBoost" },
+                        { 2202, "SummonerCherryFlash" },
+                        { 2201, "SummonerCherryHold" },
+                        { 14, "SummonerDot" },
+                        { 3, "SummonerExhaust" },
+                        { 4, "SummonerFlash" },
+                        { 6, "SummonerHaste" },
+                        { 7, "SummonerHeal" },
+                        { 13, "SummonerMana" },
+                        { 30, "SummonerPoroRecall" },
+                        { 31, "SummonerPoroThrow" },
+                        { 11, "SummonerSmite" },
+                        { 39, "SummonerSnowURFSnowball_Mark" },
+                        { 32, "SummonerSnowball" },
+                        { 12, "SummonerTeleport" },
+                        { 54, "Summoner_UltBookPlaceholder" },
+                        { 55, "Summoner_UltBookSmitePlaceholder" }
                     };
 
                     var mainPerksCorrespondences = new Dictionary<string, List<string>>
@@ -364,7 +366,7 @@ public sealed partial class SummonerInfoPage : Page
                     var firstSummonerSpellImage = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png"))
                     };
                     var firstSummonerSpellBorder = new Border
                     {
@@ -379,7 +381,7 @@ public sealed partial class SummonerInfoPage : Page
                     var secondSummonerSpellImage = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png"))
                     };
 
                     var secondSummonerSpellBorder = new Border
@@ -392,8 +394,37 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetRow(secondSummonerSpellBorder, 1);
                     summonerChampionGrid.Children.Add(secondSummonerSpellBorder);
 
-                    string mainRuneUrl=
-                        $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png";
+
+                    string perksJson =
+                        File.ReadAllText(
+                            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+                    List<PerksClass.Root> runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+
+                    string firstPerkIcon = "";
+                    string secondPerkIcon = "";
+
+                    foreach (PerksClass.Root root in runesClass)
+                    {
+                        if (root.id == participant.Perks.Styles[0].Style)
+                        {
+                            foreach (PerksClass.Rune rune in root.slots[0].runes)
+                            {
+                                if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
+                                {
+                                    firstPerkIcon = rune.icon;
+                                }
+                            }
+                        }
+
+                        if (root.id == participant.Perks.Styles[1].Style)
+                        {
+                            secondPerkIcon = root.icon;
+                        }
+                    }
+
+
+                    var mainRuneUrl =
+                        $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
 
                     var mainRune = new Image
                     {
@@ -408,7 +439,7 @@ public sealed partial class SummonerInfoPage : Page
                     var secondaryRune = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                            $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
                     };
 
                     Grid.SetColumn(secondaryRune, 1);
