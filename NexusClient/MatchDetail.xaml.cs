@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.UI;
@@ -1104,14 +1103,28 @@ public sealed partial class MatchDetail : Page
             VerticalAlignment = VerticalAlignment.Center,
             Foreground = new SolidColorBrush(Colors.White),
             HorizontalTextAlignment = TextAlignment.Center,
-            Text = " début du match",
+            Text = " fin du match",
             FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
-        startStackPanel.Children.Add(endIcon);
-        startStackPanel.Children.Add(endTextBlock);
+        endStackPanel.Children.Add(endIcon);
+        endStackPanel.Children.Add(endTextBlock);
         Grid.SetColumn(endStackPanel, 1);
-        Debug.WriteLine(elementNumber);
         Grid.SetRow(endStackPanel, elementNumber);
+
+        var ellipseGreen = new Ellipse
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 10,
+            Width = 10,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        Grid.SetColumn(ellipseGreen, 0);
+        Grid.SetRow(ellipseGreen, elementNumber);
+        MatchTimelineGrid.Children.Add(ellipseGreen);
+
+        SetPrecedentEvent();
+
+        MatchTimelineGrid.Children.Add(endStackPanel);
     }
 }

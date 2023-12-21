@@ -57,6 +57,9 @@
     <ItemGroup>
         <None Remove="Assets\loldata\**"/>
     </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Assets\emblems\"/>
+    </ItemGroup>
 
     <!--
       Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution

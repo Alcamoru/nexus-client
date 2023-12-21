@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.UI;
@@ -51,6 +52,7 @@ public sealed partial class SummonerInfoPage : Page
         SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
         SetLastMatches();
+        SetLeaderBoardGrid();
     }
 
     private List<Match> GetLastMatches()
@@ -61,6 +63,120 @@ public sealed partial class SummonerInfoPage : Page
             matches.Add(Api.MatchV5().GetMatch(SummonerRegionalRoute, matchListId));
 
         return matches;
+    }
+
+    private void SetLeaderBoardGrid()
+    {
+        var entries = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
+        var leagueItemsSorted = entries.OrderByDescending(item => item.LeaguePoints).ToArray();
+
+        var first = leagueItemsSorted[0];
+
+        Debug.WriteLine(leagueItemsSorted[0]);
+
+        var firstGrid = new Grid
+        {
+            Padding = new Thickness(10),
+            Margin = new Thickness(20, 20, 0, 20),
+            CornerRadius = new CornerRadius(12),
+            Background = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96))
+        };
+        firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var iconBorder = new Border
+        {
+            Padding = new Thickness(8),
+            CornerRadius = new CornerRadius(8),
+            Width = 50,
+            Height = 50,
+            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+        };
+
+        var firstTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Text = "1er",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        iconBorder.Child = firstTextBlock;
+
+        Grid.SetRow(iconBorder, 0);
+        firstGrid.Children.Add(iconBorder);
+
+
+        var leaderBoardStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        var profileIconImage = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var summonerNameTextBlock = new TextBlock
+        {
+            Text = $"{first.SummonerName}",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        leaderBoardStackPanel.Children.Add(profileIconImage);
+        leaderBoardStackPanel.Children.Add(summonerNameTextBlock);
+
+        Grid.SetRow(leaderBoardStackPanel, 0);
+        Grid.SetColumn(leaderBoardStackPanel, 1);
+        firstGrid.Children.Add(leaderBoardStackPanel);
+
+
+        var emblemStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        var emblemIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
+        };
+
+        var lpTextBlock = new TextBlock
+        {
+            Text = $"{first.LeaguePoints} LP",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        emblemStackPanel.Children.Add(emblemIcon);
+        emblemStackPanel.Children.Add(lpTextBlock);
+
+        Grid.SetRow(emblemStackPanel, 0);
+        Grid.SetColumn(emblemStackPanel, 2);
+        firstGrid.Children.Add(emblemStackPanel);
+
+        Grid.SetRow(firstGrid, 0);
+        Grid.SetRowSpan(firstGrid, 2);
+        Grid.SetColumn(firstGrid, 0);
+        LeaderBoardGrid.Children.Add(firstGrid);
     }
 
     private void SetLastMatches()
