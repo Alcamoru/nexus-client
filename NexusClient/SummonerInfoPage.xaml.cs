@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Core;
@@ -15,6 +17,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
+using Newtonsoft.Json;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -49,6 +53,7 @@ public sealed partial class SummonerInfoPage : Page
         SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
         SetLastMatches();
+        SetLeaderBoardGrid();
     }
 
     private List<Match> GetLastMatches()
@@ -59,6 +64,625 @@ public sealed partial class SummonerInfoPage : Page
             matches.Add(Api.MatchV5().GetMatch(SummonerRegionalRoute, matchListId));
 
         return matches;
+    }
+
+    private void SetLeaderBoardGrid()
+    {
+        var entries = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
+        var leagueItemsSorted = entries.OrderByDescending(item => item.LeaguePoints).ToArray();
+
+        var first = leagueItemsSorted[0];
+        var second = leagueItemsSorted[1];
+        var third = leagueItemsSorted[2];
+
+        Debug.WriteLine(leagueItemsSorted[0]);
+
+        var firstGrid = new Grid
+        {
+            Padding = new Thickness(10),
+            Margin = new Thickness(20, 20, 0, 20),
+            CornerRadius = new CornerRadius(12),
+            Background = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96))
+        };
+        firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var iconBorder = new Border
+        {
+            Padding = new Thickness(8),
+            CornerRadius = new CornerRadius(8),
+            Width = 50,
+            Height = 50,
+            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+        };
+
+        var firstTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Text = "1er",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        iconBorder.Child = firstTextBlock;
+
+        Grid.SetRow(iconBorder, 0);
+        firstGrid.Children.Add(iconBorder);
+
+
+        var leaderBoardStackPanel = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Orientation = Orientation.Vertical
+        };
+
+        Viewbox leaderboardViewBox = new Viewbox()
+        {
+            Child = leaderBoardStackPanel
+        };
+
+        var profileIconImage = new Image
+        {
+            Width = 60,
+            Source = new BitmapImage(new Uri(
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        Border profileIconBorder = new Border()
+        {
+            CornerRadius = new CornerRadius(10),
+            Child = profileIconImage
+        };
+
+        var summonerNameTextBlock = new TextBlock
+        {
+            Text = $"{first.SummonerName}",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        leaderBoardStackPanel.Children.Add(profileIconBorder);
+        leaderBoardStackPanel.Children.Add(summonerNameTextBlock);
+
+        Grid.SetRow(leaderboardViewBox, 0);
+        Grid.SetColumn(leaderboardViewBox, 1);
+        firstGrid.Children.Add(leaderboardViewBox);
+
+
+        var emblemStackPanel = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Orientation = Orientation.Vertical
+        };
+
+        Viewbox emblemStackPanelViewBox = new Viewbox()
+        {
+            Child = emblemStackPanel
+        };
+
+        var emblemIcon = new Image
+        {
+            Width = 70,
+            Source = new BitmapImage(new Uri(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
+        };
+
+        var lpTextBlock = new TextBlock
+        {
+            Text = $"{first.LeaguePoints} LP",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        emblemStackPanel.Children.Add(emblemIcon);
+        emblemStackPanel.Children.Add(lpTextBlock);
+
+        Grid.SetRow(emblemStackPanelViewBox, 0);
+        Grid.SetColumn(emblemStackPanelViewBox, 2);
+        firstGrid.Children.Add(emblemStackPanelViewBox);
+
+
+        var totalGamesRectangle = new Rectangle()
+        {
+            Width = 150,
+            Fill = new SolidColorBrush(Colors.White),
+            Height = 7
+        };
+
+        var totalGamesBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = totalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+
+        var width = first.Wins / (float)(first.Wins + first.Losses) * 150;
+
+        var gamesWonRectangle = new Rectangle
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = width,
+            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+            Height = 7
+        };
+
+        var gamesWonBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = gamesWonRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+        var gamesWonGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        gamesWonGrid.Children.Add(totalGamesBorder);
+        gamesWonGrid.Children.Add(gamesWonBorder);
+
+        var winRateTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{Math.Round(first.Wins / (float)(first.Wins + first.Losses) * 100)} %",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        var gamesPlayedTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{first.Wins + first.Losses} games",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        StackPanel winRateStackPanel = new StackPanel()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Children = { winRateTextBlock, gamesWonGrid, gamesPlayedTextBlock }
+        };
+
+        Viewbox winRateStackPanelViewBox = new Viewbox()
+        {
+            Child = winRateStackPanel
+        };
+
+        Grid.SetRow(winRateStackPanelViewBox, 1);
+        Grid.SetColumn(winRateStackPanelViewBox, 0);
+        Grid.SetColumnSpan(winRateStackPanelViewBox, 3);
+        firstGrid.Children.Add(winRateStackPanelViewBox);
+
+        Grid.SetRow(firstGrid, 0);
+        Grid.SetRowSpan(firstGrid, 2);
+        Grid.SetColumn(firstGrid, 0);
+        LeaderBoardGrid.Children.Add(firstGrid);
+
+        var secondGrid = new Grid
+        {
+            Padding = new Thickness(10),
+            Margin = new Thickness(20, 20, 20, 10),
+            CornerRadius = new CornerRadius(12),
+            Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
+        };
+
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var secondIconBorder = new Border
+        {
+            Padding = new Thickness(8),
+            CornerRadius = new CornerRadius(8),
+            Width = 50,
+            Height = 50,
+            Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
+        };
+
+        var secondTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Text = "2nd",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        secondIconBorder.Child = secondTextBlock;
+
+        Grid.SetRow(secondIconBorder, 0);
+        secondGrid.Children.Add(secondIconBorder);
+
+
+        var secondLeaderBoardStackPanel = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Orientation = Orientation.Vertical
+        };
+
+        Viewbox secondLeaderBoardStackPanelViewBox = new Viewbox()
+        {
+            Child = secondLeaderBoardStackPanel
+        };
+
+        var secondProfileIconImage = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var secondSummonerNameTextBlock = new TextBlock
+        {
+            Text = $"{second.SummonerName}",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImage);
+        secondLeaderBoardStackPanel.Children.Add(secondSummonerNameTextBlock);
+
+        Grid.SetRow(secondLeaderBoardStackPanelViewBox, 0);
+        Grid.SetColumn(secondLeaderBoardStackPanelViewBox, 1);
+        secondGrid.Children.Add(secondLeaderBoardStackPanelViewBox);
+
+
+        var secondEmblemStackPanel = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Orientation = Orientation.Vertical
+        };
+
+        Viewbox secondEmblemStackPanelViewBox = new Viewbox()
+        {
+            Child = secondEmblemStackPanel
+        };
+
+        var secondEmblemIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
+        };
+
+        var secondLpTextBlock = new TextBlock
+        {
+            Text = $"{second.LeaguePoints} LP",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        secondEmblemStackPanel.Children.Add(secondEmblemIcon);
+        secondEmblemStackPanel.Children.Add(secondLpTextBlock);
+
+        Grid.SetRow(secondEmblemStackPanelViewBox, 0);
+        Grid.SetColumn(secondEmblemStackPanelViewBox, 2);
+        secondGrid.Children.Add(secondEmblemStackPanelViewBox);
+
+
+        var secondTotalGamesRectangle = new Rectangle()
+        {
+            Width = 100,
+            Fill = new SolidColorBrush(Colors.White),
+            Height = 7
+        };
+
+        var secondGamesBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = secondTotalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+
+        var secondWidth = first.Wins / (float)(first.Wins + first.Losses) * 100;
+
+        var secondGamesWonRectangle = new Rectangle
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = secondWidth,
+            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+            Height = 7
+        };
+
+        var secondGamesWonBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = secondGamesWonRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+        var secondGamesWonGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        secondGamesWonGrid.Children.Add(secondGamesBorder);
+        secondGamesWonGrid.Children.Add(secondGamesWonBorder);
+
+        var secondWinRateTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{Math.Round(second.Wins / (float)(second.Wins + second.Losses) * 100)} %",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        var secondGamesPlayedTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{first.Wins + first.Losses} games",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        StackPanel secondWinRateStackPanel = new StackPanel()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Children = { secondWinRateTextBlock, secondGamesWonGrid, secondGamesPlayedTextBlock }
+        };
+
+        Viewbox secondWinRateStackPanelViewBox = new Viewbox()
+        {
+            Child = secondWinRateStackPanel
+        };
+
+        Grid.SetColumn(secondWinRateStackPanelViewBox, 3);
+        Grid.SetColumnSpan(secondWinRateStackPanelViewBox, 2);
+        secondGrid.Children.Add(secondWinRateStackPanelViewBox);
+
+        Grid.SetRow(secondGrid, 0);
+        Grid.SetColumn(secondGrid, 1);
+        LeaderBoardGrid.Children.Add(secondGrid);
+
+        var thirdGrid = new Grid
+        {
+            Padding = new Thickness(10),
+            Margin = new Thickness(20, 20, 20, 10),
+            CornerRadius = new CornerRadius(12),
+            Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
+        };
+
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var thirdIconBorder = new Border
+        {
+            Padding = new Thickness(8),
+            CornerRadius = new CornerRadius(8),
+            Width = 50,
+            Height = 50,
+            Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
+        };
+
+        var thirdTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Text = "3rd",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        thirdIconBorder.Child = thirdTextBlock;
+
+        Grid.SetRow(thirdIconBorder, 0);
+        thirdGrid.Children.Add(thirdIconBorder);
+
+
+        var thirdLeaderBoardStackPanel = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Orientation = Orientation.Vertical
+        };
+
+        Viewbox thirdLeaderBoardStackPanelViewBox = new Viewbox()
+        {
+            Child = thirdLeaderBoardStackPanel
+        };
+
+        var thirdProfileIconImage = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var thirdSummonerNameTextBlock = new TextBlock
+        {
+            Text = $"{third.SummonerName}",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
+        thirdLeaderBoardStackPanel.Children.Add(thirdSummonerNameTextBlock);
+
+        Grid.SetRow(thirdLeaderBoardStackPanelViewBox, 0);
+        Grid.SetColumn(thirdLeaderBoardStackPanelViewBox, 1);
+        thirdGrid.Children.Add(thirdLeaderBoardStackPanelViewBox);
+
+
+        var thirdEmblemStackPanel = new StackPanel
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Orientation = Orientation.Vertical
+        };
+
+        Viewbox thirdEmblemStackPanelViewBox = new Viewbox()
+        {
+            Child = thirdEmblemStackPanel
+        };
+
+        var thirdEmblemIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
+        };
+
+        var thirdLpTextBlock = new TextBlock
+        {
+            Text = $"{third.LeaguePoints} LP",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        thirdEmblemStackPanel.Children.Add(thirdEmblemIcon);
+        thirdEmblemStackPanel.Children.Add(thirdLpTextBlock);
+
+        Grid.SetRow(thirdEmblemStackPanelViewBox, 0);
+        Grid.SetColumn(thirdEmblemStackPanelViewBox, 2);
+        thirdGrid.Children.Add(thirdEmblemStackPanelViewBox);
+
+
+        var thirdTotalGamesRectangle = new Rectangle()
+        {
+            Width = 100,
+            Fill = new SolidColorBrush(Colors.White),
+            Height = 7
+        };
+
+        var thirdGamesBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = thirdTotalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+
+        var thirdWidth = first.Wins / (float)(first.Wins + first.Losses) * 100;
+
+        var thirdGamesWonRectangle = new Rectangle
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = thirdWidth,
+            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+            Height = 7
+        };
+
+        var thirdGamesWonBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = thirdGamesWonRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+        var thirdGamesWonGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        thirdGamesWonGrid.Children.Add(thirdGamesBorder);
+        thirdGamesWonGrid.Children.Add(thirdGamesWonBorder);
+
+        var thirdWinRateTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{Math.Round(third.Wins / (float)(third.Wins + third.Losses) * 100)} %",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        var thirdGamesPlayedTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{first.Wins + first.Losses} games",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        StackPanel thirdWinRateStackPanel = new StackPanel()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Children = { thirdWinRateTextBlock, thirdGamesWonGrid, thirdGamesPlayedTextBlock }
+        };
+
+        Viewbox thirdWinRateStackPanelViewBox = new Viewbox()
+        {
+            Child = thirdWinRateStackPanel
+        };
+
+        Grid.SetColumn(thirdWinRateStackPanelViewBox, 3);
+        Grid.SetColumnSpan(thirdWinRateStackPanelViewBox, 2);
+        thirdGrid.Children.Add(thirdWinRateStackPanelViewBox);
+
+        Grid.SetRow(thirdGrid, 1);
+        Grid.SetColumn(thirdGrid, 1);
+        LeaderBoardGrid.Children.Add(thirdGrid);
+
+
     }
 
     private void SetLastMatches()
@@ -116,7 +740,7 @@ public sealed partial class SummonerInfoPage : Page
                     {
                         Width = 50,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
                     };
 
                     var summonerIconBorder = new Border
@@ -227,7 +851,7 @@ public sealed partial class SummonerInfoPage : Page
                         Foreground = new SolidColorBrush(Colors.White),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
-                        Text = $"{(participant.Kills + participant.Assists) / teamKills}",
+                        Text = $"{Math.Round((float)(participant.Kills + participant.Assists) / teamKills * 100)}",
                         FontSize = 15,
                         FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                     };
@@ -308,63 +932,33 @@ public sealed partial class SummonerInfoPage : Page
                     summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow1);
                     summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow2);
 
-                    var sumsCorrespondences = new Dictionary<string, string>
+                    var sumsCorrespondences = new Dictionary<int, string>
                     {
-                        { "21", "SummonerBarrier" },
-                        { "1", "SummonerBoost" },
-                        { "2202", "SummonerCherryFlash" },
-                        { "2201", "SummonerCherryHold" },
-                        { "14", "SummonerDot" },
-                        { "3", "SummonerExhaust" },
-                        { "4", "SummonerFlash" },
-                        { "6", "SummonerHaste" },
-                        { "7", "SummonerHeal" },
-                        { "13", "SummonerMana" },
-                        { "30", "SummonerPoroRecall" },
-                        { "31", "SummonerPoroThrow" },
-                        { "11", "SummonerSmite" },
-                        { "39", "SummonerSnowURFSnowball_Mark" },
-                        { "32", "SummonerSnowball" },
-                        { "12", "SummonerTeleport" },
-                        { "54", "Summoner_UltBookPlaceholder" },
-                        { "55", "Summoner_UltBookSmitePlaceholder" }
-                    };
-
-                    var mainPerksCorrespondences = new Dictionary<string, List<string>>
-                    {
-                        { "8112", new List<string> { "Domination", "Electrocute" } },
-                        { "8124", new List<string> { "Domination", "Predator" } },
-                        { "8128", new List<string> { "Domination", "DarkHarvest" } },
-                        { "9923", new List<string> { "Domination", "HailOfBlades" } },
-                        { "8351", new List<string> { "Inspiration", "GlacialAugment" } },
-                        { "8360", new List<string> { "Inspiration", "UnsealedSpellbook" } },
-                        { "8369", new List<string> { "Inspiration", "FirstStrike" } },
-                        { "8005", new List<string> { "Precision", "PressTheAttack" } },
-                        { "8008", new List<string> { "Precision", "LethalTempo" } },
-                        { "8021", new List<string> { "Precision", "FleetFootwork" } },
-                        { "8010", new List<string> { "Precision", "Conqueror" } },
-                        { "8437", new List<string> { "Resolve", "GraspOfTheUndying" } },
-                        { "8439", new List<string> { "Resolve", "VeteranAftershock" } },
-                        { "8465", new List<string> { "Resolve", "Guardian" } },
-                        { "8214", new List<string> { "Sorcery", "SummonAery" } },
-                        { "8229", new List<string> { "Sorcery", "ArcaneComet" } },
-                        { "8230", new List<string> { "Sorcery", "PhaseRush" } }
-                    };
-
-                    var perksCategories = new Dictionary<string, string>
-                    {
-                        { "8100", "perk-images/Styles/7200_Domination.png" },
-                        { "8300", "perk-images/Styles/7203_Whimsy.png" },
-                        { "8000", "perk-images/Styles/7201_Precision.png" },
-                        { "8400", "perk-images/Styles/7204_Resolve.png" },
-                        { "8200", "perk-images/Styles/7202_Sorcery.png" }
+                        { 21, "SummonerBarrier" },
+                        { 1, "SummonerBoost" },
+                        { 2202, "SummonerCherryFlash" },
+                        { 2201, "SummonerCherryHold" },
+                        { 14, "SummonerDot" },
+                        { 3, "SummonerExhaust" },
+                        { 4, "SummonerFlash" },
+                        { 6, "SummonerHaste" },
+                        { 7, "SummonerHeal" },
+                        { 13, "SummonerMana" },
+                        { 30, "SummonerPoroRecall" },
+                        { 31, "SummonerPoroThrow" },
+                        { 11, "SummonerSmite" },
+                        { 39, "SummonerSnowURFSnowball_Mark" },
+                        { 32, "SummonerSnowball" },
+                        { 12, "SummonerTeleport" },
+                        { 54, "Summoner_UltBookPlaceholder" },
+                        { 55, "Summoner_UltBookSmitePlaceholder" }
                     };
 
 
                     var firstSummonerSpellImage = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png"))
                     };
                     var firstSummonerSpellBorder = new Border
                     {
@@ -379,7 +973,7 @@ public sealed partial class SummonerInfoPage : Page
                     var secondSummonerSpellImage = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png"))
                     };
 
                     var secondSummonerSpellBorder = new Border
@@ -393,10 +987,31 @@ public sealed partial class SummonerInfoPage : Page
                     summonerChampionGrid.Children.Add(secondSummonerSpellBorder);
 
 
+                    var perksJson =
+                        File.ReadAllText(
+                            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+                    var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+
+                    var firstPerkIcon = "";
+                    var secondPerkIcon = "";
+
+                    foreach (var root in runesClass)
+                    {
+                        if (root.id == participant.Perks.Styles[0].Style)
+                            foreach (var rune in root.slots[0].runes)
+                                if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
+                                    firstPerkIcon = rune.icon;
+
+                        if (root.id == participant.Perks.Styles[1].Style) secondPerkIcon = root.icon;
+                    }
+
+
+                    var mainRuneUrl =
+                        $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
+
                     var mainRune = new Image
                     {
-                        Source = new BitmapImage(new Uri(
-                            $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                        Source = new BitmapImage(new Uri(mainRuneUrl))
                     };
 
                     Grid.SetColumn(mainRune, 1);
@@ -407,7 +1022,7 @@ public sealed partial class SummonerInfoPage : Page
                     var secondaryRune = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                            $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
                     };
 
                     Grid.SetColumn(secondaryRune, 1);
@@ -447,6 +1062,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     var itemsChampionGrid = new Grid
                     {
+                        CornerRadius = new CornerRadius(10),
                         HorizontalAlignment = HorizontalAlignment.Center
                     };
                     var itemColumn1 = new ColumnDefinition { Width = new GridLength(20, GridUnitType.Pixel) };
@@ -468,7 +1084,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage0 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item0}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item0}.png"))
                     };
 
                     Grid.SetColumn(itemImage0, 0);
@@ -478,7 +1094,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage1 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item1}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item1}.png"))
                     };
 
                     Grid.SetColumn(itemImage1, 1);
@@ -489,7 +1105,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage2 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item2}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item2}.png"))
                     };
 
                     Grid.SetColumn(itemImage2, 2);
@@ -500,7 +1116,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage3 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item3}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item3}.png"))
                     };
 
                     Grid.SetColumn(itemImage3, 3);
@@ -511,7 +1127,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage4 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item4}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item4}.png"))
                     };
 
                     Grid.SetColumn(itemImage4, 0);
@@ -522,7 +1138,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage5 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item5}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item5}.png"))
                     };
 
                     Grid.SetColumn(itemImage5, 1);
@@ -533,7 +1149,7 @@ public sealed partial class SummonerInfoPage : Page
                     var itemImage6 = new Image
                     {
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/item/{participant.Item6}.png"))
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item6}.png"))
                     };
 
                     Grid.SetColumn(itemImage6, 2);

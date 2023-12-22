@@ -97,13 +97,21 @@
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
-                <StackPanel x:Name="MatchTimelineStackPanel">
-                    <TextBlock
-                        Margin="10"
-                        Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
-                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                    <Grid x:Name="MatchTimelineGrid" Background="#34495E" CornerRadius="10">
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="9*" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="10"
+                    Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
+                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+
+
+                <ScrollViewer CornerRadius="10" Grid.Row="1">
+                    <Grid x:Name="MatchTimelineGrid" Background="#34495E">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="6*" />
@@ -114,8 +122,10 @@
 
 
                     </Grid>
-                </StackPanel>
-            </ScrollViewer>
+                </ScrollViewer>
+
+            </Grid>
+
 
             <Grid x:Name="ParticipantsGrid" Grid.Row="0" Grid.Column="1"
                   CornerRadius="10"

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Windows.UI;
 using Camille.Enums;
@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using Newtonsoft.Json;
 using Team = Camille.RiotGames.Enums.Team;
 
 
@@ -84,10 +85,14 @@ public sealed partial class MatchDetail : Page
 
         var row = 0;
 
-        var team1Damages = 0;
-        foreach (var participant in team1) team1Damages += participant.TotalDamageDealtToChampions;
-        var team2Damages = 0;
-        foreach (var participant in team2) team2Damages += participant.TotalDamageDealtToChampions;
+        var team1BestDamages = 0;
+        foreach (var participant in team1)
+            if (participant.TotalDamageDealtToChampions > team1BestDamages)
+                team1BestDamages = participant.TotalDamageDealtToChampions;
+        var team2BestDamages = 0;
+        foreach (var participant in team2)
+            if (participant.TotalDamageDealtToChampions > team2BestDamages)
+                team2BestDamages = participant.TotalDamageDealtToChampions;
 
         foreach (var participant in team1)
         {
@@ -149,7 +154,7 @@ public sealed partial class MatchDetail : Page
             var championIcon = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png"))
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
             };
 
             champIconBorder.Child = championIcon;
@@ -234,41 +239,10 @@ public sealed partial class MatchDetail : Page
                 { "55", "Summoner_UltBookSmitePlaceholder" }
             };
 
-            var mainPerksCorrespondences = new Dictionary<string, List<string>>
-            {
-                { "8112", new List<string> { "Domination", "Electrocute" } },
-                { "8124", new List<string> { "Domination", "Predator" } },
-                { "8128", new List<string> { "Domination", "DarkHarvest" } },
-                { "9923", new List<string> { "Domination", "HailOfBlades" } },
-                { "8351", new List<string> { "Inspiration", "GlacialAugment" } },
-                { "8360", new List<string> { "Inspiration", "UnsealedSpellbook" } },
-                { "8369", new List<string> { "Inspiration", "FirstStrike" } },
-                { "8005", new List<string> { "Precision", "PressTheAttack" } },
-                { "8008", new List<string> { "Precision", "LethalTempo" } },
-                { "8021", new List<string> { "Precision", "FleetFootwork" } },
-                { "8010", new List<string> { "Precision", "Conqueror" } },
-                { "8437", new List<string> { "Resolve", "GraspOfTheUndying" } },
-                { "8439", new List<string> { "Resolve", "VeteranAftershock" } },
-                { "8465", new List<string> { "Resolve", "Guardian" } },
-                { "8214", new List<string> { "Sorcery", "SummonAery" } },
-                { "8229", new List<string> { "Sorcery", "ArcaneComet" } },
-                { "8230", new List<string> { "Sorcery", "PhaseRush" } }
-            };
-
-            var perksCategories = new Dictionary<string, string>
-            {
-                { "8100", "perk-images/Styles/7200_Domination.png" },
-                { "8300", "perk-images/Styles/7203_Whimsy.png" },
-                { "8000", "perk-images/Styles/7201_Precision.png" },
-                { "8400", "perk-images/Styles/7204_Resolve.png" },
-                { "8200", "perk-images/Styles/7202_Sorcery.png" }
-            };
-
-
             var firstSummonerSpellImage = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
             };
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
@@ -278,7 +252,7 @@ public sealed partial class MatchDetail : Page
             var secondSummonerSpellImage = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
             };
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
@@ -286,10 +260,29 @@ public sealed partial class MatchDetail : Page
             summonerChampionGrid.Children.Add(secondSummonerSpellImage);
 
 
+            var perksJson =
+                File.ReadAllText(
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+            var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+
+            var firstPerkIcon = "";
+            var secondPerkIcon = "";
+
+            foreach (var root in runesClass)
+            {
+                if (root.id == participant.Perks.Styles[0].Style)
+                    foreach (var rune in root.slots[0].runes)
+                        if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
+                            firstPerkIcon = rune.icon;
+
+                if (root.id == participant.Perks.Styles[1].Style) secondPerkIcon = root.icon;
+            }
+
+
             var mainRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}.png"))
             };
 
             Grid.SetColumn(mainRune, 1);
@@ -300,7 +293,7 @@ public sealed partial class MatchDetail : Page
             var secondaryRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
             };
 
             Grid.SetColumn(secondaryRune, 1);
@@ -318,11 +311,11 @@ public sealed partial class MatchDetail : Page
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
-                Text = $"{participant.TotalMinionsKilled} CS",
+                Text =
+                    $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                 FontSize = 15,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
-            Debug.WriteLine(participant.NeutralMinionsKilled);
 
             var csChampionViewbox = new Viewbox
             {
@@ -351,7 +344,7 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            var width = participant.TotalDamageDealtToChampions / (float)team1Damages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)team1BestDamages * 50;
 
             var participant1Rectangle = new Rectangle
             {
@@ -467,7 +460,7 @@ public sealed partial class MatchDetail : Page
             var championIcon = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.21.1/img/champion/{participant.ChampionName}.png"))
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
             };
 
             champIconBorder.Child = championIcon;
@@ -552,41 +545,11 @@ public sealed partial class MatchDetail : Page
                 { "55", "Summoner_UltBookSmitePlaceholder" }
             };
 
-            var mainPerksCorrespondences = new Dictionary<string, List<string>>
-            {
-                { "8112", new List<string> { "Domination", "Electrocute" } },
-                { "8124", new List<string> { "Domination", "Predator" } },
-                { "8128", new List<string> { "Domination", "DarkHarvest" } },
-                { "9923", new List<string> { "Domination", "HailOfBlades" } },
-                { "8351", new List<string> { "Inspiration", "GlacialAugment" } },
-                { "8360", new List<string> { "Inspiration", "UnsealedSpellbook" } },
-                { "8369", new List<string> { "Inspiration", "FirstStrike" } },
-                { "8005", new List<string> { "Precision", "PressTheAttack" } },
-                { "8008", new List<string> { "Precision", "LethalTempo" } },
-                { "8021", new List<string> { "Precision", "FleetFootwork" } },
-                { "8010", new List<string> { "Precision", "Conqueror" } },
-                { "8437", new List<string> { "Resolve", "GraspOfTheUndying" } },
-                { "8439", new List<string> { "Resolve", "VeteranAftershock" } },
-                { "8465", new List<string> { "Resolve", "Guardian" } },
-                { "8214", new List<string> { "Sorcery", "SummonAery" } },
-                { "8229", new List<string> { "Sorcery", "ArcaneComet" } },
-                { "8230", new List<string> { "Sorcery", "PhaseRush" } }
-            };
-
-            var perksCategories = new Dictionary<string, string>
-            {
-                { "8100", "perk-images/Styles/7200_Domination.png" },
-                { "8300", "perk-images/Styles/7203_Whimsy.png" },
-                { "8000", "perk-images/Styles/7201_Precision.png" },
-                { "8400", "perk-images/Styles/7204_Resolve.png" },
-                { "8200", "perk-images/Styles/7202_Sorcery.png" }
-            };
-
 
             var firstSummonerSpellImage = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
             };
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
@@ -596,7 +559,7 @@ public sealed partial class MatchDetail : Page
             var secondSummonerSpellImage = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.17.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
             };
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
@@ -604,10 +567,31 @@ public sealed partial class MatchDetail : Page
             summonerChampionGrid.Children.Add(secondSummonerSpellImage);
 
 
+            var perksJson =
+                File.ReadAllText(
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+            var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
+
+            var firstPerkIcon = "";
+            var secondPerkIcon = "";
+
+            foreach (var root in runesClass)
+            {
+                if (root.id == participant.Perks.Styles[0].Style)
+                    foreach (var rune in root.slots[0].runes)
+                        if (rune.id == participant.Perks.Styles[0].Selections[0].Perk)
+                            firstPerkIcon = rune.icon;
+
+                if (root.id == participant.Perks.Styles[1].Style) secondPerkIcon = root.icon;
+            }
+
+
+            var mainRuneUrl =
+                $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
+
             var mainRune = new Image
             {
-                Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][0]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}/{mainPerksCorrespondences[participant.Perks.Styles[0].Selections[0].Perk.ToString()][1]}.png"))
+                Source = new BitmapImage(new Uri(mainRuneUrl))
             };
 
             Grid.SetColumn(mainRune, 1);
@@ -618,7 +602,7 @@ public sealed partial class MatchDetail : Page
             var secondaryRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{perksCategories[participant.Perks.Styles[1].Style.ToString()]}"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
             };
 
             Grid.SetColumn(secondaryRune, 1);
@@ -647,7 +631,7 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            var width = participant.TotalDamageDealtToChampions / (float)team2Damages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)team2BestDamages * 50;
 
             var participant2Rectangle = new Rectangle
             {
@@ -685,7 +669,8 @@ public sealed partial class MatchDetail : Page
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 TextAlignment = TextAlignment.Center,
-                Text = $"{participant.TotalMinionsKilled} CS",
+                Text =
+                    $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                 FontSize = 15,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
@@ -728,137 +713,143 @@ public sealed partial class MatchDetail : Page
         }
     }
 
+
     private void SetMatchTimeline()
     {
+        var elementNumber = 0;
+
         var precedentEventIsPositive = true;
 
-        var ellipseGreen = new Ellipse
-        {
-            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-            Height = 10,
-            Width = 10,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
 
-        var ellipseRed = new Ellipse
-        {
-            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-            Height = 10,
-            Width = 10,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-
-        var rectangleGreenBot = new Rectangle
-        {
-            Margin = new Thickness(0, 37, 0, 0),
-            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-            Height = 75,
-            Width = 4,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-
-        var rectangleGreenTop = new Rectangle
-        {
-            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-            Height = 75,
-            Width = 4,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-
-        var rectangleRedBot = new Rectangle
-        {
-            Margin = new Thickness(0, 37, 0, 0),
-            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-            Height = 75,
-            Width = 4,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-
-        var rectangleRedTop = new Rectangle
-        {
-            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-            Height = 75,
-            Width = 4,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-
-
-        Grid.SetColumn(ellipseGreen, 0);
-        MatchTimelineGrid.Children.Add(ellipseGreen);
-        Grid.SetColumn(rectangleGreenBot, 0);
-        MatchTimelineGrid.Children.Add(rectangleGreenBot);
+        SetPositiveEvent();
+        elementNumber += 1;
 
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId);
         var summonerParticipantId = 0;
         foreach (var participant in timeline!.Info.Participants!)
+            if (participant.Puuid == LolSummoner.Puuid)
+                summonerParticipantId = participant.ParticipantId;
+
+
+        void SetPrecedentEvent()
         {
-            if (participant.Puuid == LolSummoner.Puuid) summonerParticipantId = participant.ParticipantId;
-            ;
+            if (precedentEventIsPositive)
+            {
+                var rectangleGreenTop = new Rectangle
+                {
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 75,
+                    Width = 4,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetColumn(rectangleGreenTop, 0);
+                Grid.SetRow(rectangleGreenTop, elementNumber);
+                MatchTimelineGrid.Children.Add(rectangleGreenTop);
+            }
+            else
+            {
+                var rectangleRedTop = new Rectangle
+                {
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                    Height = 75,
+                    Width = 4,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                Grid.SetColumn(rectangleRedTop, 0);
+                Grid.SetRow(rectangleRedTop, elementNumber);
+                MatchTimelineGrid.Children.Add(rectangleRedTop);
+            }
         }
 
+        void SetPositiveEvent()
+        {
+            var ellipseGreen = new Ellipse
+            {
+                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                Height = 10,
+                Width = 10,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
 
-        var elementNumber = 1;
+            var rectangleGreenBot = new Rectangle
+            {
+                Margin = new Thickness(0, 37, 0, 0),
+                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                Height = 75,
+                Width = 4,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            Grid.SetColumn(ellipseGreen, 0);
+            Grid.SetRow(ellipseGreen, elementNumber);
+            MatchTimelineGrid.Children.Add(ellipseGreen);
+            Grid.SetColumn(rectangleGreenBot, 0);
+            Grid.SetRow(rectangleGreenBot, elementNumber);
+            MatchTimelineGrid.Children.Add(rectangleGreenBot);
+        }
+
+        void SetNegativeEvent()
+        {
+            var ellipseRed = new Ellipse
+            {
+                Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                Height = 10,
+                Width = 10,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            var rectangleRedBot = new Rectangle
+            {
+                Margin = new Thickness(0, 37, 0, 0),
+                Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
+                Height = 75,
+                Width = 4,
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+
+            Grid.SetColumn(ellipseRed, 0);
+            Grid.SetRow(ellipseRed, elementNumber);
+            MatchTimelineGrid.Children.Add(ellipseRed);
+            Grid.SetColumn(rectangleRedBot, 0);
+            Grid.SetRow(rectangleRedBot, elementNumber);
+            MatchTimelineGrid.Children.Add(rectangleRedBot);
+        }
+
+        var startStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal
+        };
+
+        var startIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(
+                new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+        };
+
+        var startTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = new SolidColorBrush(Colors.White),
+            HorizontalTextAlignment = TextAlignment.Center,
+            Text = " début du match",
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        startStackPanel.Children.Add(startIcon);
+        startStackPanel.Children.Add(startTextBlock);
+        Grid.SetColumn(startStackPanel, 1);
+        Grid.SetRow(startStackPanel, 0);
+
+        MatchTimelineGrid.Children.Add(startStackPanel);
+        MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
+
         foreach (var timelineInfoFrame in timeline.Info.Frames)
         foreach (var e in timelineInfoFrame.Events)
         {
-            var infoStackPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal
-            };
-
-            var startIcon = new Image
-            {
-                Width = 40,
-                Source = new BitmapImage(
-                    new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
-            };
-
-            var startTextBlock = new TextBlock
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = new SolidColorBrush(Colors.White),
-                HorizontalTextAlignment = TextAlignment.Center,
-                Text = " début du match",
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
-
-            infoStackPanel.Children.Add(startIcon);
-            infoStackPanel.Children.Add(startTextBlock);
-            Grid.SetColumn(infoStackPanel, 1);
-            Grid.SetRow(infoStackPanel, 0);
-
-            MatchTimelineGrid.Children.Add(infoStackPanel);
-            MatchTimelineGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
-
-
             if (e.Type == "WARD_PLACED" && e.CreatorId == summonerParticipantId)
             {
-                if (precedentEventIsPositive)
-                {
-                    rectangleGreenTop = new Rectangle
-                    {
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                        Height = 75,
-                        Width = 4,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-                    Grid.SetColumn(rectangleGreenTop, 0);
-                    Grid.SetRow(rectangleGreenTop, elementNumber);
-                    MatchTimelineGrid.Children.Add(rectangleGreenTop);
-                }
-                else
-                {
-                    rectangleRedTop = new Rectangle
-                    {
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-                        Height = 75,
-                        Width = 4,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-                    Grid.SetColumn(rectangleRedTop, 0);
-                    Grid.SetRow(rectangleRedTop, elementNumber);
-                    MatchTimelineGrid.Children.Add(rectangleRedTop);
-                }
+                SetPrecedentEvent();
 
                 var frameInfoStackPanel = new StackPanel
                 {
@@ -876,7 +867,7 @@ public sealed partial class MatchDetail : Page
                 {
                     VerticalAlignment = VerticalAlignment.Center,
                     Source = new BitmapImage(new Uri(
-                        $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
                     Width = 40
                 };
 
@@ -903,29 +894,7 @@ public sealed partial class MatchDetail : Page
                 Grid.SetRow(frameInfoStackPanel, elementNumber);
 
 
-                ellipseGreen = new Ellipse
-                {
-                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                    Height = 10,
-                    Width = 10,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                };
-
-                rectangleGreenBot = new Rectangle
-                {
-                    Margin = new Thickness(0, 37, 0, 0),
-                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                    Height = 75,
-                    Width = 4,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                };
-
-                Grid.SetColumn(ellipseGreen, 0);
-                Grid.SetRow(ellipseGreen, elementNumber);
-                MatchTimelineGrid.Children.Add(ellipseGreen);
-                Grid.SetColumn(rectangleGreenBot, 0);
-                Grid.SetRow(rectangleGreenBot, elementNumber);
-                MatchTimelineGrid.Children.Add(rectangleGreenBot);
+                SetPositiveEvent();
 
                 elementNumber += 1;
 
@@ -939,32 +908,7 @@ public sealed partial class MatchDetail : Page
             {
                 if (e.KillerId == summonerParticipantId)
                 {
-                    if (precedentEventIsPositive)
-                    {
-                        rectangleGreenTop = new Rectangle
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                            Height = 75,
-                            Width = 4,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                        Grid.SetColumn(rectangleGreenTop, 0);
-                        Grid.SetRow(rectangleGreenTop, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
-                    }
-                    else
-                    {
-                        rectangleRedTop = new Rectangle
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-                            Height = 75,
-                            Width = 4,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                        Grid.SetColumn(rectangleRedTop, 0);
-                        Grid.SetRow(rectangleRedTop, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleRedTop);
-                    }
+                    SetPrecedentEvent();
 
                     var frameInfoStackPanel = new StackPanel
                     {
@@ -986,7 +930,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
                         Width = 40
                     };
 
@@ -994,7 +938,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
                         Width = 40
                     };
 
@@ -1013,29 +957,7 @@ public sealed partial class MatchDetail : Page
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
-                    ellipseGreen = new Ellipse
-                    {
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                        Height = 10,
-                        Width = 10,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    rectangleGreenBot = new Rectangle
-                    {
-                        Margin = new Thickness(0, 37, 0, 0),
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                        Height = 75,
-                        Width = 4,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    Grid.SetColumn(ellipseGreen, 0);
-                    Grid.SetRow(ellipseGreen, elementNumber);
-                    MatchTimelineGrid.Children.Add(ellipseGreen);
-                    Grid.SetColumn(rectangleGreenBot, 0);
-                    Grid.SetRow(rectangleGreenBot, elementNumber);
-                    MatchTimelineGrid.Children.Add(rectangleGreenBot);
+                    SetPositiveEvent();
 
                     elementNumber += 1;
 
@@ -1047,32 +969,7 @@ public sealed partial class MatchDetail : Page
 
                 if (e.VictimId == summonerParticipantId)
                 {
-                    if (precedentEventIsPositive)
-                    {
-                        rectangleGreenTop = new Rectangle
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                            Height = 75,
-                            Width = 4,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                        Grid.SetColumn(rectangleGreenTop, 0);
-                        Grid.SetRow(rectangleGreenTop, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
-                    }
-                    else
-                    {
-                        rectangleRedTop = new Rectangle
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-                            Height = 75,
-                            Width = 4,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                        Grid.SetColumn(rectangleRedTop, 0);
-                        Grid.SetRow(rectangleRedTop, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleRedTop);
-                    }
+                    SetPrecedentEvent();
 
                     var frameInfoStackPanel = new StackPanel
                     {
@@ -1090,7 +987,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
                         Width = 40
                     };
 
@@ -1098,7 +995,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
                         Width = 40
                     };
 
@@ -1117,29 +1014,7 @@ public sealed partial class MatchDetail : Page
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
-                    ellipseRed = new Ellipse
-                    {
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-                        Height = 10,
-                        Width = 10,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    rectangleRedBot = new Rectangle
-                    {
-                        Margin = new Thickness(0, 37, 0, 0),
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-                        Height = 75,
-                        Width = 4,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    Grid.SetColumn(ellipseRed, 0);
-                    Grid.SetRow(ellipseRed, elementNumber);
-                    MatchTimelineGrid.Children.Add(ellipseRed);
-                    Grid.SetColumn(rectangleRedBot, 0);
-                    Grid.SetRow(rectangleRedBot, elementNumber);
-                    MatchTimelineGrid.Children.Add(rectangleRedBot);
+                    SetNegativeEvent();
 
                     elementNumber += 1;
 
@@ -1154,32 +1029,7 @@ public sealed partial class MatchDetail : Page
             if (e.AssistingParticipantIds != null)
                 if (e.AssistingParticipantIds.Contains(summonerParticipantId))
                 {
-                    if (precedentEventIsPositive)
-                    {
-                        rectangleGreenTop = new Rectangle
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                            Height = 75,
-                            Width = 4,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                        Grid.SetColumn(rectangleGreenTop, 0);
-                        Grid.SetRow(rectangleGreenTop, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleGreenTop);
-                    }
-                    else
-                    {
-                        rectangleRedTop = new Rectangle
-                        {
-                            Fill = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6)),
-                            Height = 75,
-                            Width = 4,
-                            HorizontalAlignment = HorizontalAlignment.Center
-                        };
-                        Grid.SetColumn(rectangleRedTop, 0);
-                        Grid.SetRow(rectangleRedTop, elementNumber);
-                        MatchTimelineGrid.Children.Add(rectangleRedTop);
-                    }
+                    SetPrecedentEvent();
 
                     var frameInfoStackPanel = new StackPanel
                     {
@@ -1197,7 +1047,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
                         Width = 40
                     };
 
@@ -1205,7 +1055,7 @@ public sealed partial class MatchDetail : Page
                     {
                         VerticalAlignment = VerticalAlignment.Center,
                         Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.22.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
+                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
                         Width = 40
                     };
 
@@ -1225,29 +1075,7 @@ public sealed partial class MatchDetail : Page
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
 
-                    ellipseGreen = new Ellipse
-                    {
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                        Height = 10,
-                        Width = 10,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    rectangleGreenBot = new Rectangle
-                    {
-                        Margin = new Thickness(0, 37, 0, 0),
-                        Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                        Height = 75,
-                        Width = 4,
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    Grid.SetColumn(ellipseGreen, 0);
-                    Grid.SetRow(ellipseGreen, elementNumber);
-                    MatchTimelineGrid.Children.Add(ellipseGreen);
-                    Grid.SetColumn(rectangleGreenBot, 0);
-                    Grid.SetRow(rectangleGreenBot, elementNumber);
-                    MatchTimelineGrid.Children.Add(rectangleGreenBot);
+                    SetPositiveEvent();
 
                     elementNumber += 1;
 
@@ -1257,5 +1085,56 @@ public sealed partial class MatchDetail : Page
                     precedentEventIsPositive = true;
                 }
         }
+
+        var endStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal
+        };
+
+        var endIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(
+                new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
+        };
+
+        var endTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = new SolidColorBrush(Colors.White),
+            HorizontalTextAlignment = TextAlignment.Center,
+            Text = " fin du match",
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        endStackPanel.Children.Add(endIcon);
+        endStackPanel.Children.Add(endTextBlock);
+        Grid.SetColumn(endStackPanel, 1);
+        Grid.SetRow(endStackPanel, elementNumber);
+
+        var ellipseGreen = new Ellipse
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 10,
+            Width = 10,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        Grid.SetColumn(ellipseGreen, 0);
+        Grid.SetRow(ellipseGreen, elementNumber);
+        MatchTimelineGrid.Children.Add(ellipseGreen);
+
+        var rectangleGreenTop = new Rectangle
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 37,
+            Width = 4,
+            VerticalAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        Grid.SetColumn(rectangleGreenTop, 0);
+        Grid.SetRow(rectangleGreenTop, elementNumber);
+        MatchTimelineGrid.Children.Add(rectangleGreenTop);
+
+        MatchTimelineGrid.Children.Add(endStackPanel);
     }
 }
