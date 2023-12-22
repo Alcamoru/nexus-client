@@ -138,6 +138,7 @@ public sealed partial class SummonerInfoPage : Page
 
         Border profileIconBorder = new Border()
         {
+            Width = 60,
             CornerRadius = new CornerRadius(10),
             Child = profileIconImage
         };
@@ -343,6 +344,13 @@ public sealed partial class SummonerInfoPage : Page
                 $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png"))
         };
 
+        Border secondProfileIconImageBorder = new Border()
+        {
+            Width = 40,
+            Child = secondProfileIconImage,
+            CornerRadius = new CornerRadius(10)
+        };
+
         var secondSummonerNameTextBlock = new TextBlock
         {
             Text = $"{second.SummonerName}",
@@ -353,7 +361,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
 
-        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImage);
+        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImageBorder);
         secondLeaderBoardStackPanel.Children.Add(secondSummonerNameTextBlock);
 
         Grid.SetRow(secondLeaderBoardStackPanelViewBox, 0);
@@ -542,6 +550,13 @@ public sealed partial class SummonerInfoPage : Page
                 $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png"))
         };
 
+        Border thirdProfileIconImageBorder = new Border()
+        {
+            Width = 40,
+            Child = thirdProfileIconImage,
+            CornerRadius = new CornerRadius(10)
+        };
+
         var thirdSummonerNameTextBlock = new TextBlock
         {
             Text = $"{third.SummonerName}",
@@ -552,7 +567,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
 
-        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
+        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImageBorder);
         thirdLeaderBoardStackPanel.Children.Add(thirdSummonerNameTextBlock);
 
         Grid.SetRow(thirdLeaderBoardStackPanelViewBox, 0);
@@ -736,23 +751,25 @@ public sealed partial class SummonerInfoPage : Page
                     else
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
 
-                    var championIcon = new Image
+                    Image championIcon = new Image
                     {
                         Width = 50,
                         Source = new BitmapImage(new Uri(
                             $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
                     };
 
-                    var summonerIconBorder = new Border
+                    Border championIconBorder = new Border()
                     {
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        CornerRadius = new CornerRadius(10)
+                        Margin = new Thickness(10, 0, 0, 0),
+                        CornerRadius = new CornerRadius(10),
+                        Width = 50,
+                        Height = 50,
+                        Child = championIcon
                     };
-                    summonerIconBorder.Child = championIcon;
-                    Grid.SetColumn(summonerIconBorder, 0);
-                    Grid.SetRow(summonerIconBorder, 0);
-                    Grid.SetColumnSpan(summonerIconBorder, 2);
-                    matchGrid.Children.Add(summonerIconBorder);
+                    Grid.SetColumn(championIconBorder, 0);
+                    Grid.SetRow(championIconBorder, 0);
+                    Grid.SetColumnSpan(championIconBorder, 2);
+                    matchGrid.Children.Add(championIconBorder);
 
                     var titleChampionTextBlock = new TextBlock
                     {
