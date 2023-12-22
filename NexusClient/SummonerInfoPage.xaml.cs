@@ -177,6 +177,234 @@ public sealed partial class SummonerInfoPage : Page
         Grid.SetRowSpan(firstGrid, 2);
         Grid.SetColumn(firstGrid, 0);
         LeaderBoardGrid.Children.Add(firstGrid);
+
+        var secondGrid = new Grid
+        {
+            Padding = new Thickness(10),
+            Margin = new Thickness(20, 20, 20, 10),
+            CornerRadius = new CornerRadius(12),
+            Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
+        };
+
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var secondIconBorder = new Border
+        {
+            Padding = new Thickness(8),
+            CornerRadius = new CornerRadius(8),
+            Width = 50,
+            Height = 50,
+            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+        };
+
+        var secondTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Text = "1er",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        secondIconBorder.Child = secondTextBlock;
+
+        Grid.SetRow(secondIconBorder, 0);
+        secondGrid.Children.Add(secondIconBorder);
+
+
+        var secondLeaderBoardStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        var secondProfileIconImage = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var secondSummonerNameTextBlock = new TextBlock
+        {
+            Text = $"{first.SummonerName}",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImage);
+        secondLeaderBoardStackPanel.Children.Add(secondSummonerNameTextBlock);
+
+        Grid.SetRow(secondLeaderBoardStackPanel, 0);
+        Grid.SetColumn(secondLeaderBoardStackPanel, 1);
+        secondGrid.Children.Add(secondLeaderBoardStackPanel);
+
+
+        var secondEmblemStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        var secondEmblemIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
+        };
+
+        var secondLpTextBlock = new TextBlock
+        {
+            Text = $"{first.LeaguePoints} LP",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        secondEmblemStackPanel.Children.Add(secondEmblemIcon);
+        secondEmblemStackPanel.Children.Add(secondLpTextBlock);
+
+        Grid.SetRow(secondEmblemStackPanel, 0);
+        Grid.SetColumn(secondEmblemStackPanel, 2);
+        secondGrid.Children.Add(secondEmblemStackPanel);
+
+        Grid.SetRow(secondGrid, 0);
+        Grid.SetColumn(secondGrid, 1);
+        LeaderBoardGrid.Children.Add(secondGrid);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var thirdGrid = new Grid
+        {
+            Padding = new Thickness(10),
+            Margin = new Thickness(20, 20, 20, 10),
+            CornerRadius = new CornerRadius(12),
+            Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
+        };
+
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+        var thirdIconBorder = new Border
+        {
+            Padding = new Thickness(8),
+            CornerRadius = new CornerRadius(8),
+            Width = 50,
+            Height = 50,
+            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+        };
+
+        var thirdTextBlock = new TextBlock
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Text = "1er",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        thirdIconBorder.Child = thirdTextBlock;
+
+        Grid.SetRow(thirdIconBorder, 0);
+        thirdGrid.Children.Add(thirdIconBorder);
+
+
+        var thirdLeaderBoardStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        var thirdProfileIconImage = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var thirdSummonerNameTextBlock = new TextBlock
+        {
+            Text = $"{first.SummonerName}",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
+        thirdLeaderBoardStackPanel.Children.Add(thirdSummonerNameTextBlock);
+
+        Grid.SetRow(thirdLeaderBoardStackPanel, 0);
+        Grid.SetColumn(thirdLeaderBoardStackPanel, 1);
+        thirdGrid.Children.Add(thirdLeaderBoardStackPanel);
+
+
+        var thirdEmblemStackPanel = new StackPanel
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        var thirdEmblemIcon = new Image
+        {
+            Width = 40,
+            Source = new BitmapImage(new Uri(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
+        };
+
+        var thirdLpTextBlock = new TextBlock
+        {
+            Text = $"{first.LeaguePoints} LP",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+
+        thirdEmblemStackPanel.Children.Add(thirdEmblemIcon);
+        thirdEmblemStackPanel.Children.Add(thirdLpTextBlock);
+
+        Grid.SetRow(thirdEmblemStackPanel, 0);
+        Grid.SetColumn(thirdEmblemStackPanel, 2);
+        thirdGrid.Children.Add(thirdEmblemStackPanel);
+
+        Grid.SetRow(thirdGrid, 1);
+        Grid.SetColumn(thirdGrid, 1);
+        LeaderBoardGrid.Children.Add(thirdGrid);
+
+
     }
 
     private void SetLastMatches()
