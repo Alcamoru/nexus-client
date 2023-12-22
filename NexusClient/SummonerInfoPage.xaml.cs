@@ -17,6 +17,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -71,6 +72,8 @@ public sealed partial class SummonerInfoPage : Page
         var leagueItemsSorted = entries.OrderByDescending(item => item.LeaguePoints).ToArray();
 
         var first = leagueItemsSorted[0];
+        var second = leagueItemsSorted[1];
+        var third = leagueItemsSorted[2];
 
         Debug.WriteLine(leagueItemsSorted[0]);
 
@@ -116,14 +119,27 @@ public sealed partial class SummonerInfoPage : Page
 
         var leaderBoardStackPanel = new StackPanel
         {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical
+        };
+
+        Viewbox leaderboardViewBox = new Viewbox()
+        {
+            Child = leaderBoardStackPanel
         };
 
         var profileIconImage = new Image
         {
-            Width = 40,
+            Width = 60,
             Source = new BitmapImage(new Uri(
                 $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        Border profileIconBorder = new Border()
+        {
+            CornerRadius = new CornerRadius(10),
+            Child = profileIconImage
         };
 
         var summonerNameTextBlock = new TextBlock
@@ -136,22 +152,29 @@ public sealed partial class SummonerInfoPage : Page
         };
 
 
-        leaderBoardStackPanel.Children.Add(profileIconImage);
+        leaderBoardStackPanel.Children.Add(profileIconBorder);
         leaderBoardStackPanel.Children.Add(summonerNameTextBlock);
 
-        Grid.SetRow(leaderBoardStackPanel, 0);
-        Grid.SetColumn(leaderBoardStackPanel, 1);
-        firstGrid.Children.Add(leaderBoardStackPanel);
+        Grid.SetRow(leaderboardViewBox, 0);
+        Grid.SetColumn(leaderboardViewBox, 1);
+        firstGrid.Children.Add(leaderboardViewBox);
 
 
         var emblemStackPanel = new StackPanel
         {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical
+        };
+
+        Viewbox emblemStackPanelViewBox = new Viewbox()
+        {
+            Child = emblemStackPanel
         };
 
         var emblemIcon = new Image
         {
-            Width = 40,
+            Width = 70,
             Source = new BitmapImage(new Uri(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png"))
         };
@@ -169,9 +192,59 @@ public sealed partial class SummonerInfoPage : Page
         emblemStackPanel.Children.Add(emblemIcon);
         emblemStackPanel.Children.Add(lpTextBlock);
 
-        Grid.SetRow(emblemStackPanel, 0);
-        Grid.SetColumn(emblemStackPanel, 2);
-        firstGrid.Children.Add(emblemStackPanel);
+        Grid.SetRow(emblemStackPanelViewBox, 0);
+        Grid.SetColumn(emblemStackPanelViewBox, 2);
+        firstGrid.Children.Add(emblemStackPanelViewBox);
+
+
+        var totalGamesRectangle = new Rectangle()
+        {
+            Width = 150,
+            Fill = new SolidColorBrush(Colors.White),
+            Height = 7
+        };
+
+        var totalGamesBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = totalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+
+        var width = first.Wins / (float)(first.Wins + first.Losses) * 150;
+
+        var gamesWonRectangle = new Rectangle
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = width,
+            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+            Height = 7
+        };
+
+        var gamesWonBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = gamesWonRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+        var gamesWonGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        gamesWonGrid.Children.Add(totalGamesBorder);
+        gamesWonGrid.Children.Add(gamesWonBorder);
+
+        Grid.SetRow(gamesWonGrid, 1);
+        Grid.SetColumn(gamesWonGrid, 0);
+        Grid.SetColumnSpan(gamesWonGrid, 3);
+        firstGrid.Children.Add(gamesWonGrid);
 
         Grid.SetRow(firstGrid, 0);
         Grid.SetRowSpan(firstGrid, 2);
@@ -198,14 +271,14 @@ public sealed partial class SummonerInfoPage : Page
             CornerRadius = new CornerRadius(8),
             Width = 50,
             Height = 50,
-            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+            Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
         };
 
         var secondTextBlock = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Text = "1er",
+            Text = "2nd",
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
@@ -220,19 +293,26 @@ public sealed partial class SummonerInfoPage : Page
 
         var secondLeaderBoardStackPanel = new StackPanel
         {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical
+        };
+
+        Viewbox secondLeaderBoardStackPanelViewBox = new Viewbox()
+        {
+            Child = secondLeaderBoardStackPanel
         };
 
         var secondProfileIconImage = new Image
         {
             Width = 40,
             Source = new BitmapImage(new Uri(
-                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png"))
         };
 
         var secondSummonerNameTextBlock = new TextBlock
         {
-            Text = $"{first.SummonerName}",
+            Text = $"{second.SummonerName}",
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
@@ -243,14 +323,21 @@ public sealed partial class SummonerInfoPage : Page
         secondLeaderBoardStackPanel.Children.Add(secondProfileIconImage);
         secondLeaderBoardStackPanel.Children.Add(secondSummonerNameTextBlock);
 
-        Grid.SetRow(secondLeaderBoardStackPanel, 0);
-        Grid.SetColumn(secondLeaderBoardStackPanel, 1);
-        secondGrid.Children.Add(secondLeaderBoardStackPanel);
+        Grid.SetRow(secondLeaderBoardStackPanelViewBox, 0);
+        Grid.SetColumn(secondLeaderBoardStackPanelViewBox, 1);
+        secondGrid.Children.Add(secondLeaderBoardStackPanelViewBox);
 
 
         var secondEmblemStackPanel = new StackPanel
         {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical
+        };
+
+        Viewbox secondEmblemStackPanelViewBox = new Viewbox()
+        {
+            Child = secondEmblemStackPanel
         };
 
         var secondEmblemIcon = new Image
@@ -262,7 +349,7 @@ public sealed partial class SummonerInfoPage : Page
 
         var secondLpTextBlock = new TextBlock
         {
-            Text = $"{first.LeaguePoints} LP",
+            Text = $"{second.LeaguePoints} LP",
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
@@ -273,33 +360,62 @@ public sealed partial class SummonerInfoPage : Page
         secondEmblemStackPanel.Children.Add(secondEmblemIcon);
         secondEmblemStackPanel.Children.Add(secondLpTextBlock);
 
-        Grid.SetRow(secondEmblemStackPanel, 0);
-        Grid.SetColumn(secondEmblemStackPanel, 2);
-        secondGrid.Children.Add(secondEmblemStackPanel);
+        Grid.SetRow(secondEmblemStackPanelViewBox, 0);
+        Grid.SetColumn(secondEmblemStackPanelViewBox, 2);
+        secondGrid.Children.Add(secondEmblemStackPanelViewBox);
+
+
+        var secondTotalGamesRectangle = new Rectangle()
+        {
+            Width = 100,
+            Fill = new SolidColorBrush(Colors.White),
+            Height = 7
+        };
+
+        var secondGamesBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = secondTotalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+
+        var secondWidth = first.Wins / (float)(first.Wins + first.Losses) * 100;
+
+        var secondGamesWonRectangle = new Rectangle
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = secondWidth,
+            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+            Height = 7
+        };
+
+        var secondGamesWonBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = secondGamesWonRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+        var secondGamesWonGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        secondGamesWonGrid.Children.Add(secondGamesBorder);
+        secondGamesWonGrid.Children.Add(secondGamesWonBorder);
+
+        Grid.SetColumn(secondGamesWonGrid, 3);
+        Grid.SetColumnSpan(secondGamesWonGrid, 2);
+        secondGrid.Children.Add(secondGamesWonGrid);
 
         Grid.SetRow(secondGrid, 0);
         Grid.SetColumn(secondGrid, 1);
         LeaderBoardGrid.Children.Add(secondGrid);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         var thirdGrid = new Grid
         {
@@ -321,14 +437,14 @@ public sealed partial class SummonerInfoPage : Page
             CornerRadius = new CornerRadius(8),
             Width = 50,
             Height = 50,
-            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+            Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
         };
 
         var thirdTextBlock = new TextBlock
         {
             VerticalAlignment = VerticalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Text = "1er",
+            Text = "3rd",
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
@@ -343,19 +459,26 @@ public sealed partial class SummonerInfoPage : Page
 
         var thirdLeaderBoardStackPanel = new StackPanel
         {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical
+        };
+
+        Viewbox thirdLeaderBoardStackPanelViewBox = new Viewbox()
+        {
+            Child = thirdLeaderBoardStackPanel
         };
 
         var thirdProfileIconImage = new Image
         {
             Width = 40,
             Source = new BitmapImage(new Uri(
-                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
+                $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png"))
         };
 
         var thirdSummonerNameTextBlock = new TextBlock
         {
-            Text = $"{first.SummonerName}",
+            Text = $"{third.SummonerName}",
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
@@ -366,14 +489,21 @@ public sealed partial class SummonerInfoPage : Page
         thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
         thirdLeaderBoardStackPanel.Children.Add(thirdSummonerNameTextBlock);
 
-        Grid.SetRow(thirdLeaderBoardStackPanel, 0);
-        Grid.SetColumn(thirdLeaderBoardStackPanel, 1);
-        thirdGrid.Children.Add(thirdLeaderBoardStackPanel);
+        Grid.SetRow(thirdLeaderBoardStackPanelViewBox, 0);
+        Grid.SetColumn(thirdLeaderBoardStackPanelViewBox, 1);
+        thirdGrid.Children.Add(thirdLeaderBoardStackPanelViewBox);
 
 
         var thirdEmblemStackPanel = new StackPanel
         {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical
+        };
+
+        Viewbox thirdEmblemStackPanelViewBox = new Viewbox()
+        {
+            Child = thirdEmblemStackPanel
         };
 
         var thirdEmblemIcon = new Image
@@ -385,7 +515,7 @@ public sealed partial class SummonerInfoPage : Page
 
         var thirdLpTextBlock = new TextBlock
         {
-            Text = $"{first.LeaguePoints} LP",
+            Text = $"{third.LeaguePoints} LP",
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
@@ -396,9 +526,59 @@ public sealed partial class SummonerInfoPage : Page
         thirdEmblemStackPanel.Children.Add(thirdEmblemIcon);
         thirdEmblemStackPanel.Children.Add(thirdLpTextBlock);
 
-        Grid.SetRow(thirdEmblemStackPanel, 0);
-        Grid.SetColumn(thirdEmblemStackPanel, 2);
-        thirdGrid.Children.Add(thirdEmblemStackPanel);
+        Grid.SetRow(thirdEmblemStackPanelViewBox, 0);
+        Grid.SetColumn(thirdEmblemStackPanelViewBox, 2);
+        thirdGrid.Children.Add(thirdEmblemStackPanelViewBox);
+
+
+        var thirdTotalGamesRectangle = new Rectangle()
+        {
+            Width = 100,
+            Fill = new SolidColorBrush(Colors.White),
+            Height = 7
+        };
+
+        var thirdGamesBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = thirdTotalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+
+        var thirdWidth = first.Wins / (float)(first.Wins + first.Losses) * 100;
+
+        var thirdGamesWonRectangle = new Rectangle
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Width = thirdWidth,
+            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+            Height = 7
+        };
+
+        var thirdGamesWonBorder = new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = thirdGamesWonRectangle,
+            CornerRadius = new CornerRadius(3)
+        };
+
+        var thirdGamesWonGrid = new Grid
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+
+        thirdGamesWonGrid.Children.Add(thirdGamesBorder);
+        thirdGamesWonGrid.Children.Add(thirdGamesWonBorder);
+
+        Grid.SetColumn(thirdGamesWonGrid, 3);
+        Grid.SetColumnSpan(thirdGamesWonGrid, 2);
+        thirdGrid.Children.Add(thirdGamesWonGrid);
+
 
         Grid.SetRow(thirdGrid, 1);
         Grid.SetColumn(thirdGrid, 1);
@@ -784,6 +964,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     var itemsChampionGrid = new Grid
                     {
+                        CornerRadius = new CornerRadius(10),
                         HorizontalAlignment = HorizontalAlignment.Center
                     };
                     var itemColumn1 = new ColumnDefinition { Width = new GridLength(20, GridUnitType.Pixel) };
