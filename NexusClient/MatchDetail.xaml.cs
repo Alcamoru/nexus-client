@@ -140,9 +140,7 @@ public sealed partial class MatchDetail : Page
             };
 
             if (participant.SummonerName == LolSummoner.Name)
-            {
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96));
-            }
             else
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
 

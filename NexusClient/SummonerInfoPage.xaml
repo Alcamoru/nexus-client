@@ -116,74 +116,8 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-
-                    <Grid Grid.Row="0" Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                    </Grid>
-
-                    <Grid Grid.Row="1" Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                    </Grid>
-
-                    <Grid Grid.Row="2" Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                    </Grid>
-                    <Grid Grid.Row="3" Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="Assets/media/20231016_072647989_iOS.jpg" Width="60" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="1" Text="Karthus" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            Grid.Column="2" Text="53%" Foreground="White" FontSize="18" TextAlignment="Center"
-                            FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
-                    </Grid>
 
                 </Grid>
 
