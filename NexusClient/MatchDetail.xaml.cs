@@ -78,10 +78,26 @@ public sealed partial class MatchDetail : Page
         var team2 = new List<Participant>();
 
         foreach (var participant in MatchInfo.Info.Participants)
+        {
+            if (participant.SummonerName == LolSummoner.Name)
+            {
+                if (participant.Win)
+                {
+                    SummonerWonTextBlock.Text = "Victoire";
+                    SummonerWonTextBlock.Foreground = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96));
+                }
+                else
+                {
+                    SummonerWonTextBlock.Text = "Défaite";
+                    SummonerWonTextBlock.Foreground = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
+                }
+            }
+
             if (participant.TeamId == Team.Blue)
                 team1.Add(participant);
             else
                 team2.Add(participant);
+        }
 
         var row = 0;
 
@@ -282,7 +298,7 @@ public sealed partial class MatchDetail : Page
             var mainRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}.png"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}"))
             };
 
             Grid.SetColumn(mainRune, 1);

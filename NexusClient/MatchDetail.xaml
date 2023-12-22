@@ -100,7 +100,7 @@
             <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="9*" />
+                    <RowDefinition Height="8*" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -126,30 +126,44 @@
 
             </Grid>
 
-
-            <Grid x:Name="ParticipantsGrid" Grid.Row="0" Grid.Column="1"
-                  CornerRadius="10"
-                  Background="#EEEEEE" Padding="8" Margin="15">
+            <Grid Grid.Row="0" Grid.Column="1" Margin="15">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="4*" />
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="4*" />
-                </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="5"
-                           Margin="10"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
-                           Text="VS" Foreground="#34495E" FontSize="28" TextAlignment="Center"
-                           FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                <TextBlock
+                    Grid.Row="0"
+                    x:Name="SummonerWonTextBlock"
+                    FontSize="36" TextAlignment="Center"
+                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+
+                <Grid Grid.Row="1" x:Name="ParticipantsGrid"
+                      CornerRadius="10"
+                      Background="#EEEEEE" Padding="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="4*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="5"
+                               Margin="10"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Text="VS" Foreground="#34495E" FontSize="28" TextAlignment="Center"
+                               FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                </Grid>
+
             </Grid>
+
 
         </Grid>
 

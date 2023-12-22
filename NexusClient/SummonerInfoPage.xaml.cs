@@ -54,6 +54,7 @@ public sealed partial class SummonerInfoPage : Page
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
         SetLastMatches();
         SetLeaderBoardGrid();
+        SetBestChampions();
     }
 
     private List<Match> GetLastMatches()
@@ -124,7 +125,7 @@ public sealed partial class SummonerInfoPage : Page
             Orientation = Orientation.Vertical
         };
 
-        Viewbox leaderboardViewBox = new Viewbox()
+        var leaderboardViewBox = new Viewbox
         {
             Child = leaderBoardStackPanel
         };
@@ -136,8 +137,9 @@ public sealed partial class SummonerInfoPage : Page
                 $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png"))
         };
 
-        Border profileIconBorder = new Border()
+        var profileIconBorder = new Border
         {
+            Width = 60,
             CornerRadius = new CornerRadius(10),
             Child = profileIconImage
         };
@@ -167,7 +169,7 @@ public sealed partial class SummonerInfoPage : Page
             Orientation = Orientation.Vertical
         };
 
-        Viewbox emblemStackPanelViewBox = new Viewbox()
+        var emblemStackPanelViewBox = new Viewbox
         {
             Child = emblemStackPanel
         };
@@ -197,7 +199,7 @@ public sealed partial class SummonerInfoPage : Page
         firstGrid.Children.Add(emblemStackPanelViewBox);
 
 
-        var totalGamesRectangle = new Rectangle()
+        var totalGamesRectangle = new Rectangle
         {
             Width = 150,
             Fill = new SolidColorBrush(Colors.White),
@@ -261,7 +263,7 @@ public sealed partial class SummonerInfoPage : Page
             FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
-        StackPanel winRateStackPanel = new StackPanel()
+        var winRateStackPanel = new StackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -269,7 +271,7 @@ public sealed partial class SummonerInfoPage : Page
             Children = { winRateTextBlock, gamesWonGrid, gamesPlayedTextBlock }
         };
 
-        Viewbox winRateStackPanelViewBox = new Viewbox()
+        var winRateStackPanelViewBox = new Viewbox
         {
             Child = winRateStackPanel
         };
@@ -331,7 +333,7 @@ public sealed partial class SummonerInfoPage : Page
             Orientation = Orientation.Vertical
         };
 
-        Viewbox secondLeaderBoardStackPanelViewBox = new Viewbox()
+        var secondLeaderBoardStackPanelViewBox = new Viewbox
         {
             Child = secondLeaderBoardStackPanel
         };
@@ -341,6 +343,13 @@ public sealed partial class SummonerInfoPage : Page
             Width = 40,
             Source = new BitmapImage(new Uri(
                 $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var secondProfileIconImageBorder = new Border
+        {
+            Width = 40,
+            Child = secondProfileIconImage,
+            CornerRadius = new CornerRadius(10)
         };
 
         var secondSummonerNameTextBlock = new TextBlock
@@ -353,7 +362,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
 
-        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImage);
+        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImageBorder);
         secondLeaderBoardStackPanel.Children.Add(secondSummonerNameTextBlock);
 
         Grid.SetRow(secondLeaderBoardStackPanelViewBox, 0);
@@ -368,7 +377,7 @@ public sealed partial class SummonerInfoPage : Page
             Orientation = Orientation.Vertical
         };
 
-        Viewbox secondEmblemStackPanelViewBox = new Viewbox()
+        var secondEmblemStackPanelViewBox = new Viewbox
         {
             Child = secondEmblemStackPanel
         };
@@ -398,7 +407,7 @@ public sealed partial class SummonerInfoPage : Page
         secondGrid.Children.Add(secondEmblemStackPanelViewBox);
 
 
-        var secondTotalGamesRectangle = new Rectangle()
+        var secondTotalGamesRectangle = new Rectangle
         {
             Width = 100,
             Fill = new SolidColorBrush(Colors.White),
@@ -462,7 +471,7 @@ public sealed partial class SummonerInfoPage : Page
             FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
-        StackPanel secondWinRateStackPanel = new StackPanel()
+        var secondWinRateStackPanel = new StackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -470,7 +479,7 @@ public sealed partial class SummonerInfoPage : Page
             Children = { secondWinRateTextBlock, secondGamesWonGrid, secondGamesPlayedTextBlock }
         };
 
-        Viewbox secondWinRateStackPanelViewBox = new Viewbox()
+        var secondWinRateStackPanelViewBox = new Viewbox
         {
             Child = secondWinRateStackPanel
         };
@@ -530,7 +539,7 @@ public sealed partial class SummonerInfoPage : Page
             Orientation = Orientation.Vertical
         };
 
-        Viewbox thirdLeaderBoardStackPanelViewBox = new Viewbox()
+        var thirdLeaderBoardStackPanelViewBox = new Viewbox
         {
             Child = thirdLeaderBoardStackPanel
         };
@@ -540,6 +549,13 @@ public sealed partial class SummonerInfoPage : Page
             Width = 40,
             Source = new BitmapImage(new Uri(
                 $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png"))
+        };
+
+        var thirdProfileIconImageBorder = new Border
+        {
+            Width = 40,
+            Child = thirdProfileIconImage,
+            CornerRadius = new CornerRadius(10)
         };
 
         var thirdSummonerNameTextBlock = new TextBlock
@@ -552,7 +568,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
 
-        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
+        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImageBorder);
         thirdLeaderBoardStackPanel.Children.Add(thirdSummonerNameTextBlock);
 
         Grid.SetRow(thirdLeaderBoardStackPanelViewBox, 0);
@@ -567,7 +583,7 @@ public sealed partial class SummonerInfoPage : Page
             Orientation = Orientation.Vertical
         };
 
-        Viewbox thirdEmblemStackPanelViewBox = new Viewbox()
+        var thirdEmblemStackPanelViewBox = new Viewbox
         {
             Child = thirdEmblemStackPanel
         };
@@ -597,7 +613,7 @@ public sealed partial class SummonerInfoPage : Page
         thirdGrid.Children.Add(thirdEmblemStackPanelViewBox);
 
 
-        var thirdTotalGamesRectangle = new Rectangle()
+        var thirdTotalGamesRectangle = new Rectangle
         {
             Width = 100,
             Fill = new SolidColorBrush(Colors.White),
@@ -661,7 +677,7 @@ public sealed partial class SummonerInfoPage : Page
             FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
-        StackPanel thirdWinRateStackPanel = new StackPanel()
+        var thirdWinRateStackPanel = new StackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -669,7 +685,7 @@ public sealed partial class SummonerInfoPage : Page
             Children = { thirdWinRateTextBlock, thirdGamesWonGrid, thirdGamesPlayedTextBlock }
         };
 
-        Viewbox thirdWinRateStackPanelViewBox = new Viewbox()
+        var thirdWinRateStackPanelViewBox = new Viewbox
         {
             Child = thirdWinRateStackPanel
         };
@@ -681,8 +697,6 @@ public sealed partial class SummonerInfoPage : Page
         Grid.SetRow(thirdGrid, 1);
         Grid.SetColumn(thirdGrid, 1);
         LeaderBoardGrid.Children.Add(thirdGrid);
-
-
     }
 
     private void SetLastMatches()
@@ -743,16 +757,18 @@ public sealed partial class SummonerInfoPage : Page
                             $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
                     };
 
-                    var summonerIconBorder = new Border
+                    var championIconBorder = new Border
                     {
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        CornerRadius = new CornerRadius(10)
+                        Margin = new Thickness(10, 0, 0, 0),
+                        CornerRadius = new CornerRadius(10),
+                        Width = 50,
+                        Height = 50,
+                        Child = championIcon
                     };
-                    summonerIconBorder.Child = championIcon;
-                    Grid.SetColumn(summonerIconBorder, 0);
-                    Grid.SetRow(summonerIconBorder, 0);
-                    Grid.SetColumnSpan(summonerIconBorder, 2);
-                    matchGrid.Children.Add(summonerIconBorder);
+                    Grid.SetColumn(championIconBorder, 0);
+                    Grid.SetRow(championIconBorder, 0);
+                    Grid.SetColumnSpan(championIconBorder, 2);
+                    matchGrid.Children.Add(championIconBorder);
 
                     var titleChampionTextBlock = new TextBlock
                     {
@@ -1178,6 +1194,69 @@ public sealed partial class SummonerInfoPage : Page
                 }
 
             i++;
+        }
+    }
+
+    private void SetBestChampions()
+    {
+        var bestChampsjson =
+            File.ReadAllText(
+                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\bestChampions.json");
+        var bestChamps = JsonConvert.DeserializeObject<BestChampionsClass.Root>(bestChampsjson);
+
+
+        var row = 0;
+        foreach (var bestChamp in bestChamps.stats)
+        {
+            var bestChampionStackPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(10)
+            };
+
+            var championIcon = new Image
+            {
+                Margin = new Thickness(15),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = 60,
+                Source = new BitmapImage(new Uri(
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{bestChamp.name}.png"))
+            };
+
+            bestChampionStackPanel.Children.Add(championIcon);
+
+            var championNameTextBlock = new TextBlock
+            {
+                Margin = new Thickness(15),
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.White),
+                HorizontalTextAlignment = TextAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                Text = $"{bestChamp.name}",
+                FontSize = 18,
+                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+            };
+
+            bestChampionStackPanel.Children.Add(championNameTextBlock);
+
+            var championWrTextBlock = new TextBlock
+            {
+                Margin = new Thickness(15),
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.White),
+                HorizontalTextAlignment = TextAlignment.Right,
+                Text = $"{bestChamp.winrate}",
+                FontSize = 18,
+                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+            };
+
+            bestChampionStackPanel.Children.Add(championWrTextBlock);
+
+            Grid.SetRow(bestChampionStackPanel, row);
+            BestChampionsContentGrid.Children.Add(bestChampionStackPanel);
+
+            row += 1;
         }
     }
 
