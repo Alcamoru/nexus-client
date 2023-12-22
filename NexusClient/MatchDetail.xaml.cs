@@ -298,7 +298,7 @@ public sealed partial class MatchDetail : Page
             var mainRune = new Image
             {
                 Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}.png"))
+                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}"))
             };
 
             Grid.SetColumn(mainRune, 1);
