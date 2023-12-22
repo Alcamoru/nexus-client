@@ -241,10 +241,43 @@ public sealed partial class SummonerInfoPage : Page
         gamesWonGrid.Children.Add(totalGamesBorder);
         gamesWonGrid.Children.Add(gamesWonBorder);
 
-        Grid.SetRow(gamesWonGrid, 1);
-        Grid.SetColumn(gamesWonGrid, 0);
-        Grid.SetColumnSpan(gamesWonGrid, 3);
-        firstGrid.Children.Add(gamesWonGrid);
+        var winRateTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{Math.Round(first.Wins / (float)(first.Wins + first.Losses) * 100)} %",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        var gamesPlayedTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{first.Wins + first.Losses} games",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        StackPanel winRateStackPanel = new StackPanel()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Children = { winRateTextBlock, gamesWonGrid, gamesPlayedTextBlock }
+        };
+
+        Viewbox winRateStackPanelViewBox = new Viewbox()
+        {
+            Child = winRateStackPanel
+        };
+
+        Grid.SetRow(winRateStackPanelViewBox, 1);
+        Grid.SetColumn(winRateStackPanelViewBox, 0);
+        Grid.SetColumnSpan(winRateStackPanelViewBox, 3);
+        firstGrid.Children.Add(winRateStackPanelViewBox);
 
         Grid.SetRow(firstGrid, 0);
         Grid.SetRowSpan(firstGrid, 2);
@@ -409,9 +442,42 @@ public sealed partial class SummonerInfoPage : Page
         secondGamesWonGrid.Children.Add(secondGamesBorder);
         secondGamesWonGrid.Children.Add(secondGamesWonBorder);
 
-        Grid.SetColumn(secondGamesWonGrid, 3);
-        Grid.SetColumnSpan(secondGamesWonGrid, 2);
-        secondGrid.Children.Add(secondGamesWonGrid);
+        var secondWinRateTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{Math.Round(second.Wins / (float)(second.Wins + second.Losses) * 100)} %",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        var secondGamesPlayedTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{first.Wins + first.Losses} games",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        StackPanel secondWinRateStackPanel = new StackPanel()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Children = { secondWinRateTextBlock, secondGamesWonGrid, secondGamesPlayedTextBlock }
+        };
+
+        Viewbox secondWinRateStackPanelViewBox = new Viewbox()
+        {
+            Child = secondWinRateStackPanel
+        };
+
+        Grid.SetColumn(secondWinRateStackPanelViewBox, 3);
+        Grid.SetColumnSpan(secondWinRateStackPanelViewBox, 2);
+        secondGrid.Children.Add(secondWinRateStackPanelViewBox);
 
         Grid.SetRow(secondGrid, 0);
         Grid.SetColumn(secondGrid, 1);
@@ -575,10 +641,42 @@ public sealed partial class SummonerInfoPage : Page
         thirdGamesWonGrid.Children.Add(thirdGamesBorder);
         thirdGamesWonGrid.Children.Add(thirdGamesWonBorder);
 
-        Grid.SetColumn(thirdGamesWonGrid, 3);
-        Grid.SetColumnSpan(thirdGamesWonGrid, 2);
-        thirdGrid.Children.Add(thirdGamesWonGrid);
+        var thirdWinRateTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{Math.Round(third.Wins / (float)(third.Wins + third.Losses) * 100)} %",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
 
+        var thirdGamesPlayedTextBlock = new TextBlock
+        {
+            Margin = new Thickness(10),
+            Text = $"{first.Wins + first.Losses} games",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontSize = 14,
+            TextAlignment = TextAlignment.Center,
+            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+        };
+
+        StackPanel thirdWinRateStackPanel = new StackPanel()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Orientation = Orientation.Horizontal,
+            Children = { thirdWinRateTextBlock, thirdGamesWonGrid, thirdGamesPlayedTextBlock }
+        };
+
+        Viewbox thirdWinRateStackPanelViewBox = new Viewbox()
+        {
+            Child = thirdWinRateStackPanel
+        };
+
+        Grid.SetColumn(thirdWinRateStackPanelViewBox, 3);
+        Grid.SetColumnSpan(thirdWinRateStackPanelViewBox, 2);
+        thirdGrid.Children.Add(thirdWinRateStackPanelViewBox);
 
         Grid.SetRow(thirdGrid, 1);
         Grid.SetColumn(thirdGrid, 1);
@@ -753,7 +851,7 @@ public sealed partial class SummonerInfoPage : Page
                         Foreground = new SolidColorBrush(Colors.White),
                         HorizontalTextAlignment = TextAlignment.Center,
                         TextAlignment = TextAlignment.Center,
-                        Text = $"{(participant.Kills + participant.Assists) / teamKills}",
+                        Text = $"{Math.Round((float)(participant.Kills + participant.Assists) / teamKills * 100)}",
                         FontSize = 15,
                         FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
                     };

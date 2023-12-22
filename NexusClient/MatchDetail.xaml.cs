@@ -1123,7 +1123,17 @@ public sealed partial class MatchDetail : Page
         Grid.SetRow(ellipseGreen, elementNumber);
         MatchTimelineGrid.Children.Add(ellipseGreen);
 
-        SetPrecedentEvent();
+        var rectangleGreenTop = new Rectangle
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+            Height = 37,
+            Width = 4,
+            VerticalAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        Grid.SetColumn(rectangleGreenTop, 0);
+        Grid.SetRow(rectangleGreenTop, elementNumber);
+        MatchTimelineGrid.Children.Add(rectangleGreenTop);
 
         MatchTimelineGrid.Children.Add(endStackPanel);
     }
