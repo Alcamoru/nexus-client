@@ -293,9 +293,7 @@ public sealed partial class MatchDetail : Page
             participantGrid.Children.Add(summonersViewbox);
 
             Viewbox csChampionTextBlock = SetText($"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                15, Color.FromArgb(255, 52, 73, 94));
-
-            csChampionTextBlock.Child = csChampionTextBlock;
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
@@ -348,7 +346,7 @@ public sealed partial class MatchDetail : Page
             participantGrid.Children.Add(innerGrid1);
 
             Viewbox kdaChampionTextBlock = SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                15, Color.FromArgb(255, 52, 73, 94));
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
             participantGrid.Children.Add(kdaChampionTextBlock);
@@ -600,16 +598,14 @@ public sealed partial class MatchDetail : Page
             participantGrid.Children.Add(innerGrid2);
 
             Viewbox csChampionTextBlock = SetText($"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                15, Color.FromArgb(255, 52, 73, 94));
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
-
-            csChampionTextBlock.Child = csChampionTextBlock;
 
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
 
             Viewbox kdaChampionTextBlock = SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                15, Color.FromArgb(255, 52, 73, 94));
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
             participantGrid.Children.Add(kdaChampionTextBlock);

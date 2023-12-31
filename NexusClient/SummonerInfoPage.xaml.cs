@@ -416,7 +416,7 @@ public sealed partial class SummonerInfoPage : Page
         var thirdGrid = new Grid
         {
             Padding = new Thickness(10),
-            Margin = new Thickness(20, 20, 20, 10),
+            Margin = new Thickness(20, 10, 20, 20),
             CornerRadius = new CornerRadius(12),
             Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
         };
@@ -635,13 +635,18 @@ public sealed partial class SummonerInfoPage : Page
 
                     championIcon.Margin = new Thickness(10, 0, 0, 0);
 
-                    Grid.SetColumn(championIcon, 0);
-                    Grid.SetRow(championIcon, 0);
-                    Grid.SetColumnSpan(championIcon, 2);
-                    matchGrid.Children.Add(championIcon);
+                    Viewbox champIconViewBox = new Viewbox()
+                    {
+                        Child = championIcon
+                    };
+
+                    Grid.SetColumn(champIconViewBox, 0);
+                    Grid.SetRow(champIconViewBox, 0);
+                    Grid.SetColumnSpan(champIconViewBox, 2);
+                    matchGrid.Children.Add(champIconViewBox);
 
                     Viewbox titleChampionTextBlock = SetText(participant.ChampionName,
-                        14, Colors.White);
+                        30, Colors.White);
 
 
                     var gameTimeStampDuration = DateTime.Now -
@@ -779,7 +784,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png";
-                    Border firstSummonerSpellImage = GetImage(source, 0);
+                    Border firstSummonerSpellImage = GetImage(source);
 
                     firstSummonerSpellImage.CornerRadius = new CornerRadius(7, 7, 0, 0);
 
@@ -790,7 +795,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png";
-                    Border secondSummonerSpellImage = GetImage(source, 0);
+                    Border secondSummonerSpellImage = GetImage(source);
                     secondSummonerSpellImage.CornerRadius = new CornerRadius(0, 0, 7, 7);
 
 
