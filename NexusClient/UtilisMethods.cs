@@ -1,6 +1,5 @@
 ﻿using System;
 using Windows.UI;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -12,11 +11,11 @@ public class UtilisMethods
 {
     public static Border GetImage(string url, int cornerRadius = 0, int width = 0)
     {
-        Image image = new Image()
+        var image = new Image
         {
-            Source = new BitmapImage(new Uri(url)),
+            Source = new BitmapImage(new Uri(url))
         };
-        Border border = new Border()
+        var border = new Border
         {
             Child = image,
             CornerRadius = new CornerRadius(cornerRadius)
@@ -39,8 +38,7 @@ public class UtilisMethods
         VerticalAlignment verticalAlignment = VerticalAlignment.Center,
         Stretch stretch = Stretch.None)
     {
-
-        TextBlock textBlock = new TextBlock()
+        var textBlock = new TextBlock
         {
             VerticalAlignment = verticalAlignment,
             HorizontalAlignment = horizontalAlignment,
@@ -51,7 +49,7 @@ public class UtilisMethods
             FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
-        Viewbox viewbox = new Viewbox()
+        var viewbox = new Viewbox
         {
             Stretch = stretch,
             Child = textBlock
