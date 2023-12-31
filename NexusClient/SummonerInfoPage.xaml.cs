@@ -108,7 +108,6 @@ public sealed partial class SummonerInfoPage : Page
 
         var iconBorderViewBox = new Viewbox
         {
-            Stretch = Stretch.None,
             Child = iconBorder
         };
 
@@ -116,12 +115,7 @@ public sealed partial class SummonerInfoPage : Page
         firstGrid.Children.Add(iconBorderViewBox);
 
 
-        var leaderBoardStackPanel = new StackPanel
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Orientation = Orientation.Vertical
-        };
+        var leaderBoardStackPanel = new StackPanel();
 
         var leaderboardViewBox = new Viewbox
         {
@@ -280,8 +274,13 @@ public sealed partial class SummonerInfoPage : Page
 
         secondIconBorder.Child = secondTextBlock;
 
-        Grid.SetRow(secondIconBorder, 0);
-        secondGrid.Children.Add(secondIconBorder);
+        var secondIconViewbox = new Viewbox()
+        {
+            Child = secondIconBorder
+        };
+
+        Grid.SetRow(secondIconViewbox, 0);
+        secondGrid.Children.Add(secondIconViewbox);
 
 
         var secondLeaderBoardStackPanel = new StackPanel
@@ -293,7 +292,8 @@ public sealed partial class SummonerInfoPage : Page
 
         var secondLeaderBoardStackPanelViewBox = new Viewbox
         {
-            Child = secondLeaderBoardStackPanel
+            Child = secondLeaderBoardStackPanel,
+            Margin = new Thickness(7)
         };
         source =
             $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png";
@@ -442,15 +442,19 @@ public sealed partial class SummonerInfoPage : Page
 
         thirdIconBorder.Child = thirdTextBlock;
 
-        Grid.SetRow(thirdIconBorder, 0);
-        thirdGrid.Children.Add(thirdIconBorder);
+        var thirdIconViewbox = new Viewbox()
+        {
+            Child = thirdIconBorder
+        };
+
+
+        Grid.SetRow(thirdIconViewbox, 0);
+        thirdGrid.Children.Add(thirdIconViewbox);
 
 
         var thirdLeaderBoardStackPanel = new StackPanel
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Orientation = Orientation.Vertical
+            Margin = new Thickness(7)
         };
 
         var thirdLeaderBoardStackPanelViewBox = new Viewbox
