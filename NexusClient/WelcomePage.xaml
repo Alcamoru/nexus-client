@@ -26,79 +26,78 @@
         <Viewbox>
             <StackPanel
                 Margin="200 0 200 0"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center" Orientation="Horizontal"
-                        Height="200"
-                        Width="670">
-            <TextBox
-                KeyDown="SummonerNameTextBox_OnKeyDown"
-                Margin="0 0 30 0"
-                CornerRadius="10"
-                FontSize="22"
-                BorderThickness="0"
-                Padding="25, 15, 25, 15"
-                Width="450"
-                VerticalAlignment="Top"
-                Foreground="#34495E"
-                FontWeight="Bold"
-                PlaceholderForeground="#34495E"
-                x:Name="SummonerNameTextBox"
-                PlaceholderText="Nom d'invocateur"
-                HorizontalAlignment="Center"
-                Background="#EEEEEE" >
-            </TextBox>
-            <StackPanel
-                Orientation="Vertical"
-                Margin="20 0 0 0">
-                <Button
-
-                    Width="120"
-                    x:Name="RegionListButton"
-                    Click="RegionListButton_OnClick"
-                    LostFocus="RegionListButton_OnLostFocus"
-
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center" Orientation="Horizontal"
+                Height="200"
+                Width="670">
+                <TextBox
+                    KeyDown="SummonerNameTextBox_OnKeyDown"
+                    Margin="0 0 30 0"
                     CornerRadius="10"
-                    Background="#EEEEEE"
-                    Padding="25, 15, 25, 15">
+                    FontSize="22"
+                    BorderThickness="0"
+                    Padding="25, 15, 25, 15"
+                    Width="450"
+                    VerticalAlignment="Top"
+                    Foreground="#34495E"
+                    FontWeight="Bold"
+                    PlaceholderForeground="#34495E"
+                    x:Name="SummonerNameTextBox"
+                    PlaceholderText="Nom d'invocateur"
+                    HorizontalAlignment="Center"
+                    Background="#EEEEEE" />
+                <StackPanel
+                    Orientation="Vertical"
+                    Margin="20 0 0 0">
+                    <Button
 
-                    <TextBlock
-                        x:Name="RegionListButtonTextBlock"
-                        Text="EUW"
-                        FontSize="22"
-                        FontWeight="Bold"
-                        Foreground="#34495E" />
-                </Button>
-                <ListView
-                    SelectionChanged="RegionListView_OnSelectionChanged"
-                    x:Name="RegionListView"
-                    Visibility="Collapsed">
-                    <!-- ReSharper disable once InconsistentNaming -->
-                    <ListViewItem
-                        x:Name="EUWViewItem"
-                        Background="#EEEEEE">
-                        <TextBlock Text="EUW"
-                                   Foreground="#34495E" />
-                    </ListViewItem>
-                    <!-- ReSharper disable once InconsistentNaming -->
-                    <ListViewItem
-                        x:Name="NAMViewItem"
-                        Background="#EEEEEE">
-                        <TextBlock Text="NA"
-                                   Foreground="#34495E" />
-                    </ListViewItem>
-                </ListView>
+                        Width="120"
+                        x:Name="RegionListButton"
+                        Click="RegionListButton_OnClick"
+                        LostFocus="RegionListButton_OnLostFocus"
+
+                        CornerRadius="10"
+                        Background="#EEEEEE"
+                        Padding="25, 15, 25, 15">
+
+                        <TextBlock
+                            x:Name="RegionListButtonTextBlock"
+                            Text="EUW"
+                            FontSize="22"
+                            FontWeight="Bold"
+                            Foreground="#34495E" />
+                    </Button>
+                    <ListView
+                        SelectionChanged="RegionListView_OnSelectionChanged"
+                        x:Name="RegionListView"
+                        Visibility="Collapsed">
+                        <!-- ReSharper disable once InconsistentNaming -->
+                        <ListViewItem
+                            x:Name="EUWViewItem"
+                            Background="#EEEEEE">
+                            <TextBlock Text="EUW"
+                                       Foreground="#34495E" />
+                        </ListViewItem>
+                        <!-- ReSharper disable once InconsistentNaming -->
+                        <ListViewItem
+                            x:Name="NAMViewItem"
+                            Background="#EEEEEE">
+                            <TextBlock Text="NA"
+                                       Foreground="#34495E" />
+                        </ListViewItem>
+                    </ListView>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
         </Viewbox>
         <Viewbox>
             <TextBlock
                 Margin="300 0 300 0"
                 x:Name="ErrorTextBlock"
-                       Foreground="Red"
-                       FontSize="24"
-                       FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
-                       FontWeight="ExtraBold"
-                       HorizontalAlignment="Center" />
+                Foreground="Red"
+                FontSize="24"
+                FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
+                FontWeight="ExtraBold"
+                HorizontalAlignment="Center" />
         </Viewbox>
         <ProgressRing x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="False" />
         <Button

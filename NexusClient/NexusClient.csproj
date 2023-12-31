@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Camille.RiotGames" Version="3.0.0-nightly-2023-12-06-6dcc80abc0" />
+        <PackageReference Include="Camille.RiotGames" Version="3.0.0-nightly-2023-12-06-6dcc80abc0"/>
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230602002"/>
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755"/>
         <Manifest Include="$(ApplicationManifest)"/>
