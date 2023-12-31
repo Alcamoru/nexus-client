@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
 using Team = Camille.RiotGames.Enums.Team;
+using static NexusClient.UtilisMethods;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -160,26 +161,15 @@ public sealed partial class MatchDetail : Page
             participantGrid.ColumnDefinitions.Add(col6);
 
 
-            var champIconBorder = new Border
-            {
-                Height = 30,
-                Width = 30,
-                CornerRadius = new CornerRadius(15)
-            };
-
-            var championIcon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
-            };
-
-            champIconBorder.Child = championIcon;
+            string source =
+                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png";
+            Border championIcon = GetImage(source, 30, 15);
 
             var championIconViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = champIconBorder
+                Child = championIcon
             };
 
             var championNameViewbox = new Viewbox
@@ -188,15 +178,8 @@ public sealed partial class MatchDetail : Page
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            var championNameTextBlock = new TextBlock
-            {
-                Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Text = participant.ChampionName,
-                FontSize = 20,
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
+            Viewbox championNameTextBlock = SetText(participant.ChampionName,
+                20, Color.FromArgb(255, 52, 73, 94));
 
             championNameViewbox.Child = championNameTextBlock;
 
@@ -255,21 +238,17 @@ public sealed partial class MatchDetail : Page
                 { "55", "Summoner_UltBookSmitePlaceholder" }
             };
 
-            var firstSummonerSpellImage = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
-            };
+            source =
+                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
+            Border firstSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
             Grid.SetRow(firstSummonerSpellImage, 0);
             summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
-            var secondSummonerSpellImage = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
-            };
+            source =
+                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
+            Border secondSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
             Grid.SetRow(secondSummonerSpellImage, 1);
@@ -295,22 +274,14 @@ public sealed partial class MatchDetail : Page
             }
 
 
-            var mainRune = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}"))
-            };
-
+            source = $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
+            Border mainRune = GetImage(source);
             Grid.SetColumn(mainRune, 1);
             Grid.SetRow(mainRune, 0);
             summonerChampionGrid.Children.Add(mainRune);
 
-
-            var secondaryRune = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
-            };
+            source = $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}";
+            Border secondaryRune = GetImage(source);
 
             Grid.SetColumn(secondaryRune, 1);
             Grid.SetRow(secondaryRune, 1);
@@ -321,28 +292,11 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(summonersViewbox, 2);
             participantGrid.Children.Add(summonersViewbox);
 
-            var csChampionTextBlock = new TextBlock
-            {
-                Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                TextAlignment = TextAlignment.Center,
-                Text =
-                    $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                FontSize = 15,
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
+            Viewbox csChampionTextBlock = SetText($"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
-            var csChampionViewbox = new Viewbox
-            {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            csChampionViewbox.Child = csChampionTextBlock;
-
-            Grid.SetColumn(csChampionViewbox, 3);
-            participantGrid.Children.Add(csChampionViewbox);
+            Grid.SetColumn(csChampionTextBlock, 3);
+            participantGrid.Children.Add(csChampionTextBlock);
 
             var team1Rectangle = new Rectangle
             {
@@ -391,25 +345,11 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid1, 4);
             participantGrid.Children.Add(innerGrid1);
 
+            Viewbox kdaChampionTextBlock = SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
-            var kdaChampionTextBlock = new TextBlock
-            {
-                Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextAlignment = TextAlignment.Center,
-                Text = $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                FontSize = 15,
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
-
-            var kdaChampionViewbox = new Viewbox
-            {
-                Child = kdaChampionTextBlock,
-                Stretch = Stretch.Uniform
-            };
-
-            Grid.SetColumn(kdaChampionViewbox, 5);
-            participantGrid.Children.Add(kdaChampionViewbox);
+            Grid.SetColumn(kdaChampionTextBlock, 5);
+            participantGrid.Children.Add(kdaChampionTextBlock);
 
             Grid.SetColumn(participantGrid, 0);
             Grid.SetRow(participantGrid, row);
@@ -466,26 +406,15 @@ public sealed partial class MatchDetail : Page
             participantGrid.ColumnDefinitions.Add(col6);
 
 
-            var champIconBorder = new Border
-            {
-                Height = 30,
-                Width = 30,
-                CornerRadius = new CornerRadius(15)
-            };
-
-            var championIcon = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png"))
-            };
-
-            champIconBorder.Child = championIcon;
+            string source =
+                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png";
+            Border championIcon = GetImage(source, 30, 15);
 
             var championIconViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = champIconBorder
+                Child = championIcon
             };
 
             var championNameViewbox = new Viewbox
@@ -562,21 +491,17 @@ public sealed partial class MatchDetail : Page
             };
 
 
-            var firstSummonerSpellImage = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png"))
-            };
+            source =
+                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
+            Border firstSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
             Grid.SetRow(firstSummonerSpellImage, 0);
             summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
-            var secondSummonerSpellImage = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png"))
-            };
+            source =
+                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
+            Border secondSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
             Grid.SetRow(secondSummonerSpellImage, 1);
@@ -602,24 +527,18 @@ public sealed partial class MatchDetail : Page
             }
 
 
-            var mainRuneUrl =
+            source =
                 $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
 
-            var mainRune = new Image
-            {
-                Source = new BitmapImage(new Uri(mainRuneUrl))
-            };
+            Border mainRune = GetImage(source);
 
             Grid.SetColumn(mainRune, 1);
             Grid.SetRow(mainRune, 0);
             summonerChampionGrid.Children.Add(mainRune);
 
 
-            var secondaryRune = new Image
-            {
-                Source = new BitmapImage(new Uri(
-                    $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}"))
-            };
+            source = $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}";
+            Border secondaryRune = GetImage(source);
 
             Grid.SetColumn(secondaryRune, 1);
             Grid.SetRow(secondaryRune, 1);
@@ -678,49 +597,18 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid2, 4);
             participantGrid.Children.Add(innerGrid2);
 
-
-            var csChampionTextBlock = new TextBlock
-            {
-                Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                TextAlignment = TextAlignment.Center,
-                Text =
-                    $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                FontSize = 15,
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
-
-            var csChampionViewbox = new Viewbox
-            {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            csChampionViewbox.Child = csChampionTextBlock;
-
-            Grid.SetColumn(csChampionViewbox, 3);
-            participantGrid.Children.Add(csChampionViewbox);
+            Viewbox csChampionTextBlock = SetText($"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
 
-            var kdaChampionTextBlock = new TextBlock
-            {
-                Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
-                HorizontalTextAlignment = TextAlignment.Center,
-                TextAlignment = TextAlignment.Center,
-                Text = $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                FontSize = 15,
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-            };
+            Grid.SetColumn(csChampionTextBlock, 3);
+            participantGrid.Children.Add(csChampionTextBlock);
 
-            var kdaChampionViewbox = new Viewbox
-            {
-                Child = kdaChampionTextBlock,
-                Stretch = Stretch.Uniform
-            };
+            Viewbox kdaChampionTextBlock = SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+                15, Color.FromArgb(255, 52, 73, 94), stretch:Stretch.Uniform);
 
-            Grid.SetColumn(kdaChampionViewbox, 5);
-            participantGrid.Children.Add(kdaChampionViewbox);
+            Grid.SetColumn(kdaChampionTextBlock, 5);
+            participantGrid.Children.Add(kdaChampionTextBlock);
 
 
             Grid.SetColumn(participantGrid, 2);
@@ -843,14 +731,8 @@ public sealed partial class MatchDetail : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var startTextBlock = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Foreground = new SolidColorBrush(Colors.White),
-            HorizontalTextAlignment = TextAlignment.Center,
-            Text = " début du match",
-            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-        };
+        Viewbox startTextBlock = SetText(" début du match",
+            15, Colors.White);
 
         startStackPanel.Children.Add(startIcon);
         startStackPanel.Children.Add(startTextBlock);
@@ -878,30 +760,19 @@ public sealed partial class MatchDetail : Page
                     if (participant.ParticipantId == e.CreatorId)
                         creatorPuuid = participant.Puuid;
 
+                string source =
+                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png";
+                Border championIcon = GetImage(source, 7, 40);
+                championIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                var championIcon = new Image
-                {
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Source = new BitmapImage(new Uri(
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png")),
-                    Width = 40
-                };
 
-                var wardImage = new Image
-                {
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Width = 40,
-                    Source = new BitmapImage(new Uri("https://opgg-static.akamaized.net/meta/images/lol/item/3340.png"))
-                };
+                source =
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\img\item\3340.png";
+                Border wardImage = GetImage(source, 7, 40);
+                wardImage.VerticalAlignment = VerticalAlignment.Center;
 
-                var wardPlacedTextBlock = new TextBlock
-                {
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Foreground = new SolidColorBrush(Colors.White),
-                    HorizontalTextAlignment = TextAlignment.Center,
-                    Text = " a placé une balise",
-                    FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-                };
+                Viewbox wardPlacedTextBlock = SetText(" a placé une balise",
+                    15, Colors.White);
 
                 frameInfoStackPanel.Children.Add(championIcon);
                 frameInfoStackPanel.Children.Add(wardPlacedTextBlock);
@@ -941,31 +812,18 @@ public sealed partial class MatchDetail : Page
                         if (participant.ParticipantId == e.VictimId) victimPuuid = participant.Puuid;
                     }
 
+                    string source =
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
+                    Border killerChampionIcon = GetImage(source, 7, 40);
+                    killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var killerChampionIcon = new Image
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
-                        Width = 40
-                    };
+                    source =
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
+                    Border victimChampionIcon = GetImage(source, 7, 40);
+                    victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var victimChampionIcon = new Image
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
-                        Width = 40
-                    };
-
-                    var eliminatedTextBlock = new TextBlock
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Foreground = new SolidColorBrush(Colors.White),
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        Text = " a eliminé",
-                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-                    };
+                    Viewbox eliminatedTextBlock = SetText(" a eliminé",
+                        15, Colors.White);
 
                     frameInfoStackPanel.Children.Add(killerChampionIcon);
                     frameInfoStackPanel.Children.Add(eliminatedTextBlock);
@@ -999,30 +857,18 @@ public sealed partial class MatchDetail : Page
                             killerPuuid = participant.Puuid;
 
 
-                    var killerChampionIcon = new Image
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png")),
-                        Width = 40
-                    };
+                    string source =
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
+                    Border killerChampionIcon = GetImage(source, 7, 40);
+                    killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var victimChampionIcon = new Image
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
-                        Width = 40
-                    };
+                    source =
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
+                    Border victimChampionIcon = GetImage(source, 7, 40);
+                    victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = new TextBlock
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Foreground = new SolidColorBrush(Colors.White),
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        Text = " a eliminé",
-                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-                    };
+                    Viewbox eliminatedTextBlock = SetText(" a eliminé",
+                        15, Colors.White);
 
                     frameInfoStackPanel.Children.Add(killerChampionIcon);
                     frameInfoStackPanel.Children.Add(eliminatedTextBlock);
@@ -1059,30 +905,19 @@ public sealed partial class MatchDetail : Page
                             victimPuuid = participant.Puuid;
 
 
-                    var summonerChampionIcon = new Image
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png")),
-                        Width = 40
-                    };
+                    string source =
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
+                    Border summonerChampionIcon = GetImage(source, 7, 40);
+                    summonerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var victimChampionIcon = new Image
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Source = new BitmapImage(new Uri(
-                            $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png")),
-                        Width = 40
-                    };
+                    source =
+                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
+                    Border victimChampionIcon = GetImage(source, 7, 40);
+                    victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = new TextBlock
-                    {
-                        VerticalAlignment = VerticalAlignment.Center,
-                        Foreground = new SolidColorBrush(Colors.White),
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        Text = " a participé à l'élimination de ",
-                        FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-                    };
+
+                    Viewbox eliminatedTextBlock = SetText(" a participé à l'élimination de ",
+                        15, Colors.White);
 
                     frameInfoStackPanel.Children.Add(summonerChampionIcon);
                     frameInfoStackPanel.Children.Add(eliminatedTextBlock);
@@ -1114,14 +949,8 @@ public sealed partial class MatchDetail : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var endTextBlock = new TextBlock
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            Foreground = new SolidColorBrush(Colors.White),
-            HorizontalTextAlignment = TextAlignment.Center,
-            Text = " fin du match",
-            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
-        };
+        Viewbox endTextBlock = SetText(" fin du match",
+            15, Colors.White);
 
         endStackPanel.Children.Add(endIcon);
         endStackPanel.Children.Add(endTextBlock);

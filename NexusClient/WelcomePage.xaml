@@ -22,28 +22,31 @@
                    FontWeight="ExtraBold"
                    HorizontalAlignment="Center"
                    Text="Bienvenue" />
-        <StackPanel
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center" Orientation="Horizontal"
-            Height="200"
-            Width="670">
+
+        <Viewbox>
+            <StackPanel
+                Margin="200 0 200 0"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center" Orientation="Horizontal"
+                        Height="200"
+                        Width="670">
             <TextBox
                 KeyDown="SummonerNameTextBox_OnKeyDown"
                 Margin="0 0 30 0"
                 CornerRadius="10"
                 FontSize="22"
-                AllowFocusOnInteraction="True"
                 BorderThickness="0"
                 Padding="25, 15, 25, 15"
                 Width="450"
                 VerticalAlignment="Top"
                 Foreground="#34495E"
                 FontWeight="Bold"
+                PlaceholderForeground="#34495E"
                 x:Name="SummonerNameTextBox"
                 PlaceholderText="Nom d'invocateur"
                 HorizontalAlignment="Center"
-                PlaceholderForeground="#34495E"
-                Background="#EEEEEE" />
+                Background="#EEEEEE" >
+            </TextBox>
             <StackPanel
                 Orientation="Vertical"
                 Margin="20 0 0 0">
@@ -86,12 +89,17 @@
                 </ListView>
             </StackPanel>
         </StackPanel>
-        <TextBlock x:Name="ErrorTextBlock"
-                   Foreground="Red"
-                   FontSize="24"
-                   FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
-                   FontWeight="ExtraBold"
-                   HorizontalAlignment="Center" />
+        </Viewbox>
+        <Viewbox>
+            <TextBlock
+                Margin="300 0 300 0"
+                x:Name="ErrorTextBlock"
+                       Foreground="Red"
+                       FontSize="24"
+                       FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
+                       FontWeight="ExtraBold"
+                       HorizontalAlignment="Center" />
+        </Viewbox>
         <ProgressRing x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="False" />
         <Button
             x:Name="SendSummonerNameButton"
