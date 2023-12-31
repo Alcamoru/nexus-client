@@ -9,6 +9,15 @@ namespace NexusClient;
 
 public class UtilisMethods
 {
+    /// <summary>
+    ///     Retrieves an image from a given URL and wraps it in a border with optional corner radius and width.
+    /// </summary>
+    /// <param name="url">The URL of the image to be retrieved.</param>
+    /// <param name="cornerRadius">The corner radius to be applied to the border. Defaults to 0.</param>
+    /// <param name="width">The desired width of the image and the border. Defaults to 0.</param>
+    /// <returns>
+    ///     The retrieved image wrapped in a border with applied corner radius and width, if specified.
+    /// </returns>
     public static Border GetImage(string url, int cornerRadius = 0, int width = 0)
     {
         var image = new Image
@@ -32,6 +41,22 @@ public class UtilisMethods
         return border;
     }
 
+    /// <summary>
+    ///     Creates a Viewbox element with a TextBlock child that displays the specified text.
+    /// </summary>
+    /// <param name="text">The text to be displayed.</param>
+    /// <param name="fontSize">The font size of the displayed text.</param>
+    /// <param name="color">The color of the displayed text.</param>
+    /// <param name="horizontalAlignment">
+    ///     The horizontal alignment of the TextBlock within the Viewbox. Defaults to
+    ///     HorizontalAlignment.Center.
+    /// </param>
+    /// <param name="verticalAlignment">
+    ///     The vertical alignment of the TextBlock within the Viewbox. Defaults to
+    ///     VerticalAlignment.Center.
+    /// </param>
+    /// <param name="stretch">The stretch mode for the Viewbox. Defaults to Stretch.None.</param>
+    /// <returns>A Viewbox element with a TextBlock child that displays the specified text.</returns>
     public static Viewbox SetText(string text, int fontSize,
         Color color,
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,

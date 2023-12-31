@@ -27,7 +27,7 @@ using static NexusClient.UtilisMethods;
 namespace NexusClient;
 
 /// <summary>
-///     An empty page that can be used on its own or navigated to within a Frame.
+///     Represents a page that displays information about a summoner.
 /// </summary>
 public sealed partial class SummonerInfoPage : Page
 {
@@ -58,6 +58,10 @@ public sealed partial class SummonerInfoPage : Page
         SetBestChampions();
     }
 
+    /// <summary>
+    ///     Retrieves the last n matches of a summoner.
+    /// </summary>
+    /// <returns>A list of Match objects representing the last matches of the summoner.</returns>
     private List<Match> GetLastMatches()
     {
         var matches = new List<Match>();
@@ -68,6 +72,10 @@ public sealed partial class SummonerInfoPage : Page
         return matches;
     }
 
+
+    /// <summary>
+    ///     Sets the leaderboard grid with the top 3 players in the league.
+    /// </summary>
     private void SetLeaderBoardGrid()
     {
         var entries = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
@@ -274,7 +282,7 @@ public sealed partial class SummonerInfoPage : Page
 
         secondIconBorder.Child = secondTextBlock;
 
-        var secondIconViewbox = new Viewbox()
+        var secondIconViewbox = new Viewbox
         {
             Child = secondIconBorder
         };
@@ -442,7 +450,7 @@ public sealed partial class SummonerInfoPage : Page
 
         thirdIconBorder.Child = thirdTextBlock;
 
-        var thirdIconViewbox = new Viewbox()
+        var thirdIconViewbox = new Viewbox
         {
             Child = thirdIconBorder
         };
@@ -582,6 +590,16 @@ public sealed partial class SummonerInfoPage : Page
         LeaderBoardGrid.Children.Add(thirdGrid);
     }
 
+
+    /// <summary>
+    ///     Sets the last matches data in the UI.
+    ///     This method retrieves the last matches data using the GetLastMatches method
+    ///     and sets it in a Grid control in the UI. It assigns event handlers to the
+    ///     Grid control for handling pointer pressed, pointer entered, and pointer exited
+    ///     events. It populates the Grid control with data such as match information,
+    ///     champion details, game duration, roles, kills, assists, vision score, etc.
+    /// </summary>
+    /// <returns>None</returns>
     private void SetLastMatches()
     {
         var matches = GetLastMatches();
@@ -590,7 +608,6 @@ public sealed partial class SummonerInfoPage : Page
         {
             var matchGrid = new Grid
             {
-                Margin = new Thickness(10),
                 Padding = new Thickness(10),
                 BorderBrush = new SolidColorBrush(Colors.Black),
                 BorderThickness = new Thickness(1),
@@ -625,6 +642,11 @@ public sealed partial class SummonerInfoPage : Page
             matchGrid.RowDefinitions.Add(row1);
             matchGrid.RowDefinitions.Add(row2);
             matchGrid.RowDefinitions.Add(row3);
+
+            var matchStackPanel = new StackPanel
+            {
+                Margin = new Thickness(10)
+            };
 
             foreach (var participant in match.Info.Participants)
                 if (participant.SummonerName == LolSummoner.Name)
@@ -952,16 +974,29 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetColumnSpan(itemsChampionViewbox, 3);
 
                     matchGrid.Children.Add(itemsChampionViewbox);
-
-
-                    Grid.SetColumn(matchGrid, i);
-                    MatchListGrid.Children.Add(matchGrid);
                 }
+
+            Debug.WriteLine(match.Info.GameMode);
+            var matchName = SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
+            matchStackPanel.Children.Add(matchName);
+            matchStackPanel.Children.Add(matchGrid);
+            var matchStackPanelViewbox = new Viewbox
+            {
+                Child = matchStackPanel
+            };
+
+            Grid.SetColumn(matchStackPanelViewbox, i);
+            MatchListGrid.Children.Add(matchStackPanelViewbox);
 
             i++;
         }
     }
 
+
+    /// <summary>
+    ///     Sets the best champions in the application.
+    /// </summary>
+    /// <returns>None</returns>
     private void SetBestChampions()
     {
         var bestChampsjson =

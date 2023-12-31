@@ -73,6 +73,10 @@ public sealed partial class MatchDetail : Page
         return championName;
     }
 
+    /// <summary>
+    ///     Sets up the participants grid by adding participants' information and styling.
+    /// </summary>
+    /// <returns>None</returns>
     private void SetParticipantsGrid()
     {
         var team1 = new List<Participant>();
@@ -620,6 +624,10 @@ public sealed partial class MatchDetail : Page
     }
 
 
+    /// <summary>
+    ///     Sets the match timeline by adding visual elements to the MatchTimelineGrid.
+    /// </summary>
+    /// <returns>None</returns>
     private void SetMatchTimeline()
     {
         var elementNumber = 0;
