@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Windows.UI;
@@ -7,6 +8,9 @@ using Camille.Enums;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -15,6 +19,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
+using SkiaSharp;
 using Team = Camille.RiotGames.Enums.Team;
 using static NexusClient.UtilisMethods;
 
@@ -44,6 +49,10 @@ public sealed partial class MatchDetail : Page
 
     private PlatformRoute SummonerPlatformRoute { get; set; }
 
+    private List<Participant> Team1 { get; set; }
+
+    private List<Participant> Team2 { get; set; }
+
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -55,6 +64,10 @@ public sealed partial class MatchDetail : Page
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(4);
         SetMatchTimeline();
         SetParticipantsGrid();
+        Team1 = new List<Participant>();
+        Team2 = new List<Participant>();
+        SetTeams();
+        SetMatchGraph();
         base.OnNavigatedTo(e);
     }
 
@@ -623,6 +636,15 @@ public sealed partial class MatchDetail : Page
         }
     }
 
+    private void SetTeams()
+    {
+        foreach (var participant in MatchInfo.Info.Participants)
+            if (participant.TeamId == Team.Blue)
+                Team1.Add(participant);
+            else
+                Team2.Add(participant);
+    }
+
 
     /// <summary>
     ///     Sets the match timeline by adding visual elements to the MatchTimelineGrid.
@@ -991,5 +1013,85 @@ public sealed partial class MatchDetail : Page
         MatchTimelineGrid.Children.Add(rectangleGreenTop);
 
         MatchTimelineGrid.Children.Add(endStackPanel);
+    }
+
+    private void SetMatchGraph()
+    {
+        var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId)!;
+        var timer = 0;
+        var team1Money = new ObservableCollection<int> { 0 };
+        var team2Money = new ObservableCollection<int> { 0 };
+        foreach (var frame in timeline.Info.Frames)
+        {
+            var totalTeam1Money = 0;
+            foreach (var participant in Team1)
+            {
+                if (participant.ParticipantId == frame.ParticipantFrames.X1.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X2.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X2.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X3.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X3.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X4.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X4.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X5.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X5.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X6.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X6.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X7.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X7.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X8.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X8.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X9!.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X9.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X10!.ParticipantId)
+                    totalTeam1Money += frame.ParticipantFrames.X10.TotalGold;
+            }
+
+            team1Money.Add(totalTeam1Money);
+
+
+            var totalTeam2Money = 0;
+            foreach (var participant in Team2)
+            {
+                if (participant.ParticipantId == frame.ParticipantFrames.X1.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X2.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X3.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X4.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X5.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X6.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X7.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X8.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X9!.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                if (participant.ParticipantId == frame.ParticipantFrames.X10!.ParticipantId)
+                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+            }
+
+            team2Money.Add(totalTeam2Money);
+
+
+            timer += 1;
+        }
+
+        var team1Serie = new LineSeries<int>
+        {
+            Values = team1Money,
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185))
+        };
+        var team2Serie = new LineSeries<int>
+        {
+            Values = team2Money,
+            Stroke = new SolidColorPaint(new SKColor(235, 47, 6))
+        };
+        GoldChart.Series = new List<ISeries> { team1Serie, team2Serie };
     }
 }
