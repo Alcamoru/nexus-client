@@ -1019,8 +1019,8 @@ public sealed partial class MatchDetail : Page
     {
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId)!;
         var timer = 0;
-        var team1Money = new ObservableCollection<int> { 0 };
-        var team2Money = new ObservableCollection<int> { 0 };
+        var team1Money = new ObservableCollection<int>();
+        var team2Money = new ObservableCollection<int>();
         foreach (var frame in timeline.Info.Frames)
         {
             var totalTeam1Money = 0;
