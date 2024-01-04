@@ -18,4 +18,4 @@ to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
-![alt text](Assets/example-image.png)
+![alt text](NexusClient/Assets/example-image.png)

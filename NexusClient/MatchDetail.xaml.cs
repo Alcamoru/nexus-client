@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.UI;
@@ -15,6 +16,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
@@ -73,7 +75,7 @@ public sealed partial class MatchDetail : Page
 
     private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
     {
-        Frame.GoBack();
+        Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
 
     private string GetChampionNameByPuuid(string puuid)
@@ -1018,7 +1020,6 @@ public sealed partial class MatchDetail : Page
     private void SetMatchGraph()
     {
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId)!;
-        var timer = 0;
         var team1Money = new ObservableCollection<int>();
         var team2Money = new ObservableCollection<int>();
         foreach (var frame in timeline.Info.Frames)
@@ -1077,21 +1078,78 @@ public sealed partial class MatchDetail : Page
             }
 
             team2Money.Add(totalTeam2Money);
-
-
-            timer += 1;
         }
 
         var team1Serie = new LineSeries<int>
         {
             Values = team1Money,
-            Stroke = new SolidColorPaint(new SKColor(41, 128, 185))
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
+            GeometrySize = 2,
         };
         var team2Serie = new LineSeries<int>
         {
             Values = team2Money,
-            Stroke = new SolidColorPaint(new SKColor(235, 47, 6))
+            Stroke = new SolidColorPaint(new SKColor(235, 47, 6)),
+            GeometrySize = 2,
         };
         GoldChart.Series = new List<ISeries> { team1Serie, team2Serie };
+
+        var summonerId = 1;
+        foreach (string metadataParticipant in timeline.Metadata.Participants)
+        {
+            if (metadataParticipant == LolSummoner.Puuid)
+            {
+                break;
+            }
+
+            summonerId++;
+        }
+
+
+        var playerMinions = new ObservableCollection<int>();
+        foreach (var frame in timeline.Info.Frames)
+        {
+                if (summonerId == frame.ParticipantFrames.X1.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X1.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X2.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X2.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X3.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X3.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X4.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X4.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X5.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X5.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X6.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X6.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X7.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X7.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X8.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X8.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X9!.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X9.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+                if (summonerId == frame.ParticipantFrames.X10!.ParticipantId)
+                    playerMinions.Add(frame.ParticipantFrames.X10.MinionsKilled + frame.ParticipantFrames.X1.JungleMinionsKilled);
+        }
+
+        var playerMinionsSeries = new LineSeries<int>
+        {
+            Values = playerMinions,
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
+            GeometrySize = 2,
+        };
+        MinionsChart.Series = new List<ISeries> { playerMinionsSeries };
+
+    }
+
+    private void GoldsChartButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        GoldChart.Visibility = Visibility.Visible;
+        MinionsChart.Visibility = Visibility.Collapsed;
+    }
+
+    private void MinionsChartButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        GoldChart.Visibility = Visibility.Collapsed;
+        MinionsChart.Visibility = Visibility.Visible;
     }
 }

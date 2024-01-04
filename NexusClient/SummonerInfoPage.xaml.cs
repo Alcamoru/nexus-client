@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
@@ -85,7 +86,6 @@ public sealed partial class SummonerInfoPage : Page
         var second = leagueItemsSorted[1];
         var third = leagueItemsSorted[2];
 
-        Debug.WriteLine(leagueItemsSorted[0]);
 
         var firstGrid = new Grid
         {
@@ -976,7 +976,6 @@ public sealed partial class SummonerInfoPage : Page
                     matchGrid.Children.Add(itemsChampionViewbox);
                 }
 
-            Debug.WriteLine(match.Info.GameMode);
             var matchName = SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
             matchStackPanel.Children.Add(matchName);
             matchStackPanel.Children.Add(matchGrid);
@@ -1054,7 +1053,7 @@ public sealed partial class SummonerInfoPage : Page
 
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
-        Frame.Navigate(typeof(WelcomePage));
+        Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
 
     private void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
@@ -1084,7 +1083,7 @@ public sealed partial class SummonerInfoPage : Page
                 SummonerRegionalRoute,
                 SummonerPlatformRoute
             };
-            Frame.Navigate(typeof(MatchDetail), parameters);
+            Frame.Navigate(typeof(MatchDetail), parameters, new DrillInNavigationTransitionInfo());
         }
     }
 }
