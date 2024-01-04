@@ -1144,17 +1144,67 @@ public sealed partial class MatchDetail : Page
             GeometrySize = 2
         };
         MinionsChart.Series = new List<ISeries> { playerMinionsSeries };
+
+
+        var playerXp = new ObservableCollection<int>();
+        foreach (var frame in timeline.Info.Frames)
+        {
+            if (summonerId == frame.ParticipantFrames.X1.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X1.Xp);
+            if (summonerId == frame.ParticipantFrames.X2.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X2.Xp);
+            if (summonerId == frame.ParticipantFrames.X3.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X3.Xp);
+            if (summonerId == frame.ParticipantFrames.X4.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X4.Xp);
+            if (summonerId == frame.ParticipantFrames.X5.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X5.Xp);
+            if (summonerId == frame.ParticipantFrames.X6.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X6.Xp);
+            if (summonerId == frame.ParticipantFrames.X7.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X7.Xp);
+            if (summonerId == frame.ParticipantFrames.X8.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X8.Xp);
+            if (summonerId == frame.ParticipantFrames.X9!.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X9.Xp);
+            if (summonerId == frame.ParticipantFrames.X10!.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X10.Xp);
+        }
+
+        var playerXpSeries = new LineSeries<int>
+        {
+            Values = playerXp,
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
+            GeometrySize = 2
+        };
+        XpChart.Series = new List<ISeries> { playerXpSeries };
     }
+
 
     private void GoldsChartButton_OnClick(object sender, RoutedEventArgs e)
     {
+        MinionsChartButton.IsChecked = false;
+        XpChartButton.IsChecked = false;
         GoldChart.Visibility = Visibility.Visible;
+        XpChart.Visibility = Visibility.Collapsed;
         MinionsChart.Visibility = Visibility.Collapsed;
     }
 
     private void MinionsChartButton_OnClick(object sender, RoutedEventArgs e)
     {
+        GoldsChartButton.IsChecked = false;
+        XpChartButton.IsChecked = false;
         GoldChart.Visibility = Visibility.Collapsed;
+        XpChart.Visibility = Visibility.Collapsed;
         MinionsChart.Visibility = Visibility.Visible;
+    }
+
+    private void XpChartButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        GoldsChartButton.IsChecked = false;
+        MinionsChartButton.IsChecked = false;
+        GoldChart.Visibility = Visibility.Collapsed;
+        MinionsChart.Visibility = Visibility.Collapsed;
+        XpChart.Visibility = Visibility.Visible;
     }
 }

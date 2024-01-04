@@ -171,14 +171,17 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="6*" />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Button Background="Red" x:Name="GoldsChartButton" Content="Golds" Click="GoldsChartButton_OnClick" />
-                    <Button Background="Blue" x:Name="MinionsChartButton" Content="Minions"
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Orientation="Horizontal">
+                    <ToggleButton Margin="10 0 10 0" Foreground="#34495E" Background="#EEEEEE" x:Name="GoldsChartButton" Content="Golds" Click="GoldsChartButton_OnClick" />
+                    <ToggleButton Margin="10 0 10 0" Foreground="#34495E" Background="#EEEEEE" x:Name="MinionsChartButton" Content="Minions"
                             Click="MinionsChartButton_OnClick" />
+                    <ToggleButton Margin="10 0 10 0" Foreground="#34495E" Background="#EEEEEE" x:Name="XpChartButton" Content="Xp"
+                                  Click="XpChartButton_OnClick" />
                 </StackPanel>
                 <Grid Grid.Row="1" x:Name="ContentGrid">
                     <lvc:CartesianChart Visibility="Visible" x:Name="GoldChart" />
                     <lvc:CartesianChart Visibility="Collapsed" x:Name="MinionsChart" />
+                    <lvc:CartesianChart Visibility="Collapsed" x:Name="XpChart" />
                 </Grid>
             </Grid>
         </Grid>
