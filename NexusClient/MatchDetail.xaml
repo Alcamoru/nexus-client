@@ -168,12 +168,13 @@
             </Grid>
             <Grid x:Name="GraphGrid" Grid.Row="1" Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"></RowDefinition>
-                    <RowDefinition Height="6*"></RowDefinition>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="6*" />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
-                    <Button Background="Red" x:Name="GoldsChartButton" Content="Golds" Click="GoldsChartButton_OnClick"></Button>
-                    <Button Background="Blue" x:Name="MinionsChartButton" Content="Minions" Click="MinionsChartButton_OnClick"></Button>
+                    <Button Background="Red" x:Name="GoldsChartButton" Content="Golds" Click="GoldsChartButton_OnClick" />
+                    <Button Background="Blue" x:Name="MinionsChartButton" Content="Minions"
+                            Click="MinionsChartButton_OnClick" />
                 </StackPanel>
                 <Grid Grid.Row="1" x:Name="ContentGrid">
                     <lvc:CartesianChart Visibility="Visible" x:Name="GoldChart" />
