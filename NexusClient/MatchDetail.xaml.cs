@@ -15,6 +15,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
@@ -73,7 +74,7 @@ public sealed partial class MatchDetail : Page
 
     private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
     {
-        Frame.GoBack();
+        Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
 
     private string GetChampionNameByPuuid(string puuid)
@@ -195,7 +196,7 @@ public sealed partial class MatchDetail : Page
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            var championNameTextBlock = SetText(participant.ChampionName,
+            var championNameTextBlock = SetText(participant.SummonerName,
                 20, Color.FromArgb(255, 52, 73, 94));
 
             championNameViewbox.Child = championNameTextBlock;
@@ -446,7 +447,7 @@ public sealed partial class MatchDetail : Page
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Text = participant.ChampionName,
+                Text = participant.SummonerName,
                 FontSize = 20,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
@@ -753,7 +754,8 @@ public sealed partial class MatchDetail : Page
 
         var startStackPanel = new StackPanel
         {
-            Orientation = Orientation.Horizontal
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(10, 0, 0, 0)
         };
 
         var startIcon = new Image
@@ -783,6 +785,7 @@ public sealed partial class MatchDetail : Page
 
                 var frameInfoStackPanel = new StackPanel
                 {
+                    Margin = new Thickness(10, 0, 0, 0),
                     Orientation = Orientation.Horizontal
                 };
 
@@ -831,6 +834,8 @@ public sealed partial class MatchDetail : Page
 
                     var frameInfoStackPanel = new StackPanel
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
+
                         Orientation = Orientation.Horizontal
                     };
 
@@ -879,6 +884,7 @@ public sealed partial class MatchDetail : Page
 
                     var frameInfoStackPanel = new StackPanel
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
                         Orientation = Orientation.Horizontal
                     };
 
@@ -927,6 +933,7 @@ public sealed partial class MatchDetail : Page
 
                     var frameInfoStackPanel = new StackPanel
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
                         Orientation = Orientation.Horizontal
                     };
 
@@ -971,6 +978,7 @@ public sealed partial class MatchDetail : Page
 
         var endStackPanel = new StackPanel
         {
+            Margin = new Thickness(10, 0, 0, 0),
             Orientation = Orientation.Horizontal
         };
 
@@ -1018,7 +1026,6 @@ public sealed partial class MatchDetail : Page
     private void SetMatchGraph()
     {
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId)!;
-        var timer = 0;
         var team1Money = new ObservableCollection<int>();
         var team2Money = new ObservableCollection<int>();
         foreach (var frame in timeline.Info.Frames)
@@ -1077,21 +1084,134 @@ public sealed partial class MatchDetail : Page
             }
 
             team2Money.Add(totalTeam2Money);
-
-
-            timer += 1;
         }
 
         var team1Serie = new LineSeries<int>
         {
             Values = team1Money,
-            Stroke = new SolidColorPaint(new SKColor(41, 128, 185))
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
+            GeometrySize = 2
         };
         var team2Serie = new LineSeries<int>
         {
             Values = team2Money,
-            Stroke = new SolidColorPaint(new SKColor(235, 47, 6))
+            Stroke = new SolidColorPaint(new SKColor(235, 47, 6)),
+            GeometrySize = 2
         };
         GoldChart.Series = new List<ISeries> { team1Serie, team2Serie };
+
+        var summonerId = 1;
+        foreach (var metadataParticipant in timeline.Metadata.Participants)
+        {
+            if (metadataParticipant == LolSummoner.Puuid) break;
+
+            summonerId++;
+        }
+
+
+        var playerMinions = new ObservableCollection<int>();
+        foreach (var frame in timeline.Info.Frames)
+        {
+            if (summonerId == frame.ParticipantFrames.X1.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X1.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X2.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X2.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X3.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X3.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X4.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X4.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X5.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X5.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X6.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X6.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X7.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X7.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X8.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X8.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X9!.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X9.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+            if (summonerId == frame.ParticipantFrames.X10!.ParticipantId)
+                playerMinions.Add(frame.ParticipantFrames.X10.MinionsKilled +
+                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
+        }
+
+        var playerMinionsSeries = new LineSeries<int>
+        {
+            Values = playerMinions,
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
+            GeometrySize = 2
+        };
+        MinionsChart.Series = new List<ISeries> { playerMinionsSeries };
+
+
+        var playerXp = new ObservableCollection<int>();
+        foreach (var frame in timeline.Info.Frames)
+        {
+            if (summonerId == frame.ParticipantFrames.X1.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X1.Xp);
+            if (summonerId == frame.ParticipantFrames.X2.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X2.Xp);
+            if (summonerId == frame.ParticipantFrames.X3.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X3.Xp);
+            if (summonerId == frame.ParticipantFrames.X4.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X4.Xp);
+            if (summonerId == frame.ParticipantFrames.X5.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X5.Xp);
+            if (summonerId == frame.ParticipantFrames.X6.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X6.Xp);
+            if (summonerId == frame.ParticipantFrames.X7.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X7.Xp);
+            if (summonerId == frame.ParticipantFrames.X8.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X8.Xp);
+            if (summonerId == frame.ParticipantFrames.X9!.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X9.Xp);
+            if (summonerId == frame.ParticipantFrames.X10!.ParticipantId)
+                playerXp.Add(frame.ParticipantFrames.X10.Xp);
+        }
+
+        var playerXpSeries = new LineSeries<int>
+        {
+            Values = playerXp,
+            Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
+            GeometrySize = 2
+        };
+        XpChart.Series = new List<ISeries> { playerXpSeries };
+    }
+
+
+    private void GoldsChartButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        MinionsChartButton.IsChecked = false;
+        XpChartButton.IsChecked = false;
+        GoldChart.Visibility = Visibility.Visible;
+        XpChart.Visibility = Visibility.Collapsed;
+        MinionsChart.Visibility = Visibility.Collapsed;
+    }
+
+    private void MinionsChartButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        GoldsChartButton.IsChecked = false;
+        XpChartButton.IsChecked = false;
+        GoldChart.Visibility = Visibility.Collapsed;
+        XpChart.Visibility = Visibility.Collapsed;
+        MinionsChart.Visibility = Visibility.Visible;
+    }
+
+    private void XpChartButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        GoldsChartButton.IsChecked = false;
+        MinionsChartButton.IsChecked = false;
+        GoldChart.Visibility = Visibility.Collapsed;
+        MinionsChart.Visibility = Visibility.Collapsed;
+        XpChart.Visibility = Visibility.Visible;
     }
 }

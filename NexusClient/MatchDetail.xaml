@@ -33,6 +33,7 @@
             </Grid.RowDefinitions>
 
             <Button
+                x:Name="ButtonBack"
                 Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -105,26 +106,30 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="8*" />
                 </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Margin="10"
-                    Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
-                    FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
 
+                <Viewbox Grid.Row="0"
+                         Grid.Column="0">
+                    <TextBlock
+                        Margin="10"
+                        Text="Temps forts" Foreground="#34495E" FontSize="18" TextAlignment="Center"
+                        FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter" />
+                </Viewbox>
 
                 <ScrollViewer CornerRadius="10" Grid.Row="1">
-                    <Grid x:Name="MatchTimelineGrid" Background="#34495E">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="6*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="75" />
-                        </Grid.RowDefinitions>
+
+                    <Viewbox>
+                        <Grid Padding="8" x:Name="MatchTimelineGrid" Background="#34495E">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="6*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="75" />
+                            </Grid.RowDefinitions>
 
 
-                    </Grid>
+                        </Grid>
+                    </Viewbox>
                 </ScrollViewer>
 
             </Grid>
@@ -167,7 +172,26 @@
 
             </Grid>
             <Grid x:Name="GraphGrid" Grid.Row="1" Grid.Column="1">
-                <lvc:CartesianChart x:Name="GoldChart" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="6*" />
+                </Grid.RowDefinitions>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0"
+                            Orientation="Horizontal">
+                    <ToggleButton Margin="10 0 10 0" Foreground="#34495E" Background="#EEEEEE"
+                                  x:Name="GoldsChartButton" Content="Golds" Click="GoldsChartButton_OnClick" />
+                    <ToggleButton Margin="10 0 10 0" Foreground="#34495E" Background="#EEEEEE"
+                                  x:Name="MinionsChartButton" Content="Minions"
+                                  Click="MinionsChartButton_OnClick" />
+                    <ToggleButton Margin="10 0 10 0" Foreground="#34495E" Background="#EEEEEE" x:Name="XpChartButton"
+                                  Content="Xp"
+                                  Click="XpChartButton_OnClick" />
+                </StackPanel>
+                <Grid Grid.Row="1" x:Name="ContentGrid">
+                    <lvc:CartesianChart Visibility="Visible" x:Name="GoldChart" />
+                    <lvc:CartesianChart Visibility="Collapsed" x:Name="MinionsChart" />
+                    <lvc:CartesianChart Visibility="Collapsed" x:Name="XpChart" />
+                </Grid>
             </Grid>
         </Grid>
 

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Core;
 using Camille.Enums;
@@ -15,6 +16,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
@@ -85,7 +87,6 @@ public sealed partial class SummonerInfoPage : Page
         var second = leagueItemsSorted[1];
         var third = leagueItemsSorted[2];
 
-        Debug.WriteLine(leagueItemsSorted[0]);
 
         var firstGrid = new Grid
         {
@@ -976,7 +977,6 @@ public sealed partial class SummonerInfoPage : Page
                     matchGrid.Children.Add(itemsChampionViewbox);
                 }
 
-            Debug.WriteLine(match.Info.GameMode);
             var matchName = SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
             matchStackPanel.Children.Add(matchName);
             matchStackPanel.Children.Add(matchGrid);
@@ -1054,10 +1054,10 @@ public sealed partial class SummonerInfoPage : Page
 
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
-        Frame.Navigate(typeof(WelcomePage));
+        Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
 
-    private void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    private async void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var originalSource = e.OriginalSource as FrameworkElement;
 
@@ -1076,6 +1076,33 @@ public sealed partial class SummonerInfoPage : Page
 
         if (matchGrid != null)
         {
+            var matchProgressRing = new ProgressRing
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Background = new SolidColorBrush(Colors.White)
+            };
+
+            var matchRectangle = new Rectangle
+            {
+                Fill = new SolidColorBrush(Color.FromArgb(150, 52, 73, 94))
+            };
+            Grid.SetColumn(matchRectangle, 0);
+            Grid.SetColumnSpan(matchRectangle, 6);
+            Grid.SetRow(matchRectangle, 0);
+            Grid.SetRowSpan(matchRectangle, 3);
+
+            matchGrid!.Children.Add(matchRectangle);
+
+            Grid.SetColumn(matchProgressRing, 0);
+            Grid.SetColumnSpan(matchProgressRing, 6);
+            Grid.SetRow(matchProgressRing, 0);
+            Grid.SetRowSpan(matchProgressRing, 3);
+
+            matchGrid!.Children.Add(matchProgressRing);
+            await Task.Run(() => { Thread.Sleep(1); });
+
+
             var parameters = new List<object>
             {
                 Api,
@@ -1084,7 +1111,7 @@ public sealed partial class SummonerInfoPage : Page
                 SummonerRegionalRoute,
                 SummonerPlatformRoute
             };
-            Frame.Navigate(typeof(MatchDetail), parameters);
+            Frame.Navigate(typeof(MatchDetail), parameters, new DrillInNavigationTransitionInfo());
         }
     }
 }

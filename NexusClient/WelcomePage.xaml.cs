@@ -11,6 +11,7 @@ using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Animation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -119,6 +120,6 @@ public sealed partial class WelcomePage : Page
             SummonerPlatformRoute
         };
 
-        Frame.Navigate(typeof(SummonerInfoPage), parametersList);
+        Frame.Navigate(typeof(SummonerInfoPage), parametersList, new DrillInNavigationTransitionInfo());
     }
 }
