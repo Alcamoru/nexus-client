@@ -604,6 +604,9 @@ public sealed partial class SummonerInfoPage : Page
     /// <returns>None</returns>
     private void SetLastMatches()
     {
+
+        MatchListGrid.Children.Clear();
+
         var matches = GetLastMatches();
         var i = 0;
         foreach (var match in matches)
@@ -1000,6 +1003,9 @@ public sealed partial class SummonerInfoPage : Page
     /// <returns>None</returns>
     private void SetBestChampions()
     {
+
+        BestChampionsContentGrid.Children.Clear();
+
         var bestChampsjson =
             File.ReadAllText(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\bestChampions.json");
