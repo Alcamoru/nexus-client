@@ -196,7 +196,7 @@ public sealed partial class MatchDetail : Page
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            var championNameTextBlock = SetText(participant.ChampionName,
+            var championNameTextBlock = SetText(participant.SummonerName,
                 20, Color.FromArgb(255, 52, 73, 94));
 
             championNameViewbox.Child = championNameTextBlock;
@@ -447,7 +447,7 @@ public sealed partial class MatchDetail : Page
                 Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Text = participant.ChampionName,
+                Text = participant.SummonerName,
                 FontSize = 20,
                 FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
             };
@@ -754,7 +754,8 @@ public sealed partial class MatchDetail : Page
 
         var startStackPanel = new StackPanel
         {
-            Orientation = Orientation.Horizontal
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(10, 0, 0, 0)
         };
 
         var startIcon = new Image
@@ -784,6 +785,7 @@ public sealed partial class MatchDetail : Page
 
                 var frameInfoStackPanel = new StackPanel
                 {
+                    Margin = new Thickness(10, 0, 0, 0),
                     Orientation = Orientation.Horizontal
                 };
 
@@ -832,6 +834,8 @@ public sealed partial class MatchDetail : Page
 
                     var frameInfoStackPanel = new StackPanel
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
+
                         Orientation = Orientation.Horizontal
                     };
 
@@ -880,6 +884,7 @@ public sealed partial class MatchDetail : Page
 
                     var frameInfoStackPanel = new StackPanel
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
                         Orientation = Orientation.Horizontal
                     };
 
@@ -928,6 +933,7 @@ public sealed partial class MatchDetail : Page
 
                     var frameInfoStackPanel = new StackPanel
                     {
+                        Margin = new Thickness(10, 0, 0, 0),
                         Orientation = Orientation.Horizontal
                     };
 
@@ -972,6 +978,7 @@ public sealed partial class MatchDetail : Page
 
         var endStackPanel = new StackPanel
         {
+            Margin = new Thickness(10, 0, 0, 0),
             Orientation = Orientation.Horizontal
         };
 

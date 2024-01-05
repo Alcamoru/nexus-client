@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Core;
 using Camille.Enums;
@@ -1055,7 +1057,7 @@ public sealed partial class SummonerInfoPage : Page
         Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
 
-    private void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
+    private async void Match_OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
         var originalSource = e.OriginalSource as FrameworkElement;
 
@@ -1074,6 +1076,33 @@ public sealed partial class SummonerInfoPage : Page
 
         if (matchGrid != null)
         {
+            var matchProgressRing = new ProgressRing
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Background = new SolidColorBrush(Colors.White)
+            };
+
+            var matchRectangle = new Rectangle
+            {
+                Fill = new SolidColorBrush(Color.FromArgb(150, 52, 73, 94))
+            };
+            Grid.SetColumn(matchRectangle, 0);
+            Grid.SetColumnSpan(matchRectangle, 6);
+            Grid.SetRow(matchRectangle, 0);
+            Grid.SetRowSpan(matchRectangle, 3);
+
+            matchGrid!.Children.Add(matchRectangle);
+
+            Grid.SetColumn(matchProgressRing, 0);
+            Grid.SetColumnSpan(matchProgressRing, 6);
+            Grid.SetRow(matchProgressRing, 0);
+            Grid.SetRowSpan(matchProgressRing, 3);
+
+            matchGrid!.Children.Add(matchProgressRing);
+            await Task.Run(() => { Thread.Sleep(1); });
+
+
             var parameters = new List<object>
             {
                 Api,
