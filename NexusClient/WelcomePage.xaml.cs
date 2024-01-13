@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.System;
 using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.AccountV1;
 using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -88,10 +89,20 @@ public sealed partial class WelcomePage : Page
     private async void CheckIfExists()
     {
         WelcomePageProgressRing.IsActive = true;
+
+        string[] subs = SummonerNameTextBox.Text.Split("#");
+        Debug.WriteLine(subs);
+
         try
         {
-            LolSummoner =
-                (await Api.SummonerV4().GetBySummonerNameAsync(SummonerPlatformRoute, SummonerNameTextBox.Text))!;
+            if (subs.Length != 2)
+            {
+                throw new ArgumentNullException();
+            }
+
+            Account lolAccount = (await Api.AccountV1().GetByRiotIdAsync(SummonerRegionalRoute, subs[0], subs[1]))!;
+            LolSummoner = await Api.SummonerV4().GetByPUUIDAsync(SummonerPlatformRoute, lolAccount.Puuid);
+            Debug.WriteLine(LolSummoner);
 
             if (LolSummoner is null) throw new ArgumentNullException();
 
