@@ -275,7 +275,7 @@ public sealed partial class MatchDetail : Page
 
             var perksJson =
                 File.ReadAllText(
-                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
             var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
             var firstPerkIcon = "";
@@ -529,7 +529,7 @@ public sealed partial class MatchDetail : Page
 
             var perksJson =
                 File.ReadAllText(
-                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
             var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
             var firstPerkIcon = "";
@@ -802,7 +802,7 @@ public sealed partial class MatchDetail : Page
 
 
                 source =
-                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\img\item\3340.png";
+                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\img\item\3340.png";
                 var wardImage = GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
 

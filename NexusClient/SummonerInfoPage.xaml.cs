@@ -81,8 +81,16 @@ public sealed partial class SummonerInfoPage : Page
     /// </summary>
     private void SetLeaderBoardGrid()
     {
-        var entries = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
-        var leagueItemsSorted = entries.OrderByDescending(item => item.LeaguePoints).ToArray();
+        var challengerEntries = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
+        if (challengerEntries.Length < 3)
+        {
+            challengerEntries = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
+        }
+        if (challengerEntries.Length < 3)
+        {
+            challengerEntries = Api.LeagueV4().GetMasterLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Entries;
+        }
+        var leagueItemsSorted = challengerEntries.OrderByDescending(item => item.LeaguePoints).ToArray();
 
         var first = leagueItemsSorted[0];
         var second = leagueItemsSorted[1];
@@ -133,7 +141,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         var source =
-            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png";
         var profileIconImage = GetImage(source, 10, 60);
 
         var summonerNameTextBlock = SetText($"{first.SummonerName}", 14, Colors.White);
@@ -306,7 +314,7 @@ public sealed partial class SummonerInfoPage : Page
             Margin = new Thickness(7)
         };
         source =
-            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png";
         var secondProfileIconImage = GetImage(source, 10, 40);
 
 
@@ -473,7 +481,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         source =
-            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\13.24.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png";
 
         var thirdProfileIconImage = GetImage(source, 10, 40);
 
@@ -604,6 +612,9 @@ public sealed partial class SummonerInfoPage : Page
     /// <returns>None</returns>
     private void SetLastMatches()
     {
+
+        MatchListGrid.Children.Clear();
+
         var matches = GetLastMatches();
         var i = 0;
         foreach (var match in matches)
@@ -838,7 +849,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     var perksJson =
                         File.ReadAllText(
-                            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\13.24.1\data\fr_FR\runesReforged.json");
+                            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
                     var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
                     var firstPerkIcon = "";
@@ -1000,6 +1011,9 @@ public sealed partial class SummonerInfoPage : Page
     /// <returns>None</returns>
     private void SetBestChampions()
     {
+
+        BestChampionsContentGrid.Children.Clear();
+
         var bestChampsjson =
             File.ReadAllText(
                 @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\bestChampions.json");
