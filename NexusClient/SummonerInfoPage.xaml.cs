@@ -141,7 +141,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         var source =
-            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png";
         var profileIconImage = GetImage(source, 10, 60);
 
         var summonerNameTextBlock = SetText($"{first.SummonerName}", 14, Colors.White);
@@ -167,7 +167,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         source =
-            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
+            @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
         var emblemIcon = GetImage(source, 0, 70);
 
         var lpTextBlock = new TextBlock
@@ -176,7 +176,6 @@ public sealed partial class SummonerInfoPage : Page
             Foreground = new SolidColorBrush(Colors.White),
             FontSize = 14,
             TextAlignment = TextAlignment.Center,
-            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
 
@@ -314,7 +313,7 @@ public sealed partial class SummonerInfoPage : Page
             Margin = new Thickness(7)
         };
         source =
-            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png";
         var secondProfileIconImage = GetImage(source, 10, 40);
 
 
@@ -343,7 +342,7 @@ public sealed partial class SummonerInfoPage : Page
 
 
         source =
-            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
+            @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
 
         var secondEmblemIcon = GetImage(source, 0, 40);
 
@@ -481,7 +480,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         source =
-            $@"C:\\Users\\alcam\\OneDrive\\Documents\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png";
 
         var thirdProfileIconImage = GetImage(source, 10, 40);
 
@@ -510,7 +509,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         source =
-            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
+            @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
 
         var thirdEmblemIcon = GetImage(source, 0, 40);
 
@@ -670,7 +669,7 @@ public sealed partial class SummonerInfoPage : Page
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
 
                     var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
                     var championIcon = GetImage(source, 10, 50);
 
                     championIcon.Margin = new Thickness(10, 0, 0, 0);
@@ -826,7 +825,7 @@ public sealed partial class SummonerInfoPage : Page
                     };
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png";
                     var firstSummonerSpellImage = GetImage(source);
 
                     firstSummonerSpellImage.CornerRadius = new CornerRadius(7, 7, 0, 0);
@@ -837,7 +836,7 @@ public sealed partial class SummonerInfoPage : Page
                     summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png";
                     var secondSummonerSpellImage = GetImage(source);
                     secondSummonerSpellImage.CornerRadius = new CornerRadius(0, 0, 7, 7);
 
@@ -849,7 +848,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     var perksJson =
                         File.ReadAllText(
-                            @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
+                            @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
                     var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
                     var firstPerkIcon = "";
@@ -936,19 +935,19 @@ public sealed partial class SummonerInfoPage : Page
                     itemsChampionGrid.RowDefinitions.Add(itemRow1);
                     itemsChampionGrid.RowDefinitions.Add(itemRow2);
 
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item0}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item0}.png";
                     var itemImage0 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item1}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item1}.png";
                     var itemImage1 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item2}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item2}.png";
                     var itemImage2 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item3}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item3}.png";
                     var itemImage3 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item4}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item4}.png";
                     var itemImage4 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item5}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item5}.png";
                     var itemImage5 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/item/{participant.Item6}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item6}.png";
                     var itemImage6 = GetImage(source, 3);
 
                     Grid.SetColumn(itemImage0, 0);
@@ -1016,7 +1015,7 @@ public sealed partial class SummonerInfoPage : Page
 
         var bestChampsjson =
             File.ReadAllText(
-                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\bestChampions.json");
+                @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\bestChampions.json");
         var bestChamps = JsonConvert.DeserializeObject<BestChampionsClass.Root>(bestChampsjson);
 
 
@@ -1029,7 +1028,7 @@ public sealed partial class SummonerInfoPage : Page
                 Margin = new Thickness(10)
             };
 
-            var source = $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{bestChamp.name}.png";
+            var source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{bestChamp.name}.png";
             var championIcon = GetImage(source, 10, 60);
             championIcon.HorizontalAlignment = HorizontalAlignment.Left;
             championIcon.VerticalAlignment = VerticalAlignment.Center;
@@ -1069,6 +1068,8 @@ public sealed partial class SummonerInfoPage : Page
 
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
+        // var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        // localSettings.Values.Clear();
         Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
 

@@ -30,10 +30,17 @@ public sealed partial class WelcomePage : Page
         SummonerPlatformRoute = PlatformRoute.EUW1;
         var sr =
             new StreamReader(
-                @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
+                @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\RIOT_TOKEN.txt");
         var token = sr.ReadLine();
         InitializeComponent();
         Api = RiotGamesApi.NewInstance(token!);
+        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        // if (localSettings.Values.ContainsKey("SummonerName") & localSettings.Values.ContainsKey("RiotID"))
+        // {
+        //     SummonerNameTextBox.Text = localSettings.Values["SummonerName"].ToString();
+        //     AccountTextBox.Text = localSettings.Values["RiotID"].ToString();
+        //     CheckIfExists();
+        // }
     }
 
     private RiotGamesApi Api { get; }
@@ -89,24 +96,19 @@ public sealed partial class WelcomePage : Page
     private async void CheckIfExists()
     {
         WelcomePageProgressRing.IsActive = true;
-
-        string[] subs = SummonerNameTextBox.Text.Split("#");
-        Debug.WriteLine(subs);
-
         try
         {
-            if (subs.Length != 2)
-            {
-                throw new ArgumentNullException();
-            }
-
-            Account lolAccount = (await Api.AccountV1().GetByRiotIdAsync(SummonerRegionalRoute, subs[0], subs[1]))!;
+            Account lolAccount = (await Api.AccountV1().GetByRiotIdAsync(SummonerRegionalRoute, SummonerNameTextBox.Text, AccountTextBox.Text))!;
+            Debug.WriteLine(lolAccount);
             LolSummoner = await Api.SummonerV4().GetByPUUIDAsync(SummonerPlatformRoute, lolAccount.Puuid);
             Debug.WriteLine(LolSummoner);
 
             if (LolSummoner is null) throw new ArgumentNullException();
 
             await Task.Run(() => { Thread.Sleep(1); });
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            // localSettings.Values["SummonerName"] = SummonerNameTextBox.Text;
+            // localSettings.Values["RiotID"] = AccountTextBox.Text;
 
             NavigateToSummonerInfoPage();
         }

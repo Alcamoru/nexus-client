@@ -71,7 +71,6 @@ public class UtilisMethods
             TextAlignment = TextAlignment.Center,
             Text = text,
             FontSize = fontSize,
-            FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
         };
 
         var viewbox = new Viewbox

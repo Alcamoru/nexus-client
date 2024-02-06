@@ -180,7 +180,7 @@ public sealed partial class MatchDetail : Page
 
 
             var source =
-                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png";
+                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
             var championIcon = GetImage(source, 30, 15);
 
             var championIconViewbox = new Viewbox
@@ -257,7 +257,7 @@ public sealed partial class MatchDetail : Page
             };
 
             source =
-                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
+                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
             var firstSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
@@ -265,7 +265,7 @@ public sealed partial class MatchDetail : Page
             summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
             source =
-                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
+                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
             var secondSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
@@ -275,7 +275,7 @@ public sealed partial class MatchDetail : Page
 
             var perksJson =
                 File.ReadAllText(
-                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
+                    @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
             var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
             var firstPerkIcon = "";
@@ -426,7 +426,7 @@ public sealed partial class MatchDetail : Page
 
 
             var source =
-                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{participant.ChampionName}.png";
+                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
             var championIcon = GetImage(source, 30, 15);
 
             var championIconViewbox = new Viewbox
@@ -511,7 +511,7 @@ public sealed partial class MatchDetail : Page
 
 
             source =
-                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
+                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
             var firstSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
@@ -519,7 +519,7 @@ public sealed partial class MatchDetail : Page
             summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
             source =
-                $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
+                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
             var secondSummonerSpellImage = GetImage(source);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
@@ -529,7 +529,7 @@ public sealed partial class MatchDetail : Page
 
             var perksJson =
                 File.ReadAllText(
-                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
+                    @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\data\fr_FR\runesReforged.json");
             var runesClass = JsonConvert.DeserializeObject<List<PerksClass.Root>>(perksJson);
 
             var firstPerkIcon = "";
@@ -796,13 +796,13 @@ public sealed partial class MatchDetail : Page
                         creatorPuuid = participant.Puuid;
 
                 var source =
-                    $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png";
+                    $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png";
                 var championIcon = GetImage(source, 7, 40);
                 championIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
                 source =
-                    @"C:\Users\alcam\OneDrive\Documents\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\img\item\3340.png";
+                    @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\img\item\3340.png";
                 var wardImage = GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
 
@@ -850,12 +850,12 @@ public sealed partial class MatchDetail : Page
                     }
 
                     var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
                     var killerChampionIcon = GetImage(source, 7, 40);
                     killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
                     var victimChampionIcon = GetImage(source, 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
@@ -896,12 +896,12 @@ public sealed partial class MatchDetail : Page
 
 
                     var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
                     var killerChampionIcon = GetImage(source, 7, 40);
                     killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
                     var victimChampionIcon = GetImage(source, 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
@@ -945,12 +945,12 @@ public sealed partial class MatchDetail : Page
 
 
                     var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
                     var summonerChampionIcon = GetImage(source, 7, 40);
                     summonerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
                     var victimChampionIcon = GetImage(source, 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
