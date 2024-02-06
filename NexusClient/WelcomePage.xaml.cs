@@ -34,7 +34,7 @@ public sealed partial class WelcomePage : Page
         var token = sr.ReadLine();
         InitializeComponent();
         Api = RiotGamesApi.NewInstance(token!);
-        var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        // var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         // if (localSettings.Values.ContainsKey("SummonerName") & localSettings.Values.ContainsKey("RiotID"))
         // {
         //     SummonerNameTextBox.Text = localSettings.Values["SummonerName"].ToString();
@@ -96,6 +96,7 @@ public sealed partial class WelcomePage : Page
     private async void CheckIfExists()
     {
         WelcomePageProgressRing.IsActive = true;
+
         try
         {
             Account lolAccount = (await Api.AccountV1().GetByRiotIdAsync(SummonerRegionalRoute, SummonerNameTextBox.Text, AccountTextBox.Text))!;
@@ -106,7 +107,7 @@ public sealed partial class WelcomePage : Page
             if (LolSummoner is null) throw new ArgumentNullException();
 
             await Task.Run(() => { Thread.Sleep(1); });
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            // var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             // localSettings.Values["SummonerName"] = SummonerNameTextBox.Text;
             // localSettings.Values["RiotID"] = AccountTextBox.Text;
 
