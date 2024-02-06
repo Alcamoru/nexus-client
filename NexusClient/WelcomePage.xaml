@@ -17,19 +17,15 @@
                    Margin="0, 20, 0, 150"
                    Foreground="#34495E"
                    FontSize="36"
-                   CharacterSpacing="-50"
-                   FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
-                   FontWeight="ExtraBold"
                    HorizontalAlignment="Center"
-                   Text="Bienvenue" />
-
+                   Text="Bienvenue"/>
         <Viewbox>
             <StackPanel
                 Margin="200 0 200 0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center" Orientation="Horizontal"
                 Height="200"
-                Width="670">
+                Width="900">
                 <TextBox
                     KeyDown="SummonerNameTextBox_OnKeyDown"
                     Margin="0 0 30 0"
@@ -37,13 +33,29 @@
                     FontSize="22"
                     BorderThickness="0"
                     Padding="25, 15, 25, 15"
-                    Width="450"
+                    Width="400"
                     VerticalAlignment="Top"
                     Foreground="#34495E"
                     FontWeight="Bold"
                     PlaceholderForeground="#34495E"
                     x:Name="SummonerNameTextBox"
                     PlaceholderText="Nom d'invocateur"
+                    HorizontalAlignment="Center"
+                    Background="#EEEEEE" />
+                <TextBox
+                    KeyDown="SummonerNameTextBox_OnKeyDown"
+                    Margin="0 0 30 0"
+                    CornerRadius="10"
+                    FontSize="22"
+                    BorderThickness="0"
+                    Padding="25, 15, 25, 15"
+                    Width="200"
+                    VerticalAlignment="Top"
+                    Foreground="#34495E"
+                    FontWeight="Bold"
+                    PlaceholderForeground="#34495E"
+                    x:Name="AccountTextBox"
+                    PlaceholderText="#ID"
                     HorizontalAlignment="Center"
                     Background="#EEEEEE" />
                 <StackPanel
@@ -95,7 +107,6 @@
                 x:Name="ErrorTextBlock"
                 Foreground="Red"
                 FontSize="24"
-                FontFamily="Assets/fonts/Inter/Inter-Medium.ttf#Inter"
                 FontWeight="ExtraBold"
                 HorizontalAlignment="Center" />
         </Viewbox>
