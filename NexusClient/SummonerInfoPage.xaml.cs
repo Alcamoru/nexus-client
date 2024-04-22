@@ -9,7 +9,6 @@ using Windows.UI;
 using Windows.UI.Core;
 using Camille.Enums;
 using Camille.RiotGames;
-using Camille.RiotGames.AccountV1;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
 using Microsoft.UI;
@@ -23,7 +22,6 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
-using static NexusClient.UtilisMethods;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -82,7 +80,6 @@ public sealed partial class SummonerInfoPage : Page
     /// </summary>
     private void SetLeaderBoardGrid()
     {
-
         // TODO: Re-understand and optimize this
         var bestPlayersList = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5)
             .Entries;
@@ -108,16 +105,12 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         // 2 rows definition
-        for (int i = 0; i < 2; i++)
-        {
+        for (var i = 0; i < 2; i++)
             firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-        }
 
         // 3 columns definition
-        for (int i = 0; i < 3; i++)
-        {
+        for (var i = 0; i < 3; i++)
             firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        }
 
 
         var rankingViewbox = new Viewbox
@@ -136,13 +129,12 @@ public sealed partial class SummonerInfoPage : Page
         firstGrid.Children.Add(rankingViewbox);
 
 
-
         var firstProfileIconImage = Methods.GetProfileIcon(firstPlayer.SummonerId, 10, 60);
         var summonerNameTextBlock = Methods.SetText(Methods.GetSummonerName(firstPlayer.SummonerId), 14, Colors.White);
 
         var firstInfosViewbox = new Viewbox
         {
-            Child = new StackPanel()
+            Child = new StackPanel
             {
                 Children = { firstProfileIconImage, summonerNameTextBlock }
             }
@@ -152,22 +144,27 @@ public sealed partial class SummonerInfoPage : Page
         Grid.SetRow(firstInfosViewbox, 0);
         Grid.SetColumn(firstInfosViewbox, 1);
         firstGrid.Children.Add(firstInfosViewbox);
-        
-        var emblemStackPanelViewBox = new Viewbox
+
+        var emblemViewBox = new Viewbox
         {
             Child = new StackPanel
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 Orientation = Orientation.Vertical,
-                Children = { Methods.GetImage(
-                    @"C:\Users\alcam\OneDrive\\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png", 0, 70), Methods.SetText($"{firstPlayer.LeaguePoints} LP", 14, Colors.White)}
+                Children =
+                {
+                    Methods.GetImage(
+                        @"C:\Users\alcam\OneDrive\\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png",
+                        0, 70),
+                    Methods.SetText($"{firstPlayer.LeaguePoints} LP", 14, Colors.White)
+                }
             }
         };
 
-        Grid.SetRow(emblemStackPanelViewBox, 0);
-        Grid.SetColumn(emblemStackPanelViewBox, 2);
-        firstGrid.Children.Add(emblemStackPanelViewBox);
+        Grid.SetRow(emblemViewBox, 0);
+        Grid.SetColumn(emblemViewBox, 2);
+        firstGrid.Children.Add(emblemViewBox);
 
 
         var totalGamesRectangle = new Rectangle
@@ -177,44 +174,37 @@ public sealed partial class SummonerInfoPage : Page
             Height = 7
         };
 
-        var totalGamesBorder = new Border
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Child = totalGamesRectangle,
-            CornerRadius = new CornerRadius(3)
-        };
-
-
-        var width = firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 150;
-
-        var gamesWonRectangle = new Rectangle
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Width = width,
-            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
-            Height = 7
-        };
-
-        var gamesWonBorder = new Border
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Child = gamesWonRectangle,
-            CornerRadius = new CornerRadius(3)
-        };
-
         var gamesWonGrid = new Grid
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
         };
 
-        gamesWonGrid.Children.Add(totalGamesBorder);
-        gamesWonGrid.Children.Add(gamesWonBorder);
+        gamesWonGrid.Children.Add(new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = totalGamesRectangle,
+            CornerRadius = new CornerRadius(3)
+        });
+        gamesWonGrid.Children.Add(new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = new Rectangle
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 150,
+                Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+                Height = 7
+            },
+            CornerRadius = new CornerRadius(3)
+        });
 
-        var winRateTextBlock = Methods.SetText($"{Math.Round(firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100)} %",
+
+        var winRateTextBlock = Methods.SetText(
+            $"{Math.Round(firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100)} %",
             14, Colors.White);
         winRateTextBlock.Margin = new Thickness(10);
 
@@ -222,18 +212,15 @@ public sealed partial class SummonerInfoPage : Page
             14, Colors.White);
         gamesPlayedTextBlock.Margin = new Thickness(10);
 
-
-        var winRateStackPanel = new StackPanel
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-            Orientation = Orientation.Horizontal,
-            Children = { winRateTextBlock, gamesWonGrid, gamesPlayedTextBlock }
-        };
-
         var winRateStackPanelViewBox = new Viewbox
         {
-            Child = winRateStackPanel
+            Child = new StackPanel
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Children = { winRateTextBlock, gamesWonGrid, gamesPlayedTextBlock }
+            }
         };
 
         Grid.SetRow(winRateStackPanelViewBox, 1);
@@ -245,20 +232,7 @@ public sealed partial class SummonerInfoPage : Page
         Grid.SetRowSpan(firstGrid, 2);
         Grid.SetColumn(firstGrid, 0);
         LeaderBoardGrid.Children.Add(firstGrid);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
 
         var secondGrid = new Grid
         {
@@ -268,11 +242,9 @@ public sealed partial class SummonerInfoPage : Page
             Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
         };
 
-        for (int i = 0; i < 5; i++)
-        {
+        for (var i = 0; i < 5; i++)
             secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        }
-        
+
         var secondRankingViewbox = new Viewbox
         {
             Child = new Border
@@ -289,11 +261,11 @@ public sealed partial class SummonerInfoPage : Page
 
         Grid.SetRow(secondRankingViewbox, 0);
         secondGrid.Children.Add(secondRankingViewbox);
-        
+
         var secondProfileIconImage = Methods.GetProfileIcon(secondPlayer.SummonerId, 10, 40);
         var secondSummonerNameTextBlock = Methods.SetText(Methods.GetSummonerName(secondPlayer.SummonerId),
             14, Colors.White);
-        
+
         var secondInfosViewbox = new Viewbox
         {
             Child = new StackPanel
@@ -311,69 +283,29 @@ public sealed partial class SummonerInfoPage : Page
         secondGrid.Children.Add(secondInfosViewbox);
 
 
-        var secondEmblemStackPanel = new StackPanel
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Orientation = Orientation.Vertical
-        };
-
-        var secondEmblemStackPanelViewBox = new Viewbox
-        {
-            Child = secondEmblemStackPanel
-        };
-
-
         var source =
             @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
 
-        var secondEmblemIcon = Methods.GetImage(source, 0, 40);
 
-        var secondLpTextBlock = Methods.SetText($"{secondPlayer.LeaguePoints} LP",
-            14, Colors.White);
-
-        secondEmblemStackPanel.Children.Add(secondEmblemIcon);
-        secondEmblemStackPanel.Children.Add(secondLpTextBlock);
-
-        Grid.SetRow(secondEmblemStackPanelViewBox, 0);
-        Grid.SetColumn(secondEmblemStackPanelViewBox, 2);
-        secondGrid.Children.Add(secondEmblemStackPanelViewBox);
-
-
-        var secondTotalGamesRectangle = new Rectangle
+        var secondEmblemViewBox = new Viewbox
         {
-            Width = 100,
-            Fill = new SolidColorBrush(Colors.White),
-            Height = 7
+            Child = new StackPanel
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Orientation = Orientation.Vertical,
+                Children =
+                {
+                    Methods.GetImage(source, 0, 40), Methods.SetText($"{secondPlayer.LeaguePoints} LP",
+                        14, Colors.White)
+                }
+            }
         };
 
-        var secondGamesBorder = new Border
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Child = secondTotalGamesRectangle,
-            CornerRadius = new CornerRadius(3)
-        };
+        Grid.SetRow(secondEmblemViewBox, 0);
+        Grid.SetColumn(secondEmblemViewBox, 2);
+        secondGrid.Children.Add(secondEmblemViewBox);
 
-
-        var secondWidth = firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100;
-
-        var secondGamesWonRectangle = new Rectangle
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Width = secondWidth,
-            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
-            Height = 7
-        };
-
-        var secondGamesWonBorder = new Border
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Child = secondGamesWonRectangle,
-            CornerRadius = new CornerRadius(3)
-        };
 
         var secondGamesWonGrid = new Grid
         {
@@ -381,8 +313,32 @@ public sealed partial class SummonerInfoPage : Page
             VerticalAlignment = VerticalAlignment.Center
         };
 
-        secondGamesWonGrid.Children.Add(secondGamesBorder);
-        secondGamesWonGrid.Children.Add(secondGamesWonBorder);
+        secondGamesWonGrid.Children.Add(new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = new Rectangle
+            {
+                Width = 100,
+                Fill = new SolidColorBrush(Colors.White),
+                Height = 7
+            },
+            CornerRadius = new CornerRadius(3)
+        });
+        secondGamesWonGrid.Children.Add(new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = new Rectangle
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100,
+                Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+                Height = 7
+            },
+            CornerRadius = new CornerRadius(3)
+        });
 
         var secondWinRateTextBlock = Methods.SetText(
             $"{Math.Round(secondPlayer.Wins / (float)(secondPlayer.Wins + secondPlayer.Losses) * 100)} %",
@@ -393,26 +349,25 @@ public sealed partial class SummonerInfoPage : Page
             14, Colors.White);
         secondGamesPlayedTextBlock.Margin = new Thickness(10);
 
-        var secondWinRateStackPanel = new StackPanel
+        var secondWinRateViewBox = new Viewbox
         {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-            Orientation = Orientation.Horizontal,
-            Children = { secondWinRateTextBlock, secondGamesWonGrid, secondGamesPlayedTextBlock }
+            Child = new StackPanel
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Children = { secondWinRateTextBlock, secondGamesWonGrid, secondGamesPlayedTextBlock }
+            }
         };
 
-        var secondWinRateStackPanelViewBox = new Viewbox
-        {
-            Child = secondWinRateStackPanel
-        };
-
-        Grid.SetColumn(secondWinRateStackPanelViewBox, 3);
-        Grid.SetColumnSpan(secondWinRateStackPanelViewBox, 2);
-        secondGrid.Children.Add(secondWinRateStackPanelViewBox);
+        Grid.SetColumn(secondWinRateViewBox, 3);
+        Grid.SetColumnSpan(secondWinRateViewBox, 2);
+        secondGrid.Children.Add(secondWinRateViewBox);
 
         Grid.SetRow(secondGrid, 0);
         Grid.SetColumn(secondGrid, 1);
         LeaderBoardGrid.Children.Add(secondGrid);
+
 
         var thirdGrid = new Grid
         {
@@ -422,122 +377,67 @@ public sealed partial class SummonerInfoPage : Page
             Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
         };
 
-        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        for (var i = 0; i < 5; i++)
+            thirdGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
-        var thirdIconBorder = new Border
+        var thirdRankingViewbox = new Viewbox
         {
-            Padding = new Thickness(8),
-            CornerRadius = new CornerRadius(8),
-            Width = 50,
-            Height = 50,
-            Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
-        };
-
-        var thirdTextBlock = Methods.SetText("3rd",
-            14, Colors.White);
-
-        thirdIconBorder.Child = thirdTextBlock;
-
-        var thirdIconViewbox = new Viewbox
-        {
-            Child = thirdIconBorder
+            Child = new Border
+            {
+                Padding = new Thickness(8),
+                CornerRadius = new CornerRadius(8),
+                Width = 50,
+                Height = 50,
+                Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185)),
+                Child = Methods.SetText("3rd",
+                    14, Colors.White)
+            }
         };
 
 
-        Grid.SetRow(thirdIconViewbox, 0);
-        thirdGrid.Children.Add(thirdIconViewbox);
+        Grid.SetRow(thirdRankingViewbox, 0);
+        thirdGrid.Children.Add(thirdRankingViewbox);
 
-
-        var thirdLeaderBoardStackPanel = new StackPanel
-        {
-            Margin = new Thickness(7)
-        };
-
-        var thirdLeaderBoardStackPanelViewBox = new Viewbox
-        {
-            Child = thirdLeaderBoardStackPanel
-        };
 
         var thirdProfileIconImage = Methods.GetProfileIcon(firstPlayer.SummonerId, 10, 40);
 
         var thirdSummonerNameTextBlock = Methods.SetText(Methods.GetSummonerName(thirdPlayer.SummonerId),
             14, Colors.White);
 
-        thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
-        thirdLeaderBoardStackPanel.Children.Add(thirdSummonerNameTextBlock);
-
-        Grid.SetRow(thirdLeaderBoardStackPanelViewBox, 0);
-        Grid.SetColumn(thirdLeaderBoardStackPanelViewBox, 1);
-        thirdGrid.Children.Add(thirdLeaderBoardStackPanelViewBox);
-
-
-        var thirdEmblemStackPanel = new StackPanel
+        var thirdLeaderBoardViewBox = new Viewbox
         {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Orientation = Orientation.Vertical
+            Child = new StackPanel
+            {
+                Margin = new Thickness(7),
+                Children = { thirdProfileIconImage, thirdSummonerNameTextBlock }
+            }
         };
 
-        var thirdEmblemStackPanelViewBox = new Viewbox
-        {
-            Child = thirdEmblemStackPanel
-        };
+        Grid.SetRow(thirdLeaderBoardViewBox, 0);
+        Grid.SetColumn(thirdLeaderBoardViewBox, 1);
+        thirdGrid.Children.Add(thirdLeaderBoardViewBox);
 
         source =
             @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
 
-        var thirdEmblemIcon = Methods.GetImage(source, 0, 40);
-
-
-        var thirdLpTextBlock = Methods.SetText($"{thirdPlayer.LeaguePoints} LP",
-            14, Colors.White);
-
-        thirdEmblemStackPanel.Children.Add(thirdEmblemIcon);
-        thirdEmblemStackPanel.Children.Add(thirdLpTextBlock);
-
-        Grid.SetRow(thirdEmblemStackPanelViewBox, 0);
-        Grid.SetColumn(thirdEmblemStackPanelViewBox, 2);
-        thirdGrid.Children.Add(thirdEmblemStackPanelViewBox);
-
-
-        var thirdTotalGamesRectangle = new Rectangle
+        var thirdEmblemViewBox = new Viewbox
         {
-            Width = 100,
-            Fill = new SolidColorBrush(Colors.White),
-            Height = 7
+            Child = new StackPanel
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Orientation = Orientation.Vertical,
+                Children =
+                {
+                    Methods.GetImage(source, 0, 40), Methods.SetText($"{thirdPlayer.LeaguePoints} LP",
+                        14, Colors.White)
+                }
+            }
         };
 
-        var thirdGamesBorder = new Border
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Child = thirdTotalGamesRectangle,
-            CornerRadius = new CornerRadius(3)
-        };
-
-
-        var thirdWidth = firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100;
-
-        var thirdGamesWonRectangle = new Rectangle
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Width = thirdWidth,
-            Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
-            Height = 7
-        };
-
-        var thirdGamesWonBorder = new Border
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Left,
-            Child = thirdGamesWonRectangle,
-            CornerRadius = new CornerRadius(3)
-        };
+        Grid.SetRow(thirdEmblemViewBox, 0);
+        Grid.SetColumn(thirdEmblemViewBox, 2);
+        thirdGrid.Children.Add(thirdEmblemViewBox);
 
         var thirdGamesWonGrid = new Grid
         {
@@ -545,8 +445,32 @@ public sealed partial class SummonerInfoPage : Page
             VerticalAlignment = VerticalAlignment.Center
         };
 
-        thirdGamesWonGrid.Children.Add(thirdGamesBorder);
-        thirdGamesWonGrid.Children.Add(thirdGamesWonBorder);
+        thirdGamesWonGrid.Children.Add(new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Child = new Rectangle
+            {
+                Width = 100,
+                Fill = new SolidColorBrush(Colors.White),
+                Height = 7
+            },
+            CornerRadius = new CornerRadius(3)
+        });
+        thirdGamesWonGrid.Children.Add(new Border
+        {
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = new Rectangle
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100,
+                Fill = new SolidColorBrush(Color.FromArgb(255, 155, 89, 182)),
+                Height = 7
+            },
+            CornerRadius = new CornerRadius(3)
+        });
 
         var thirdWinRateTextBlock = Methods.SetText($"{thirdPlayer.LeaguePoints} LP",
             14, Colors.White);
@@ -556,22 +480,20 @@ public sealed partial class SummonerInfoPage : Page
             14, Colors.White);
         thirdGamesPlayedTextBlock.Margin = new Thickness(10);
 
-        var thirdWinRateStackPanel = new StackPanel
+        var thirdWinRateViewBox = new Viewbox
         {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-            Orientation = Orientation.Horizontal,
-            Children = { thirdWinRateTextBlock, thirdGamesWonGrid, thirdGamesPlayedTextBlock }
+            Child = new StackPanel
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Children = { thirdWinRateTextBlock, thirdGamesWonGrid, thirdGamesPlayedTextBlock }
+            }
         };
 
-        var thirdWinRateStackPanelViewBox = new Viewbox
-        {
-            Child = thirdWinRateStackPanel
-        };
-
-        Grid.SetColumn(thirdWinRateStackPanelViewBox, 3);
-        Grid.SetColumnSpan(thirdWinRateStackPanelViewBox, 2);
-        thirdGrid.Children.Add(thirdWinRateStackPanelViewBox);
+        Grid.SetColumn(thirdWinRateViewBox, 3);
+        Grid.SetColumnSpan(thirdWinRateViewBox, 2);
+        thirdGrid.Children.Add(thirdWinRateViewBox);
 
         Grid.SetRow(thirdGrid, 1);
         Grid.SetColumn(thirdGrid, 1);
@@ -590,7 +512,6 @@ public sealed partial class SummonerInfoPage : Page
     /// <returns>None</returns>
     private void SetLastMatches()
     {
-
         MatchListGrid.Children.Clear();
 
         var matches = GetLastMatches();
@@ -640,7 +561,6 @@ public sealed partial class SummonerInfoPage : Page
             };
 
             foreach (var participant in match.Info.Participants)
-            {
                 if (participant.SummonerId == LolSummoner.Id)
                 {
                     if (participant.Win)
@@ -971,7 +891,6 @@ public sealed partial class SummonerInfoPage : Page
 
                     matchGrid.Children.Add(itemsChampionViewbox);
                 }
-            }
 
             var matchName = Methods.SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
             matchStackPanel.Children.Add(matchName);
@@ -995,7 +914,6 @@ public sealed partial class SummonerInfoPage : Page
     /// <returns>None</returns>
     private void SetBestChampions()
     {
-
         BestChampionsContentGrid.Children.Clear();
 
         var bestChampsjson =
@@ -1115,5 +1033,4 @@ public sealed partial class SummonerInfoPage : Page
         // localSettings.Values.Clear();
         Frame.GoBack(new DrillInNavigationTransitionInfo());
     }
-
 }
