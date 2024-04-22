@@ -25,19 +25,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-
             <Button
                 x:Name="ButtonBack"
                 Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Grid.Column="1" Grid.Row="1" Click="ButtonBack_OnClick">
+                Grid.Column="0" Click="ButtonBack_OnClick">
                 <Viewbox>
                     <TextBlock
                         Text="Retour"
@@ -50,7 +45,7 @@
             <HyperlinkButton
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Grid.Row="0" Grid.Column="0" x:Name="ChampionsHyperlinkButton">
+                Grid.Column="1" x:Name="ChampionsHyperlinkButton">
                 <Viewbox>
                     <TextBlock
                         Text="Champions"
@@ -63,20 +58,7 @@
             <HyperlinkButton
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Grid.Row="0" Grid.Column="1" x:Name="ProfileHyperlinkButton">
-                <Viewbox>
-                    <TextBlock
-                        Text="Profil"
-                        FontSize="22"
-                        FontWeight="Bold"
-                        Foreground="White" />
-                </Viewbox>
-
-            </HyperlinkButton>
-            <HyperlinkButton
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Grid.Row="0" Grid.Column="2" x:Name="ScoreboardHyperlinkButton">
+                Grid.Column="2" x:Name="ScoreboardHyperlinkButton">
 
                 <Viewbox>
                     <TextBlock
@@ -87,6 +69,9 @@
                 </Viewbox>
 
             </HyperlinkButton>
+            <Border Grid.Column="3"
+                    Margin="15"
+                    x:Name="profilePicture" />
 
         </Grid>
 

@@ -11,6 +11,7 @@
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
     <ItemGroup>
@@ -46,6 +47,9 @@
             <SubType>Designer</SubType>
         </Page>
         <Page Remove="Assets\loldata\**"/>
+        <Page Update="PlayerInfo.xaml">
+          <SubType>Designer</SubType>
+        </Page>
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="Assets\loldata\**"/>

@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.Storage;
 using Windows.System;
 using Camille.Enums;
 using Camille.RiotGames;
@@ -34,6 +36,7 @@ public sealed partial class WelcomePage : Page
         var token = sr.ReadLine();
         InitializeComponent();
         Api = RiotGamesApi.NewInstance(token!);
+        Debug.WriteLine(Directory.GetCurrentDirectory());
         // var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         // if (localSettings.Values.ContainsKey("SummonerName") & localSettings.Values.ContainsKey("RiotID"))
         // {
@@ -67,7 +70,6 @@ public sealed partial class WelcomePage : Page
     private void RegionListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var item = (ListViewItem)e.AddedItems[0];
-        Debug.WriteLine(item.Name);
         var itemContent = (TextBlock)item.Content;
         RegionListButtonTextBlock.Text = itemContent.Text;
         switch (itemContent.Text)
@@ -115,6 +117,7 @@ public sealed partial class WelcomePage : Page
         }
         catch (Exception e)
         {
+            Debug.WriteLine(e);
             if (e is ArgumentNullException) ErrorTextBlock.Text = "L'invocateur recherché est invalide";
 
             if (e is AggregateException) ErrorTextBlock.Text = "Le logiciel n'est pas connecté à Internet";
