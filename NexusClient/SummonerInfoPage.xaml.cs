@@ -140,8 +140,7 @@ public sealed partial class SummonerInfoPage : Page
             Child = leaderBoardStackPanel
         };
 
-        var source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, firstPlayer.SummonerId)!.ProfileIconId}.png";
+        var source = $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, firstPlayer.SummonerId)!.ProfileIconId}.png";
         var profileIconImage = GetImage(source, 10, 60);
 
         var summonerNameTextBlock = SetText($"{firstPlayer.SummonerName}", 14, Colors.White);
