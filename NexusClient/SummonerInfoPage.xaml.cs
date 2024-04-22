@@ -141,7 +141,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         var source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, first.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, first.SummonerId)!.ProfileIconId}.png";
         var profileIconImage = GetImage(source, 10, 60);
 
         var summonerNameTextBlock = SetText($"{first.SummonerName}", 14, Colors.White);
@@ -313,7 +313,7 @@ public sealed partial class SummonerInfoPage : Page
             Margin = new Thickness(7)
         };
         source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, second.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, second.SummonerId)!.ProfileIconId}.png";
         var secondProfileIconImage = GetImage(source, 10, 40);
 
 
@@ -480,7 +480,7 @@ public sealed partial class SummonerInfoPage : Page
         };
 
         source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, third.SummonerName)!.ProfileIconId}.png";
+            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, third.SummonerId)!.ProfileIconId}.png";
 
         var thirdProfileIconImage = GetImage(source, 10, 40);
 
