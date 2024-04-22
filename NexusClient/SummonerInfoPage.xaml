@@ -85,8 +85,6 @@
                 </Viewbox>
 
             </HyperlinkButton>
-
-
         </Grid>
         <Grid x:Name="SummonerInfoPageContentGrid" Grid.Row="1">
             <Grid.ColumnDefinitions>

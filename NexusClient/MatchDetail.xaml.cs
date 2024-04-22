@@ -1187,12 +1187,12 @@ public sealed partial class MatchDetail : Page
         XpChart.Series = new List<ISeries> { playerXpSeries };
     }
 
-    private void SetProfilePicture()
-    {
-        var source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, LolSummoner.Name)!.ProfileIconId}.png";
-        profilePicture = GetImage(source, 10, 60);
-    }
+    // private void SetProfilePicture()
+    // {
+    //     var source =
+    //         $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, LolSummoner.Name)!.ProfileIconId}.png";
+    //     profilePicture = GetImage(source, 10, 60);
+    // }
 
     private void GoldsChartButton_OnClick(object sender, RoutedEventArgs e)
     {

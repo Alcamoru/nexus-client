@@ -71,7 +71,6 @@ public sealed partial class SummonerInfoPage : Page
         var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(SummonerRegionalRoute, LolSummoner.Puuid, 3);
         foreach (var matchListId in matchListIds)
             matches.Add(Api.MatchV5().GetMatch(SummonerRegionalRoute, matchListId));
-
         return matches;
     }
 
@@ -662,15 +661,18 @@ public sealed partial class SummonerInfoPage : Page
             };
 
             foreach (var participant in match.Info.Participants)
-                if (participant.SummonerName == LolSummoner.Name)
+            {
+                if (participant.SummonerId == LolSummoner.Id)
                 {
+                    Debug.WriteLine("OKKOKOKOKOKOKO");
                     if (participant.Win)
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
                     else
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
 
                     var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{participant.ChampionName}.png";
+                    Debug.WriteLine(source);
                     var championIcon = GetImage(source, 10, 50);
 
                     championIcon.Margin = new Thickness(10, 0, 0, 0);
@@ -726,6 +728,7 @@ public sealed partial class SummonerInfoPage : Page
                     matchGrid.Children.Add(titleChampionViewBox);
 
                     source = $"ms-appx:///Assets/media/roles-icons/{participant.TeamPosition}.png";
+                    Debug.WriteLine(source);
 
                     var roleLogo = GetImage(source, 0, 40);
 
@@ -826,7 +829,7 @@ public sealed partial class SummonerInfoPage : Page
                     };
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png";
                     var firstSummonerSpellImage = GetImage(source);
 
                     firstSummonerSpellImage.CornerRadius = new CornerRadius(7, 7, 0, 0);
@@ -837,7 +840,7 @@ public sealed partial class SummonerInfoPage : Page
                     summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
                     source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png";
+                        $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png";
                     var secondSummonerSpellImage = GetImage(source);
                     secondSummonerSpellImage.CornerRadius = new CornerRadius(0, 0, 7, 7);
 
@@ -868,6 +871,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     var mainRuneUrl =
                         $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
+                    Debug.WriteLine(mainRuneUrl);
 
                     var mainRune = new Image
                     {
@@ -936,19 +940,20 @@ public sealed partial class SummonerInfoPage : Page
                     itemsChampionGrid.RowDefinitions.Add(itemRow1);
                     itemsChampionGrid.RowDefinitions.Add(itemRow2);
 
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item0}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item0}.png";
+                    Debug.WriteLine(source);
                     var itemImage0 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item1}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item1}.png";
                     var itemImage1 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item2}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item2}.png";
                     var itemImage2 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item3}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item3}.png";
                     var itemImage3 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item4}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item4}.png";
                     var itemImage4 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item5}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item5}.png";
                     var itemImage5 = GetImage(source, 3);
-                    source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{participant.Item6}.png";
+                    source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item6}.png";
                     var itemImage6 = GetImage(source, 3);
 
                     Grid.SetColumn(itemImage0, 0);
@@ -988,6 +993,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     matchGrid.Children.Add(itemsChampionViewbox);
                 }
+            }
 
             var matchName = SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
             matchStackPanel.Children.Add(matchName);
@@ -1029,7 +1035,7 @@ public sealed partial class SummonerInfoPage : Page
                 Margin = new Thickness(10)
             };
 
-            var source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{bestChamp.name}.png";
+            var source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{bestChamp.name}.png";
             var championIcon = GetImage(source, 10, 60);
             championIcon.HorizontalAlignment = HorizontalAlignment.Left;
             championIcon.VerticalAlignment = VerticalAlignment.Center;

@@ -102,9 +102,7 @@ public sealed partial class WelcomePage : Page
         try
         {
             Account lolAccount = (await Api.AccountV1().GetByRiotIdAsync(SummonerRegionalRoute, SummonerNameTextBox.Text, AccountTextBox.Text))!;
-            Debug.WriteLine(lolAccount);
             LolSummoner = await Api.SummonerV4().GetByPUUIDAsync(SummonerPlatformRoute, lolAccount.Puuid);
-            Debug.WriteLine(LolSummoner);
 
             if (LolSummoner is null) throw new ArgumentNullException();
 
