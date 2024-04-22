@@ -48,6 +48,9 @@ public sealed partial class PlayerInfo : Page
     private RegionalRoute SummonerRegionalRoute { get; set; }
 
     private PlatformRoute SummonerPlatformRoute { get; set; }
+    
+    private UtilisMethods Methods { get; set; }
+
 
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -58,6 +61,7 @@ public sealed partial class PlayerInfo : Page
         LolSummoner = (Summoner)parameters.ElementAt(2);
         SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(3);
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(4);
+        Methods = new UtilisMethods(Api, LolSummoner, SummonerRegionalRoute, SummonerPlatformRoute);
         base.OnNavigatedTo(e);
     }
 
@@ -112,12 +116,12 @@ public sealed partial class PlayerInfo : Page
             if (summonerPlayer!.Win)
             {
                 matchGrid.Background = new SolidColorBrush(Color.FromArgb(100, 41, 128, 185));
-                var matchWinOrLose = SetText("Victoire", 18, Colors.Gray);
+                var matchWinOrLose = Methods.SetText("Victoire", 18, Colors.Gray);
             }
             else
             {
                 matchGrid.Background = new SolidColorBrush(Color.FromArgb(100, 235, 47, 6));
-                var matchWinOrLose = SetText("Défaite", 18, Colors.Gray);
+                var matchWinOrLose = Methods.SetText("Défaite", 18, Colors.Gray);
             }
 
             var matchDuration = TimeSpan.FromMilliseconds(match.Info.GameDuration);
@@ -130,10 +134,10 @@ public sealed partial class PlayerInfo : Page
 
             var matchWasString = $"Il y a {gameTimeStampDuration.Days} jours";
 
-            var matchType = SetText("Match classé solo", 18, Color.FromArgb(150, 235, 47, 6));
-            var matchWas = SetText(matchWasString, 18, Colors.Gray);
+            var matchType = Methods.SetText("Match classé solo", 18, Color.FromArgb(150, 235, 47, 6));
+            var matchWas = Methods.SetText(matchWasString, 18, Colors.Gray);
             var line = new Line { Width = 40 };
-            var matchDurationViewbox = SetText($"{matchDuration.Minutes}:{matchDuration.Seconds}", 16,
+            var matchDurationViewbox = Methods.SetText($"{matchDuration.Minutes}:{matchDuration.Seconds}", 16,
                 Color.FromArgb(150, 235, 47, 6));
             var matchInfoStackLayout = new StackPanel
             {
@@ -170,19 +174,19 @@ public sealed partial class PlayerInfo : Page
             gameItemsGrid.RowDefinitions.Add(row3);
 
             var source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item0}.png";
-            var itemImage0 = GetImage(source, 3);
+            var itemImage0 = Methods.GetImage(source, 3);
             source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item1}.png";
-            var itemImage1 = GetImage(source, 3);
+            var itemImage1 = Methods.GetImage(source, 3);
             source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item2}.png";
-            var itemImage2 = GetImage(source, 3);
+            var itemImage2 = Methods.GetImage(source, 3);
             source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item3}.png";
-            var itemImage3 = GetImage(source, 3);
+            var itemImage3 = Methods.GetImage(source, 3);
             source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item4}.png";
-            var itemImage4 = GetImage(source, 3);
+            var itemImage4 = Methods.GetImage(source, 3);
             source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item5}.png";
-            var itemImage5 = GetImage(source, 3);
+            var itemImage5 = Methods.GetImage(source, 3);
             source = $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/item/{summonerPlayer.Item6}.png";
-            var itemImage6 = GetImage(source, 3);
+            var itemImage6 = Methods.GetImage(source, 3);
 
             Grid.SetColumn(itemImage0, 0);
             Grid.SetRow(itemImage0, 2);
@@ -208,7 +212,7 @@ public sealed partial class PlayerInfo : Page
 
             source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{summonerPlayer.ChampionName}.png";
-            var championIcon = GetImage(source, 10, 50);
+            var championIcon = Methods.GetImage(source, 10, 50);
 
             Grid.SetColumn(championIcon, 0);
             Grid.SetRowSpan(championIcon, 2);

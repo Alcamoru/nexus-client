@@ -9,6 +9,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.AccountV1;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
 using Microsoft.UI;
@@ -43,10 +44,10 @@ public sealed partial class SummonerInfoPage : Page
     private RiotGamesApi Api { get; set; }
 
     private Summoner LolSummoner { get; set; }
-
     private RegionalRoute SummonerRegionalRoute { get; set; }
 
     private PlatformRoute SummonerPlatformRoute { get; set; }
+    private UtilisMethods Methods { get; set; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -56,6 +57,7 @@ public sealed partial class SummonerInfoPage : Page
         LolSummoner = (Summoner)parameters.ElementAt(1);
         SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(2);
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(3);
+        Methods = new UtilisMethods(Api, LolSummoner, SummonerRegionalRoute, SummonerPlatformRoute);
         SetLastMatches();
         SetLeaderBoardGrid();
         SetBestChampions();
@@ -104,83 +106,64 @@ public sealed partial class SummonerInfoPage : Page
             CornerRadius = new CornerRadius(12),
             Background = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96))
         };
-        firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-        firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-        var iconBorder = new Border
+        // 2 rows definition
+        for (int i = 0; i < 2; i++)
         {
-            Padding = new Thickness(8),
-            CornerRadius = new CornerRadius(8),
-            Width = 50,
-            Height = 50,
-            Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18))
+            firstGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        }
+
+        // 3 columns definition
+        for (int i = 0; i < 3; i++)
+        {
+            firstGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        }
+
+
+        var rankingViewbox = new Viewbox
+        {
+            Child = new Border
+            {
+                Padding = new Thickness(8),
+                CornerRadius = new CornerRadius(8),
+                Width = 50,
+                Height = 50,
+                Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18)),
+                Child = Methods.SetText("1er", 14, Colors.White, stretch: Stretch.None)
+            }
+        };
+        Grid.SetRow(rankingViewbox, 0);
+        firstGrid.Children.Add(rankingViewbox);
+
+
+
+        var firstProfileIconImage = Methods.GetProfileIcon(firstPlayer.SummonerId, 10, 60);
+        var summonerNameTextBlock = Methods.SetText(Methods.GetSummonerName(firstPlayer.SummonerId), 14, Colors.White);
+
+        var firstInfosViewbox = new Viewbox
+        {
+            Child = new StackPanel()
+            {
+                Children = { firstProfileIconImage, summonerNameTextBlock }
+            }
         };
 
-        var firstTextBlock = SetText("1er", 14, Colors.White, stretch: Stretch.None);
 
-        iconBorder.Child = firstTextBlock;
-
-        var iconBorderViewBox = new Viewbox
-        {
-            Child = iconBorder
-        };
-
-        Grid.SetRow(iconBorderViewBox, 0);
-        firstGrid.Children.Add(iconBorderViewBox);
-
-
-        var leaderBoardStackPanel = new StackPanel();
-
-        var leaderboardViewBox = new Viewbox
-        {
-            Child = leaderBoardStackPanel
-        };
-
-        var source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, firstPlayer.SummonerId)!.ProfileIconId}.png";
-        var profileIconImage = GetImage(source, 10, 60);
-
-        var summonerNameTextBlock = SetText($"{firstPlayer.SummonerName}", 14, Colors.White);
-
-        leaderBoardStackPanel.Children.Add(profileIconImage);
-        leaderBoardStackPanel.Children.Add(summonerNameTextBlock);
-
-        Grid.SetRow(leaderboardViewBox, 0);
-        Grid.SetColumn(leaderboardViewBox, 1);
-        firstGrid.Children.Add(leaderboardViewBox);
-
-
-        var emblemStackPanel = new StackPanel
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Orientation = Orientation.Vertical
-        };
-
+        Grid.SetRow(firstInfosViewbox, 0);
+        Grid.SetColumn(firstInfosViewbox, 1);
+        firstGrid.Children.Add(firstInfosViewbox);
+        
         var emblemStackPanelViewBox = new Viewbox
         {
-            Child = emblemStackPanel
+            Child = new StackPanel
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Orientation = Orientation.Vertical,
+                Children = { Methods.GetImage(
+                    @"C:\Users\alcam\OneDrive\\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png", 0, 70), Methods.SetText($"{firstPlayer.LeaguePoints} LP", 14, Colors.White)}
+            }
         };
-
-        source =
-            @"C:\Users\alcam\OneDrive\\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
-        var emblemIcon = GetImage(source, 0, 70);
-
-        var lpTextBlock = new TextBlock
-        {
-            Text = $"{firstPlayer.LeaguePoints} LP",
-            Foreground = new SolidColorBrush(Colors.White),
-            FontSize = 14,
-            TextAlignment = TextAlignment.Center
-        };
-
-
-        emblemStackPanel.Children.Add(emblemIcon);
-        emblemStackPanel.Children.Add(lpTextBlock);
 
         Grid.SetRow(emblemStackPanelViewBox, 0);
         Grid.SetColumn(emblemStackPanelViewBox, 2);
@@ -231,11 +214,11 @@ public sealed partial class SummonerInfoPage : Page
         gamesWonGrid.Children.Add(totalGamesBorder);
         gamesWonGrid.Children.Add(gamesWonBorder);
 
-        var winRateTextBlock = SetText($"{Math.Round(firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100)} %",
+        var winRateTextBlock = Methods.SetText($"{Math.Round(firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100)} %",
             14, Colors.White);
         winRateTextBlock.Margin = new Thickness(10);
 
-        var gamesPlayedTextBlock = SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
+        var gamesPlayedTextBlock = Methods.SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
             14, Colors.White);
         gamesPlayedTextBlock.Margin = new Thickness(10);
 
@@ -262,6 +245,20 @@ public sealed partial class SummonerInfoPage : Page
         Grid.SetRowSpan(firstGrid, 2);
         Grid.SetColumn(firstGrid, 0);
         LeaderBoardGrid.Children.Add(firstGrid);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         var secondGrid = new Grid
         {
@@ -271,61 +268,47 @@ public sealed partial class SummonerInfoPage : Page
             Background = new SolidColorBrush(Color.FromArgb(255, 241, 196, 15))
         };
 
-        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-        var secondIconBorder = new Border
+        for (int i = 0; i < 5; i++)
         {
-            Padding = new Thickness(8),
-            CornerRadius = new CornerRadius(8),
-            Width = 50,
-            Height = 50,
-            Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
+            secondGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        }
+        
+        var secondRankingViewbox = new Viewbox
+        {
+            Child = new Border
+            {
+                Padding = new Thickness(8),
+                CornerRadius = new CornerRadius(8),
+                Width = 50,
+                Height = 50,
+                Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185)),
+                Child = Methods.SetText("2nd",
+                    14, Colors.White)
+            }
         };
 
-        var secondTextBlock = SetText("2nd",
+        Grid.SetRow(secondRankingViewbox, 0);
+        secondGrid.Children.Add(secondRankingViewbox);
+        
+        var secondProfileIconImage = Methods.GetProfileIcon(secondPlayer.SummonerId, 10, 40);
+        var secondSummonerNameTextBlock = Methods.SetText(Methods.GetSummonerName(secondPlayer.SummonerId),
             14, Colors.White);
-
-        secondIconBorder.Child = secondTextBlock;
-
-        var secondIconViewbox = new Viewbox
+        
+        var secondInfosViewbox = new Viewbox
         {
-            Child = secondIconBorder
-        };
-
-        Grid.SetRow(secondIconViewbox, 0);
-        secondGrid.Children.Add(secondIconViewbox);
-
-
-        var secondLeaderBoardStackPanel = new StackPanel
-        {
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Orientation = Orientation.Vertical
-        };
-
-        var secondLeaderBoardStackPanelViewBox = new Viewbox
-        {
-            Child = secondLeaderBoardStackPanel,
+            Child = new StackPanel
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Orientation = Orientation.Vertical,
+                Children = { secondProfileIconImage, secondSummonerNameTextBlock }
+            },
             Margin = new Thickness(7)
         };
-        source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, secondPlayer.SummonerId)!.ProfileIconId}.png";
-        var secondProfileIconImage = GetImage(source, 10, 40);
 
-
-        var secondSummonerNameTextBlock = SetText($"{secondPlayer.SummonerName}",
-            14, Colors.White);
-
-        secondLeaderBoardStackPanel.Children.Add(secondProfileIconImage);
-        secondLeaderBoardStackPanel.Children.Add(secondSummonerNameTextBlock);
-
-        Grid.SetRow(secondLeaderBoardStackPanelViewBox, 0);
-        Grid.SetColumn(secondLeaderBoardStackPanelViewBox, 1);
-        secondGrid.Children.Add(secondLeaderBoardStackPanelViewBox);
+        Grid.SetRow(secondInfosViewbox, 0);
+        Grid.SetColumn(secondInfosViewbox, 1);
+        secondGrid.Children.Add(secondInfosViewbox);
 
 
         var secondEmblemStackPanel = new StackPanel
@@ -341,12 +324,12 @@ public sealed partial class SummonerInfoPage : Page
         };
 
 
-        source =
+        var source =
             @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
 
-        var secondEmblemIcon = GetImage(source, 0, 40);
+        var secondEmblemIcon = Methods.GetImage(source, 0, 40);
 
-        var secondLpTextBlock = SetText($"{secondPlayer.LeaguePoints} LP",
+        var secondLpTextBlock = Methods.SetText($"{secondPlayer.LeaguePoints} LP",
             14, Colors.White);
 
         secondEmblemStackPanel.Children.Add(secondEmblemIcon);
@@ -401,12 +384,12 @@ public sealed partial class SummonerInfoPage : Page
         secondGamesWonGrid.Children.Add(secondGamesBorder);
         secondGamesWonGrid.Children.Add(secondGamesWonBorder);
 
-        var secondWinRateTextBlock = SetText(
+        var secondWinRateTextBlock = Methods.SetText(
             $"{Math.Round(secondPlayer.Wins / (float)(secondPlayer.Wins + secondPlayer.Losses) * 100)} %",
             14, Colors.White);
         secondWinRateTextBlock.Margin = new Thickness(10);
 
-        var secondGamesPlayedTextBlock = SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
+        var secondGamesPlayedTextBlock = Methods.SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
             14, Colors.White);
         secondGamesPlayedTextBlock.Margin = new Thickness(10);
 
@@ -454,7 +437,7 @@ public sealed partial class SummonerInfoPage : Page
             Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185))
         };
 
-        var thirdTextBlock = SetText("3rd",
+        var thirdTextBlock = Methods.SetText("3rd",
             14, Colors.White);
 
         thirdIconBorder.Child = thirdTextBlock;
@@ -479,13 +462,9 @@ public sealed partial class SummonerInfoPage : Page
             Child = thirdLeaderBoardStackPanel
         };
 
-        source =
-            $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, thirdPlayer.SummonerId)!.ProfileIconId}.png";
+        var thirdProfileIconImage = Methods.GetProfileIcon(firstPlayer.SummonerId, 10, 40);
 
-        var thirdProfileIconImage = GetImage(source, 10, 40);
-
-
-        var thirdSummonerNameTextBlock = SetText($"{thirdPlayer.SummonerName}",
+        var thirdSummonerNameTextBlock = Methods.SetText(Methods.GetSummonerName(thirdPlayer.SummonerId),
             14, Colors.White);
 
         thirdLeaderBoardStackPanel.Children.Add(thirdProfileIconImage);
@@ -511,10 +490,10 @@ public sealed partial class SummonerInfoPage : Page
         source =
             @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\emblems\Rank=Challenger.png";
 
-        var thirdEmblemIcon = GetImage(source, 0, 40);
+        var thirdEmblemIcon = Methods.GetImage(source, 0, 40);
 
 
-        var thirdLpTextBlock = SetText($"{thirdPlayer.LeaguePoints} LP",
+        var thirdLpTextBlock = Methods.SetText($"{thirdPlayer.LeaguePoints} LP",
             14, Colors.White);
 
         thirdEmblemStackPanel.Children.Add(thirdEmblemIcon);
@@ -569,11 +548,11 @@ public sealed partial class SummonerInfoPage : Page
         thirdGamesWonGrid.Children.Add(thirdGamesBorder);
         thirdGamesWonGrid.Children.Add(thirdGamesWonBorder);
 
-        var thirdWinRateTextBlock = SetText($"{thirdPlayer.LeaguePoints} LP",
+        var thirdWinRateTextBlock = Methods.SetText($"{thirdPlayer.LeaguePoints} LP",
             14, Colors.White);
         thirdWinRateTextBlock.Margin = new Thickness(10);
 
-        var thirdGamesPlayedTextBlock = SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
+        var thirdGamesPlayedTextBlock = Methods.SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
             14, Colors.White);
         thirdGamesPlayedTextBlock.Margin = new Thickness(10);
 
@@ -664,7 +643,6 @@ public sealed partial class SummonerInfoPage : Page
             {
                 if (participant.SummonerId == LolSummoner.Id)
                 {
-                    Debug.WriteLine("OKKOKOKOKOKOKO");
                     if (participant.Win)
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
                     else
@@ -673,7 +651,7 @@ public sealed partial class SummonerInfoPage : Page
                     var source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{participant.ChampionName}.png";
                     Debug.WriteLine(source);
-                    var championIcon = GetImage(source, 10, 50);
+                    var championIcon = Methods.GetImage(source, 10, 50);
 
                     championIcon.Margin = new Thickness(10, 0, 0, 0);
 
@@ -687,7 +665,7 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetColumnSpan(champIconViewBox, 2);
                     matchGrid.Children.Add(champIconViewBox);
 
-                    var titleChampionTextBlock = SetText(participant.ChampionName,
+                    var titleChampionTextBlock = Methods.SetText(participant.ChampionName,
                         30, Colors.White);
 
 
@@ -703,7 +681,7 @@ public sealed partial class SummonerInfoPage : Page
                         matchWasChampionString += $"{gameTimeStampDuration.Hours} heures";
 
 
-                    var matchWasChampionTextBlock = SetText(matchWasChampionString,
+                    var matchWasChampionTextBlock = Methods.SetText(matchWasChampionString,
                         14, Colors.White, stretch: Stretch.Uniform);
 
 
@@ -730,14 +708,14 @@ public sealed partial class SummonerInfoPage : Page
                     source = $"ms-appx:///Assets/media/roles-icons/{participant.TeamPosition}.png";
                     Debug.WriteLine(source);
 
-                    var roleLogo = GetImage(source, 0, 40);
+                    var roleLogo = Methods.GetImage(source, 0, 40);
 
                     Grid.SetRow(roleLogo, 0);
                     Grid.SetColumn(roleLogo, 4);
                     Grid.SetColumnSpan(roleLogo, 2);
                     matchGrid.Children.Add(roleLogo);
 
-                    var kdaChampionTextBlock = SetText(
+                    var kdaChampionTextBlock = Methods.SetText(
                         $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
                         14, Colors.White, stretch: Stretch.Uniform);
                     kdaChampionTextBlock.MaxHeight = 30;
@@ -754,7 +732,7 @@ public sealed partial class SummonerInfoPage : Page
                         if (team.TeamId == participant.TeamId)
                             teamKills = team.Objectives.Champion.Kills;
 
-                    var kpChampionTextBlock = SetText(
+                    var kpChampionTextBlock = Methods.SetText(
                         $"{Math.Round((float)(participant.Kills + participant.Assists) / teamKills * 100)}",
                         14, Colors.White, stretch: Stretch.Uniform);
                     kpChampionTextBlock.MaxHeight = 30;
@@ -765,7 +743,7 @@ public sealed partial class SummonerInfoPage : Page
                     Grid.SetColumnSpan(kpChampionTextBlock, 2);
                     matchGrid.Children.Add(kpChampionTextBlock);
 
-                    var csChampionTextBlock = SetText(
+                    var csChampionTextBlock = Methods.SetText(
                         $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} cs",
                         14, Colors.White, stretch: Stretch.Uniform);
                     csChampionTextBlock.MaxHeight = 30;
@@ -782,7 +760,7 @@ public sealed partial class SummonerInfoPage : Page
                         Margin = new Thickness(10)
                     };
 
-                    var visionChampionTextBlock = SetText($"{participant.VisionScore} vision",
+                    var visionChampionTextBlock = Methods.SetText($"{participant.VisionScore} vision",
                         14, Colors.White);
 
                     var summonerChampionGrid = new Grid
@@ -830,7 +808,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/spell/{sumsCorrespondences[participant.Summoner1Id]}.png";
-                    var firstSummonerSpellImage = GetImage(source);
+                    var firstSummonerSpellImage = Methods.GetImage(source);
 
                     firstSummonerSpellImage.CornerRadius = new CornerRadius(7, 7, 0, 0);
 
@@ -841,7 +819,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/spell/{sumsCorrespondences[participant.Summoner2Id]}.png";
-                    var secondSummonerSpellImage = GetImage(source);
+                    var secondSummonerSpellImage = Methods.GetImage(source);
                     secondSummonerSpellImage.CornerRadius = new CornerRadius(0, 0, 7, 7);
 
 
@@ -914,7 +892,7 @@ public sealed partial class SummonerInfoPage : Page
 
                     var itemsChampionStackPanel = new StackPanel();
 
-                    var matchDurationChampionTextBlock = SetText(
+                    var matchDurationChampionTextBlock = Methods.SetText(
                         $"{gameDuration.Minutes} minutes\n{gameDuration.Seconds} secondes",
                         14, Colors.White);
                     matchDurationChampionTextBlock.Margin = new Thickness(8);
@@ -942,19 +920,19 @@ public sealed partial class SummonerInfoPage : Page
 
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item0}.png";
                     Debug.WriteLine(source);
-                    var itemImage0 = GetImage(source, 3);
+                    var itemImage0 = Methods.GetImage(source, 3);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item1}.png";
-                    var itemImage1 = GetImage(source, 3);
+                    var itemImage1 = Methods.GetImage(source, 3);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item2}.png";
-                    var itemImage2 = GetImage(source, 3);
+                    var itemImage2 = Methods.GetImage(source, 3);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item3}.png";
-                    var itemImage3 = GetImage(source, 3);
+                    var itemImage3 = Methods.GetImage(source, 3);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item4}.png";
-                    var itemImage4 = GetImage(source, 3);
+                    var itemImage4 = Methods.GetImage(source, 3);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item5}.png";
-                    var itemImage5 = GetImage(source, 3);
+                    var itemImage5 = Methods.GetImage(source, 3);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item6}.png";
-                    var itemImage6 = GetImage(source, 3);
+                    var itemImage6 = Methods.GetImage(source, 3);
 
                     Grid.SetColumn(itemImage0, 0);
                     Grid.SetRow(itemImage0, 0);
@@ -995,7 +973,7 @@ public sealed partial class SummonerInfoPage : Page
                 }
             }
 
-            var matchName = SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
+            var matchName = Methods.SetText(match.Info.GameMode.ToString(), 20, Color.FromArgb(255, 52, 73, 94));
             matchStackPanel.Children.Add(matchName);
             matchStackPanel.Children.Add(matchGrid);
             var matchStackPanelViewbox = new Viewbox
@@ -1036,7 +1014,7 @@ public sealed partial class SummonerInfoPage : Page
             };
 
             var source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/{bestChamp.name}.png";
-            var championIcon = GetImage(source, 10, 60);
+            var championIcon = Methods.GetImage(source, 10, 60);
             championIcon.HorizontalAlignment = HorizontalAlignment.Left;
             championIcon.VerticalAlignment = VerticalAlignment.Center;
             championIcon.Margin = new Thickness(10);
@@ -1044,13 +1022,13 @@ public sealed partial class SummonerInfoPage : Page
 
             bestChampionStackPanel.Children.Add(championIcon);
 
-            var championNameTextBlock = SetText($"{bestChamp.name}",
+            var championNameTextBlock = Methods.SetText($"{bestChamp.name}",
                 20, Colors.White);
             championNameTextBlock.Margin = new Thickness(10);
 
             bestChampionStackPanel.Children.Add(championNameTextBlock);
 
-            var championWrTextBlock = SetText($"{bestChamp.winrate} %",
+            var championWrTextBlock = Methods.SetText($"{bestChamp.winrate} %",
                 20, Colors.White);
             championWrTextBlock.Margin = new Thickness(10);
 

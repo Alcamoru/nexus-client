@@ -6,6 +6,7 @@ using System.Linq;
 using Windows.UI;
 using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.AccountV1;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
 using LiveChartsCore;
@@ -53,6 +54,8 @@ public sealed partial class MatchDetail : Page
     private List<Participant> Team1 { get; set; }
 
     private List<Participant> Team2 { get; set; }
+    
+    private UtilisMethods Methods { get; set; }
 
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -63,6 +66,7 @@ public sealed partial class MatchDetail : Page
         LolSummoner = (Summoner)parameters.ElementAt(2);
         SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(3);
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(4);
+        Methods = new UtilisMethods(Api, LolSummoner, SummonerRegionalRoute, SummonerPlatformRoute);
         SetMatchTimeline();
         SetParticipantsGrid();
         Team1 = new List<Participant>();
@@ -181,7 +185,7 @@ public sealed partial class MatchDetail : Page
 
             var source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
-            var championIcon = GetImage(source, 30, 15);
+            var championIcon = Methods.GetImage(source, 30, 15);
 
             var championIconViewbox = new Viewbox
             {
@@ -196,7 +200,7 @@ public sealed partial class MatchDetail : Page
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            var championNameTextBlock = SetText(participant.SummonerName,
+            var championNameTextBlock = Methods.SetText(participant.SummonerName,
                 20, Color.FromArgb(255, 52, 73, 94));
 
             championNameViewbox.Child = championNameTextBlock;
@@ -258,7 +262,7 @@ public sealed partial class MatchDetail : Page
 
             source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
-            var firstSummonerSpellImage = GetImage(source);
+            var firstSummonerSpellImage = Methods.GetImage(source);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
             Grid.SetRow(firstSummonerSpellImage, 0);
@@ -266,7 +270,7 @@ public sealed partial class MatchDetail : Page
 
             source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
-            var secondSummonerSpellImage = GetImage(source);
+            var secondSummonerSpellImage = Methods.GetImage(source);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
             Grid.SetRow(secondSummonerSpellImage, 1);
@@ -293,13 +297,13 @@ public sealed partial class MatchDetail : Page
 
 
             source = $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
-            var mainRune = GetImage(source);
+            var mainRune = Methods.GetImage(source);
             Grid.SetColumn(mainRune, 1);
             Grid.SetRow(mainRune, 0);
             summonerChampionGrid.Children.Add(mainRune);
 
             source = $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}";
-            var secondaryRune = GetImage(source);
+            var secondaryRune = Methods.GetImage(source);
 
             Grid.SetColumn(secondaryRune, 1);
             Grid.SetRow(secondaryRune, 1);
@@ -310,7 +314,7 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(summonersViewbox, 2);
             participantGrid.Children.Add(summonersViewbox);
 
-            var csChampionTextBlock = SetText(
+            var csChampionTextBlock = Methods.SetText(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                 15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
 
@@ -364,7 +368,7 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid1, 4);
             participantGrid.Children.Add(innerGrid1);
 
-            var kdaChampionTextBlock = SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+            var kdaChampionTextBlock = Methods.SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
                 15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
@@ -427,7 +431,7 @@ public sealed partial class MatchDetail : Page
 
             var source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
-            var championIcon = GetImage(source, 30, 15);
+            var championIcon = Methods.GetImage(source, 30, 15);
 
             var championIconViewbox = new Viewbox
             {
@@ -512,7 +516,7 @@ public sealed partial class MatchDetail : Page
 
             source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
-            var firstSummonerSpellImage = GetImage(source);
+            var firstSummonerSpellImage = Methods.GetImage(source);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
             Grid.SetRow(firstSummonerSpellImage, 0);
@@ -520,7 +524,7 @@ public sealed partial class MatchDetail : Page
 
             source =
                 $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
-            var secondSummonerSpellImage = GetImage(source);
+            var secondSummonerSpellImage = Methods.GetImage(source);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
             Grid.SetRow(secondSummonerSpellImage, 1);
@@ -549,7 +553,7 @@ public sealed partial class MatchDetail : Page
             source =
                 $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
 
-            var mainRune = GetImage(source);
+            var mainRune = Methods.GetImage(source);
 
             Grid.SetColumn(mainRune, 1);
             Grid.SetRow(mainRune, 0);
@@ -557,7 +561,7 @@ public sealed partial class MatchDetail : Page
 
 
             source = $"https://ddragon.leagueoflegends.com/cdn/img/{secondPerkIcon}";
-            var secondaryRune = GetImage(source);
+            var secondaryRune = Methods.GetImage(source);
 
             Grid.SetColumn(secondaryRune, 1);
             Grid.SetRow(secondaryRune, 1);
@@ -616,7 +620,7 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid2, 4);
             participantGrid.Children.Add(innerGrid2);
 
-            var csChampionTextBlock = SetText(
+            var csChampionTextBlock = Methods.SetText(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                 15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
 
@@ -624,7 +628,7 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
 
-            var kdaChampionTextBlock = SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+            var kdaChampionTextBlock = Methods.SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
                 15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
@@ -765,7 +769,7 @@ public sealed partial class MatchDetail : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var startTextBlock = SetText(" début du match",
+        var startTextBlock = Methods.SetText(" début du match",
             15, Colors.White);
 
         startStackPanel.Children.Add(startIcon);
@@ -797,16 +801,16 @@ public sealed partial class MatchDetail : Page
 
                 var source =
                     $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png";
-                var championIcon = GetImage(source, 7, 40);
+                var championIcon = Methods.GetImage(source, 7, 40);
                 championIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
                 source =
                     @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\img\item\3340.png";
-                var wardImage = GetImage(source, 7, 40);
+                var wardImage = Methods.GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
 
-                var wardPlacedTextBlock = SetText(" a placé une balise",
+                var wardPlacedTextBlock = Methods.SetText(" a placé une balise",
                     15, Colors.White);
 
                 frameInfoStackPanel.Children.Add(championIcon);
@@ -851,15 +855,15 @@ public sealed partial class MatchDetail : Page
 
                     var source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
-                    var killerChampionIcon = GetImage(source, 7, 40);
+                    var killerChampionIcon = Methods.GetImage(source, 7, 40);
                     killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
-                    var victimChampionIcon = GetImage(source, 7, 40);
+                    var victimChampionIcon = Methods.GetImage(source, 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = SetText(" a eliminé",
+                    var eliminatedTextBlock = Methods.SetText(" a eliminé",
                         15, Colors.White);
 
                     frameInfoStackPanel.Children.Add(killerChampionIcon);
@@ -897,15 +901,15 @@ public sealed partial class MatchDetail : Page
 
                     var source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
-                    var killerChampionIcon = GetImage(source, 7, 40);
+                    var killerChampionIcon = Methods.GetImage(source, 7, 40);
                     killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
-                    var victimChampionIcon = GetImage(source, 7, 40);
+                    var victimChampionIcon = Methods.GetImage(source, 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = SetText(" a eliminé",
+                    var eliminatedTextBlock = Methods.SetText(" a eliminé",
                         15, Colors.White);
 
                     frameInfoStackPanel.Children.Add(killerChampionIcon);
@@ -946,16 +950,16 @@ public sealed partial class MatchDetail : Page
 
                     var source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
-                    var summonerChampionIcon = GetImage(source, 7, 40);
+                    var summonerChampionIcon = Methods.GetImage(source, 7, 40);
                     summonerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     source =
                         $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
-                    var victimChampionIcon = GetImage(source, 7, 40);
+                    var victimChampionIcon = Methods.GetImage(source, 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
-                    var eliminatedTextBlock = SetText(" a participé à l'élimination de ",
+                    var eliminatedTextBlock = Methods.SetText(" a participé à l'élimination de ",
                         15, Colors.White);
 
                     frameInfoStackPanel.Children.Add(summonerChampionIcon);
@@ -989,7 +993,7 @@ public sealed partial class MatchDetail : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var endTextBlock = SetText(" fin du match",
+        var endTextBlock = Methods.SetText(" fin du match",
             15, Colors.White);
 
         endStackPanel.Children.Add(endIcon);
@@ -1191,7 +1195,7 @@ public sealed partial class MatchDetail : Page
     // {
     //     var source =
     //         $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, LolSummoner.Name)!.ProfileIconId}.png";
-    //     profilePicture = GetImage(source, 10, 60);
+    //     profilePicture = Methods.GetImage(source, 10, 60);
     // }
 
     private void GoldsChartButton_OnClick(object sender, RoutedEventArgs e)
