@@ -4,12 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
-using Windows.Storage;
 using Windows.System;
 using Camille.Enums;
 using Camille.RiotGames;
-using Camille.RiotGames.AccountV1;
 using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -101,7 +98,8 @@ public sealed partial class WelcomePage : Page
 
         try
         {
-            Account lolAccount = (await Api.AccountV1().GetByRiotIdAsync(SummonerRegionalRoute, SummonerNameTextBox.Text, AccountTextBox.Text))!;
+            var lolAccount = (await Api.AccountV1()
+                .GetByRiotIdAsync(SummonerRegionalRoute, SummonerNameTextBox.Text, AccountTextBox.Text))!;
             LolSummoner = await Api.SummonerV4().GetByPUUIDAsync(SummonerPlatformRoute, lolAccount.Puuid);
 
             if (LolSummoner is null) throw new ArgumentNullException();

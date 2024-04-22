@@ -6,7 +6,6 @@ using System.Linq;
 using Windows.UI;
 using Camille.Enums;
 using Camille.RiotGames;
-using Camille.RiotGames.AccountV1;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
 using LiveChartsCore;
@@ -23,7 +22,6 @@ using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
 using SkiaSharp;
 using Team = Camille.RiotGames.Enums.Team;
-using static NexusClient.UtilisMethods;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -54,7 +52,7 @@ public sealed partial class MatchDetail : Page
     private List<Participant> Team1 { get; set; }
 
     private List<Participant> Team2 { get; set; }
-    
+
     private UtilisMethods Methods { get; set; }
 
 
@@ -368,7 +366,8 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid1, 4);
             participantGrid.Children.Add(innerGrid1);
 
-            var kdaChampionTextBlock = Methods.SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+            var kdaChampionTextBlock = Methods.SetText(
+                $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
                 15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
@@ -628,7 +627,8 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
 
-            var kdaChampionTextBlock = Methods.SetText($"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
+            var kdaChampionTextBlock = Methods.SetText(
+                $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
                 15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
 
             Grid.SetColumn(kdaChampionTextBlock, 5);

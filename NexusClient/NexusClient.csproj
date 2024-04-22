@@ -10,7 +10,7 @@
         <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
-		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
@@ -26,12 +26,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Camille.RiotGames" Version="3.0.0-nightly-2024-01-04-95741ea8f0" />
+        <PackageReference Include="Camille.RiotGames" Version="3.0.0-nightly-2024-01-04-95741ea8f0"/>
         <PackageReference Include="LiveChartsCore.SkiaSharpView.WinUI" Version="2.0.0-rc2.1"/>
         <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230602002"/>
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755"/>
         <Manifest Include="$(ApplicationManifest)"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     </ItemGroup>
 
     <!--
@@ -48,7 +48,7 @@
         </Page>
         <Page Remove="Assets\loldata\**"/>
         <Page Update="PlayerInfo.xaml">
-          <SubType>Designer</SubType>
+            <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
     <ItemGroup>

@@ -21,7 +21,6 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
-using static NexusClient.UtilisMethods;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -48,9 +47,8 @@ public sealed partial class PlayerInfo : Page
     private RegionalRoute SummonerRegionalRoute { get; set; }
 
     private PlatformRoute SummonerPlatformRoute { get; set; }
-    
-    private UtilisMethods Methods { get; set; }
 
+    private UtilisMethods Methods { get; set; }
 
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -260,7 +258,6 @@ public sealed partial class PlayerInfo : Page
             Grid.SetColumn(secondaryRune, 2);
             Grid.SetRow(secondaryRune, 1);
             gameItemsGrid.Children.Add(secondaryRune);
-
 
 
             Grid.SetColumn(matchGrid, i);
