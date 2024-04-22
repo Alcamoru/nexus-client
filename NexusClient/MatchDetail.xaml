@@ -33,7 +33,6 @@
             </Grid.RowDefinitions>
 
             <Button
-                x:Name="ButtonBack"
                 Margin="8"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -45,12 +44,12 @@
                         FontWeight="Bold"
                         Foreground="White" />
                 </Viewbox>
-
             </Button>
             <HyperlinkButton
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Row="0" Grid.Column="0" x:Name="ChampionsHyperlinkButton">
+
                 <Viewbox>
                     <TextBlock
                         Text="Champions"
@@ -64,6 +63,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Row="0" Grid.Column="1" x:Name="ProfileHyperlinkButton">
+
                 <Viewbox>
                     <TextBlock
                         Text="Profil"
@@ -77,7 +77,6 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Grid.Row="0" Grid.Column="2" x:Name="ScoreboardHyperlinkButton">
-
                 <Viewbox>
                     <TextBlock
                         Text="Scoreboard"
@@ -87,7 +86,6 @@
                 </Viewbox>
 
             </HyperlinkButton>
-
         </Grid>
 
         <Grid Grid.Row="1" Padding="30">
