@@ -18,7 +18,7 @@
                    Foreground="#34495E"
                    FontSize="36"
                    HorizontalAlignment="Center"
-                   Text="Bienvenue"/>
+                   Text="Bienvenue" />
         <Viewbox>
             <StackPanel
                 Margin="200 0 200 0"
