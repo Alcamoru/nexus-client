@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Core;
 using Camille.Enums;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
@@ -12,8 +15,10 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -149,7 +154,8 @@ public sealed partial class MatchDetail : Page
                 Background = new SolidColorBrush(Color.FromArgb(255, 217, 217, 217)),
                 CornerRadius = new CornerRadius(8),
                 Margin = new Thickness(2),
-                Padding = new Thickness(5)
+                Padding = new Thickness(5),
+                Tag = participant.SummonerId
             };
 
             if (participant.SummonerId == LolSummoner.Id)
@@ -173,11 +179,16 @@ public sealed partial class MatchDetail : Page
                 }
             }
 
+
+            participantGrid.PointerEntered += (_, _) => ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Hand, 1));
+            participantGrid.PointerExited += (_, _) => ProtectedCursor = InputCursor.CreateFromCoreCursor(new CoreCursor(CoreCursorType.Arrow, 1));
+            participantGrid.PointerPressed += ChampionIconViewboxOnPointerPressed;
+
             var championIconViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = Methods.GetChampionImage(participant.ChampionName, 30, 15)
+                Child = Methods.GetChampionImage(participant.ChampionName, 30, 15),
             };
 
             var summonerNameViewbox = new Viewbox
@@ -541,6 +552,57 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(participantGrid, 2);
             Grid.SetRow(participantGrid, row);
             ParticipantsGrid.Children.Add(participantGrid);
+        }
+    }
+
+    private async void ChampionIconViewboxOnPointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        var originalSource = e.OriginalSource as FrameworkElement;
+
+        Grid player = null;
+
+        while (originalSource != null)
+        {
+            if (originalSource is Grid)
+            {
+                player = originalSource as Grid;
+                break;
+            }
+
+            originalSource = originalSource.Parent as FrameworkElement;
+        }
+
+        if (player != null)
+        {
+            var progressRing = new ProgressRing
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Background = new SolidColorBrush(Colors.White)
+            };
+
+            var matchRectangle = new Rectangle
+            {
+                Fill = new SolidColorBrush(Color.FromArgb(150, 52, 73, 94))
+            };
+            Grid.SetColumn(matchRectangle, 0);
+            Grid.SetColumnSpan(matchRectangle, 6);
+            player!.Children.Add(matchRectangle);
+
+            Grid.SetColumn(progressRing, 0);
+            Grid.SetColumnSpan(progressRing, 6);
+            player!.Children.Add(progressRing);
+            await Task.Run(() => { Thread.Sleep(1); });
+
+            var parameters = new List<object>
+            {
+                Api,
+                Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, player.Tag.ToString()!),
+                LolSummoner,
+                SummonerRegionalRoute,
+                SummonerPlatformRoute
+            };
+            Frame.Navigate(typeof(PlayerInfo), parameters, new DrillInNavigationTransitionInfo());
         }
     }
 
