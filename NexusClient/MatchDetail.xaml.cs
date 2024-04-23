@@ -49,9 +49,9 @@ public sealed partial class MatchDetail : Page
 
     private PlatformRoute SummonerPlatformRoute { get; set; }
 
-    private List<Participant> Team1 { get; set; }
+    private List<Participant> BlueTeam { get; set; }
 
-    private List<Participant> Team2 { get; set; }
+    private List<Participant> RedTeam { get; set; }
 
     private UtilisMethods Methods { get; set; }
 
@@ -65,11 +65,11 @@ public sealed partial class MatchDetail : Page
         SummonerRegionalRoute = (RegionalRoute)parameters.ElementAt(3);
         SummonerPlatformRoute = (PlatformRoute)parameters.ElementAt(4);
         Methods = new UtilisMethods(Api, LolSummoner, SummonerRegionalRoute, SummonerPlatformRoute);
+        BlueTeam = new List<Participant>();
+        RedTeam = new List<Participant>();
+        SetTeams();
         SetMatchTimeline();
         SetParticipantsGrid();
-        Team1 = new List<Participant>();
-        Team2 = new List<Participant>();
-        SetTeams();
         SetMatchGraph();
         base.OnNavigatedTo(e);
     }
@@ -95,12 +95,9 @@ public sealed partial class MatchDetail : Page
     /// <returns>None</returns>
     private void SetParticipantsGrid()
     {
-        var team1 = new List<Participant>();
-        var team2 = new List<Participant>();
-
         foreach (var participant in MatchInfo.Info.Participants)
         {
-            if (participant.SummonerName == LolSummoner.Name)
+            if (Methods.GetSummonerName(participant.SummonerId) == LolSummoner.Name)
             {
                 if (participant.Win)
                 {
@@ -113,25 +110,20 @@ public sealed partial class MatchDetail : Page
                     SummonerWonTextBlock.Foreground = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
                 }
             }
-
-            if (participant.TeamId == Team.Blue)
-                team1.Add(participant);
-            else
-                team2.Add(participant);
         }
 
         var row = 0;
 
-        var team1BestDamages = 0;
-        foreach (var participant in team1)
-            if (participant.TotalDamageDealtToChampions > team1BestDamages)
-                team1BestDamages = participant.TotalDamageDealtToChampions;
-        var team2BestDamages = 0;
-        foreach (var participant in team2)
-            if (participant.TotalDamageDealtToChampions > team2BestDamages)
-                team2BestDamages = participant.TotalDamageDealtToChampions;
+        var blueTeamBestDamages = 0;
+        foreach (var participant in BlueTeam)
+            if (participant.TotalDamageDealtToChampions > blueTeamBestDamages)
+                blueTeamBestDamages = participant.TotalDamageDealtToChampions;
+        var redTeamBestDamages = 0;
+        foreach (var participant in RedTeam)
+            if (participant.TotalDamageDealtToChampions > redTeamBestDamages)
+                redTeamBestDamages = participant.TotalDamageDealtToChampions;
 
-        foreach (var participant in team1)
+        foreach (var participant in BlueTeam)
         {
             switch (participant.TeamPosition)
             {
@@ -160,54 +152,47 @@ public sealed partial class MatchDetail : Page
                 Padding = new Thickness(5)
             };
 
-            if (participant.SummonerName == LolSummoner.Name)
+            if (participant.SummonerId == LolSummoner.Id)
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96));
             else
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
 
             participantGrid.BorderThickness = new Thickness(2);
 
-            var col1 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col2 = new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) };
-            var col3 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col4 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col5 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col6 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            participantGrid.ColumnDefinitions.Add(col1);
-            participantGrid.ColumnDefinitions.Add(col2);
-            participantGrid.ColumnDefinitions.Add(col3);
-            participantGrid.ColumnDefinitions.Add(col4);
-            participantGrid.ColumnDefinitions.Add(col5);
-            participantGrid.ColumnDefinitions.Add(col6);
-
-
-            var source =
-                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
-            var championIcon = Methods.GetImage(source, 30, 15);
+            for (int i = 0; i < 6; i++)
+            {
+                if (i == 1)
+                {
+                    participantGrid.ColumnDefinitions.Add(new ColumnDefinition
+                        { Width = new GridLength(2, GridUnitType.Star) });
+                }
+                else
+                {
+                    participantGrid.ColumnDefinitions.Add(new ColumnDefinition
+                        { Width = new GridLength(1, GridUnitType.Star) });
+                }
+            }
 
             var championIconViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = championIcon
+                Child = Methods.GetChampionImage(participant.ChampionName, 30, 15)
             };
 
-            var championNameViewbox = new Viewbox
+            var summonerNameViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                Child = Methods.SetText(Methods.GetSummonerName(participant.SummonerId),
+                    20, Color.FromArgb(255, 52, 73, 94))
             };
-
-            var championNameTextBlock = Methods.SetText(participant.SummonerName,
-                20, Color.FromArgb(255, 52, 73, 94));
-
-            championNameViewbox.Child = championNameTextBlock;
 
             Grid.SetColumn(championIconViewbox, 0);
             participantGrid.Children.Add(championIconViewbox);
 
-            Grid.SetColumn(championNameViewbox, 1);
-            participantGrid.Children.Add(championNameViewbox);
+            Grid.SetColumn(summonerNameViewbox, 1);
+            participantGrid.Children.Add(summonerNameViewbox);
 
             var summonersViewbox = new Viewbox
             {
@@ -220,55 +205,25 @@ public sealed partial class MatchDetail : Page
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            var summonerChampionGridColumn1 = new ColumnDefinition
-                { Width = new GridLength(15, GridUnitType.Pixel) };
-            var summonerChampionGridColumn2 = new ColumnDefinition
-                { Width = new GridLength(15, GridUnitType.Pixel) };
-
-            summonerChampionGrid.ColumnDefinitions.Add(summonerChampionGridColumn1);
-            summonerChampionGrid.ColumnDefinitions.Add(summonerChampionGridColumn2);
-
-            var summonerChampionGridRow1 = new RowDefinition
-                { Height = new GridLength(15, GridUnitType.Pixel) };
-            var summonerChampionGridRow2 = new RowDefinition
-                { Height = new GridLength(15, GridUnitType.Pixel) };
-
-            summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow1);
-            summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow2);
-
-            var sumsCorrespondences = new Dictionary<string, string>
+            for (int i = 0; i < 2; i++)
             {
-                { "21", "SummonerBarrier" },
-                { "1", "SummonerBoost" },
-                { "2202", "SummonerCherryFlash" },
-                { "2201", "SummonerCherryHold" },
-                { "14", "SummonerDot" },
-                { "3", "SummonerExhaust" },
-                { "4", "SummonerFlash" },
-                { "6", "SummonerHaste" },
-                { "7", "SummonerHeal" },
-                { "13", "SummonerMana" },
-                { "30", "SummonerPoroRecall" },
-                { "31", "SummonerPoroThrow" },
-                { "11", "SummonerSmite" },
-                { "39", "SummonerSnowURFSnowball_Mark" },
-                { "32", "SummonerSnowball" },
-                { "12", "SummonerTeleport" },
-                { "54", "Summoner_UltBookPlaceholder" },
-                { "55", "Summoner_UltBookSmitePlaceholder" }
-            };
+                summonerChampionGrid.ColumnDefinitions.Add(new ColumnDefinition
+                    { Width = new GridLength(15, GridUnitType.Pixel) });
+            }
 
-            source =
-                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
-            var firstSummonerSpellImage = Methods.GetImage(source);
+            for (int i = 0; i < 2; i++)
+            {
+                summonerChampionGrid.RowDefinitions.Add(new RowDefinition
+                    { Height = new GridLength(15, GridUnitType.Pixel) });
+            }
+
+            var firstSummonerSpellImage = Methods.GetSummonerSpellImage(participant.Summoner1Id);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
             Grid.SetRow(firstSummonerSpellImage, 0);
             summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
-            source =
-                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
-            var secondSummonerSpellImage = Methods.GetImage(source);
+            var secondSummonerSpellImage = Methods.GetSummonerSpellImage(participant.Summoner2Id);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
             Grid.SetRow(secondSummonerSpellImage, 1);
@@ -294,7 +249,7 @@ public sealed partial class MatchDetail : Page
             }
 
 
-            source = $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
+            var source = $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
             var mainRune = Methods.GetImage(source);
             Grid.SetColumn(mainRune, 1);
             Grid.SetRow(mainRune, 0);
@@ -319,52 +274,46 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
 
-            var team1Rectangle = new Rectangle
-            {
-                Width = 50,
-                Fill = new SolidColorBrush(Colors.White),
-                Height = 7
-            };
-
-            var team1Border = new Border
+            var blueTeamBorder = new Border
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Child = team1Rectangle,
+                Child = new Rectangle
+                {
+                    Width = 50,
+                    Fill = new SolidColorBrush(Colors.White),
+                    Height = 7
+                },
                 CornerRadius = new CornerRadius(3)
             };
 
 
-            var width = participant.TotalDamageDealtToChampions / (float)team1BestDamages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)blueTeamBestDamages * 50;
 
-            var participant1Rectangle = new Rectangle
+            var participantBorder = new Border
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Width = width,
-                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                Height = 7
-            };
-
-            var participant1Border = new Border
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Child = participant1Rectangle,
+                Child = new Rectangle
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Width = width,
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 7
+                },
                 CornerRadius = new CornerRadius(3)
             };
 
-            var innerGrid1 = new Grid
+            var innerGrid = new Grid
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                Children = { blueTeamBorder, participantBorder }
             };
 
-            innerGrid1.Children.Add(team1Border);
-            innerGrid1.Children.Add(participant1Border);
-
-            Grid.SetColumn(innerGrid1, 4);
-            participantGrid.Children.Add(innerGrid1);
+            Grid.SetColumn(innerGrid, 4);
+            participantGrid.Children.Add(innerGrid);
 
             var kdaChampionTextBlock = Methods.SetText(
                 $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
@@ -378,7 +327,7 @@ public sealed partial class MatchDetail : Page
             ParticipantsGrid.Children.Add(participantGrid);
         }
 
-        foreach (var participant in team2)
+        foreach (var participant in RedTeam)
         {
             switch (participant.TeamPosition)
             {
@@ -407,55 +356,47 @@ public sealed partial class MatchDetail : Page
                 Padding = new Thickness(5)
             };
 
-            if (participant.SummonerName == LolSummoner.Name)
+            if (participant.SummonerId == LolSummoner.Id)
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96));
             else
                 participantGrid.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
 
             participantGrid.BorderThickness = new Thickness(2);
-
-            var col1 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col2 = new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) };
-            var col3 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col4 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col5 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var col6 = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            participantGrid.ColumnDefinitions.Add(col1);
-            participantGrid.ColumnDefinitions.Add(col2);
-            participantGrid.ColumnDefinitions.Add(col3);
-            participantGrid.ColumnDefinitions.Add(col4);
-            participantGrid.ColumnDefinitions.Add(col5);
-            participantGrid.ColumnDefinitions.Add(col6);
-
-
-            var source =
-                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{participant.ChampionName}.png";
-            var championIcon = Methods.GetImage(source, 30, 15);
+            for (int i = 0; i < 6; i++)
+            {
+                if (i == 1)
+                {
+                    participantGrid.ColumnDefinitions.Add(new ColumnDefinition
+                        { Width = new GridLength(2, GridUnitType.Star) });
+                }
+                else
+                {
+                    participantGrid.ColumnDefinitions.Add(new ColumnDefinition
+                        { Width = new GridLength(1, GridUnitType.Star) });
+                }
+            }
 
             var championIconViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = championIcon
+                Child = Methods.GetChampionImage(participant.ChampionName, 30, 15)
             };
 
             var championNameViewbox = new Viewbox
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            var championNameTextBlock = new TextBlock
-            {
-                Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
-                HorizontalTextAlignment = TextAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Text = participant.SummonerName,
-                FontSize = 20,
-                FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                Child = new TextBlock
+                {
+                    Foreground = new SolidColorBrush(Color.FromArgb(255, 52, 73, 94)),
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Text = Methods.GetSummonerName(participant.SummonerId),
+                    FontSize = 20,
+                    FontFamily = new FontFamily("Assets/fonts/Inter/Inter-Medium.ttf#Inter")
+                }
             };
-
-            championNameViewbox.Child = championNameTextBlock;
 
             Grid.SetColumn(championIconViewbox, 0);
             participantGrid.Children.Add(championIconViewbox);
@@ -474,56 +415,25 @@ public sealed partial class MatchDetail : Page
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            var summonerChampionGridColumn1 = new ColumnDefinition
-                { Width = new GridLength(15, GridUnitType.Pixel) };
-            var summonerChampionGridColumn2 = new ColumnDefinition
-                { Width = new GridLength(15, GridUnitType.Pixel) };
-
-            summonerChampionGrid.ColumnDefinitions.Add(summonerChampionGridColumn1);
-            summonerChampionGrid.ColumnDefinitions.Add(summonerChampionGridColumn2);
-
-            var summonerChampionGridRow1 = new RowDefinition
-                { Height = new GridLength(15, GridUnitType.Pixel) };
-            var summonerChampionGridRow2 = new RowDefinition
-                { Height = new GridLength(15, GridUnitType.Pixel) };
-
-            summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow1);
-            summonerChampionGrid.RowDefinitions.Add(summonerChampionGridRow2);
-
-            var sumsCorrespondences = new Dictionary<string, string>
+            for (int i = 0; i < 2; i++)
             {
-                { "21", "SummonerBarrier" },
-                { "1", "SummonerBoost" },
-                { "2202", "SummonerCherryFlash" },
-                { "2201", "SummonerCherryHold" },
-                { "14", "SummonerDot" },
-                { "3", "SummonerExhaust" },
-                { "4", "SummonerFlash" },
-                { "6", "SummonerHaste" },
-                { "7", "SummonerHeal" },
-                { "13", "SummonerMana" },
-                { "30", "SummonerPoroRecall" },
-                { "31", "SummonerPoroThrow" },
-                { "11", "SummonerSmite" },
-                { "39", "SummonerSnowURFSnowball_Mark" },
-                { "32", "SummonerSnowball" },
-                { "12", "SummonerTeleport" },
-                { "54", "Summoner_UltBookPlaceholder" },
-                { "55", "Summoner_UltBookSmitePlaceholder" }
-            };
+                summonerChampionGrid.ColumnDefinitions.Add(new ColumnDefinition
+                    { Width = new GridLength(15, GridUnitType.Pixel) });
+            }
 
+            for (int i = 0; i < 2; i++)
+            {
+                summonerChampionGrid.RowDefinitions.Add(new RowDefinition
+                    { Height = new GridLength(15, GridUnitType.Pixel) });
+            }
 
-            source =
-                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner1Id.ToString()]}.png";
-            var firstSummonerSpellImage = Methods.GetImage(source);
+            var firstSummonerSpellImage = Methods.GetSummonerSpellImage(participant.Summoner1Id);
 
             Grid.SetColumn(firstSummonerSpellImage, 0);
             Grid.SetRow(firstSummonerSpellImage, 0);
             summonerChampionGrid.Children.Add(firstSummonerSpellImage);
 
-            source =
-                $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/spell/{sumsCorrespondences[participant.Summoner2Id.ToString()]}.png";
-            var secondSummonerSpellImage = Methods.GetImage(source);
+            var secondSummonerSpellImage = Methods.GetSummonerSpellImage(participant.Summoner2Id);
 
             Grid.SetColumn(secondSummonerSpellImage, 0);
             Grid.SetRow(secondSummonerSpellImage, 1);
@@ -549,7 +459,7 @@ public sealed partial class MatchDetail : Page
             }
 
 
-            source =
+            var source =
                 $"https://ddragon.leagueoflegends.com/cdn/img/{firstPerkIcon}";
 
             var mainRune = Methods.GetImage(source);
@@ -571,53 +481,46 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(summonersViewbox, 2);
             participantGrid.Children.Add(summonersViewbox);
 
-
-            var team2Rectangle = new Rectangle
-            {
-                Width = 50,
-                Fill = new SolidColorBrush(Colors.White),
-                Height = 7
-            };
-
-            var team2Border = new Border
+            var redTeamBorder = new Border
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Child = team2Rectangle,
+                Child = new Rectangle
+                {
+                    Width = 50,
+                    Fill = new SolidColorBrush(Colors.White),
+                    Height = 7
+                },
                 CornerRadius = new CornerRadius(3)
             };
 
 
-            var width = participant.TotalDamageDealtToChampions / (float)team2BestDamages * 50;
+            var width = participant.TotalDamageDealtToChampions / (float)redTeamBestDamages * 50;
 
-            var participant2Rectangle = new Rectangle
+            var participantBorder = new Border
             {
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                Width = width,
-                Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
-                Height = 7
-            };
-
-            var participant2Border = new Border
-            {
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Child = participant2Rectangle,
+                Child = new Rectangle
+                {
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Width = width,
+                    Fill = new SolidColorBrush(Color.FromArgb(255, 39, 174, 96)),
+                    Height = 7
+                },
                 CornerRadius = new CornerRadius(3)
             };
 
-            var innerGrid2 = new Grid
+            var innerGrid = new Grid
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
+                Children = { redTeamBorder, participantBorder }
             };
 
-            innerGrid2.Children.Add(team2Border);
-            innerGrid2.Children.Add(participant2Border);
-
-            Grid.SetColumn(innerGrid2, 4);
-            participantGrid.Children.Add(innerGrid2);
+            Grid.SetColumn(innerGrid, 4);
+            participantGrid.Children.Add(innerGrid);
 
             var csChampionTextBlock = Methods.SetText(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
@@ -645,9 +548,9 @@ public sealed partial class MatchDetail : Page
     {
         foreach (var participant in MatchInfo.Info.Participants)
             if (participant.TeamId == Team.Blue)
-                Team1.Add(participant);
+                BlueTeam.Add(participant);
             else
-                Team2.Add(participant);
+                RedTeam.Add(participant);
     }
 
 
@@ -756,12 +659,6 @@ public sealed partial class MatchDetail : Page
             MatchTimelineGrid.Children.Add(rectangleRedBot);
         }
 
-        var startStackPanel = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Margin = new Thickness(10, 0, 0, 0)
-        };
-
         var startIcon = new Image
         {
             Width = 40,
@@ -772,8 +669,13 @@ public sealed partial class MatchDetail : Page
         var startTextBlock = Methods.SetText(" début du match",
             15, Colors.White);
 
-        startStackPanel.Children.Add(startIcon);
-        startStackPanel.Children.Add(startTextBlock);
+        var startStackPanel = new StackPanel
+        {
+            Spacing = 10.0,
+            Orientation = Orientation.Horizontal,
+            Margin = new Thickness(10, 0, 0, 0),
+            Children = { startIcon, startTextBlock }
+        };
         Grid.SetColumn(startStackPanel, 1);
         Grid.SetRow(startStackPanel, 0);
 
@@ -787,25 +689,17 @@ public sealed partial class MatchDetail : Page
             {
                 SetPrecedentEvent();
 
-                var frameInfoStackPanel = new StackPanel
-                {
-                    Margin = new Thickness(10, 0, 0, 0),
-                    Orientation = Orientation.Horizontal
-                };
-
                 var creatorPuuid = "";
 
                 foreach (var participant in timeline.Info.Participants)
                     if (participant.ParticipantId == e.CreatorId)
                         creatorPuuid = participant.Puuid;
 
-                var source =
-                    $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(creatorPuuid)}.png";
-                var championIcon = Methods.GetImage(source, 7, 40);
+                var championIcon = Methods.GetChampionImage(GetChampionNameByPuuid(creatorPuuid), 7, 40);
                 championIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
-                source =
+                var source =
                     @"C:\Users\alcam\OneDrive\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\img\item\3340.png";
                 var wardImage = Methods.GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
@@ -813,9 +707,14 @@ public sealed partial class MatchDetail : Page
                 var wardPlacedTextBlock = Methods.SetText(" a placé une balise",
                     15, Colors.White);
 
-                frameInfoStackPanel.Children.Add(championIcon);
-                frameInfoStackPanel.Children.Add(wardPlacedTextBlock);
-                frameInfoStackPanel.Children.Add(wardImage);
+
+                var frameInfoStackPanel = new StackPanel
+                {
+                    Spacing = 10.0,
+                    Margin = new Thickness(10, 0, 0, 0),
+                    Orientation = Orientation.Horizontal,
+                    Children = { championIcon, wardPlacedTextBlock, wardImage }
+                };
                 Grid.SetColumn(frameInfoStackPanel, 1);
                 Grid.SetRow(frameInfoStackPanel, elementNumber);
 
@@ -836,13 +735,6 @@ public sealed partial class MatchDetail : Page
                 {
                     SetPrecedentEvent();
 
-                    var frameInfoStackPanel = new StackPanel
-                    {
-                        Margin = new Thickness(10, 0, 0, 0),
-
-                        Orientation = Orientation.Horizontal
-                    };
-
                     var killerPuuid = "";
                     var victimPuuid = "";
 
@@ -853,22 +745,22 @@ public sealed partial class MatchDetail : Page
                         if (participant.ParticipantId == e.VictimId) victimPuuid = participant.Puuid;
                     }
 
-                    var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
-                    var killerChampionIcon = Methods.GetImage(source, 7, 40);
+                    var killerChampionIcon = Methods.GetChampionImage(GetChampionNameByPuuid(killerPuuid), 7, 40);
                     killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
-                    var victimChampionIcon = Methods.GetImage(source, 7, 40);
+                    var victimChampionIcon = Methods.GetChampionImage(GetChampionNameByPuuid(victimPuuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     var eliminatedTextBlock = Methods.SetText(" a eliminé",
                         15, Colors.White);
 
-                    frameInfoStackPanel.Children.Add(killerChampionIcon);
-                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
-                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Spacing = 10,
+                        Margin = new Thickness(10, 0, 0, 0),
+                        Orientation = Orientation.Horizontal,
+                        Children = { killerChampionIcon, eliminatedTextBlock, victimChampionIcon }
+                    };
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
@@ -886,35 +778,28 @@ public sealed partial class MatchDetail : Page
                 {
                     SetPrecedentEvent();
 
-                    var frameInfoStackPanel = new StackPanel
-                    {
-                        Margin = new Thickness(10, 0, 0, 0),
-                        Orientation = Orientation.Horizontal
-                    };
-
                     var killerPuuid = "";
 
                     foreach (var participant in timeline.Info.Participants)
                         if (participant.ParticipantId == e.KillerId)
                             killerPuuid = participant.Puuid;
 
-
-                    var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(killerPuuid)}.png";
-                    var killerChampionIcon = Methods.GetImage(source, 7, 40);
+                    var killerChampionIcon = Methods.GetChampionImage(GetChampionNameByPuuid(killerPuuid), 7, 40);
                     killerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
-                    var victimChampionIcon = Methods.GetImage(source, 7, 40);
+                    var victimChampionIcon = Methods.GetChampionImage(GetChampionNameByPuuid(LolSummoner.Puuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
                     var eliminatedTextBlock = Methods.SetText(" a eliminé",
                         15, Colors.White);
 
-                    frameInfoStackPanel.Children.Add(killerChampionIcon);
-                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
-                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Spacing = 10,
+                        Margin = new Thickness(10, 0, 0, 0),
+                        Orientation = Orientation.Horizontal,
+                        Children = { killerChampionIcon, eliminatedTextBlock, victimChampionIcon }
+                    };
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
@@ -935,36 +820,30 @@ public sealed partial class MatchDetail : Page
                 {
                     SetPrecedentEvent();
 
-                    var frameInfoStackPanel = new StackPanel
-                    {
-                        Margin = new Thickness(10, 0, 0, 0),
-                        Orientation = Orientation.Horizontal
-                    };
-
                     var victimPuuid = "";
 
                     foreach (var participant in timeline.Info.Participants)
                         if (participant.ParticipantId == e.VictimId)
                             victimPuuid = participant.Puuid;
 
-
-                    var source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(LolSummoner.Puuid)}.png";
-                    var summonerChampionIcon = Methods.GetImage(source, 7, 40);
+                    var summonerChampionIcon =
+                        Methods.GetChampionImage(GetChampionNameByPuuid(LolSummoner.Puuid), 7, 40);
                     summonerChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    source =
-                        $"http://ddragon.leagueoflegends.com/cdn/14.2.1/img/champion/{GetChampionNameByPuuid(victimPuuid)}.png";
-                    var victimChampionIcon = Methods.GetImage(source, 7, 40);
+                    var victimChampionIcon = Methods.GetChampionImage(GetChampionNameByPuuid(victimPuuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
                     var eliminatedTextBlock = Methods.SetText(" a participé à l'élimination de ",
                         15, Colors.White);
 
-                    frameInfoStackPanel.Children.Add(summonerChampionIcon);
-                    frameInfoStackPanel.Children.Add(eliminatedTextBlock);
-                    frameInfoStackPanel.Children.Add(victimChampionIcon);
+                    var frameInfoStackPanel = new StackPanel
+                    {
+                        Spacing = 10,
+                        Margin = new Thickness(10, 0, 0, 0),
+                        Orientation = Orientation.Horizontal,
+                        Children = { summonerChampionIcon, eliminatedTextBlock, victimChampionIcon }
+                    };
                     Grid.SetColumn(frameInfoStackPanel, 1);
                     Grid.SetRow(frameInfoStackPanel, elementNumber);
 
@@ -982,6 +861,7 @@ public sealed partial class MatchDetail : Page
 
         var endStackPanel = new StackPanel
         {
+            Spacing = 10,
             Margin = new Thickness(10, 0, 0, 0),
             Orientation = Orientation.Horizontal
         };
@@ -1030,79 +910,79 @@ public sealed partial class MatchDetail : Page
     private void SetMatchGraph()
     {
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId)!;
-        var team1Money = new ObservableCollection<int>();
-        var team2Money = new ObservableCollection<int>();
+        var blueTeamMoney = new ObservableCollection<int>();
+        var redTeamMoney = new ObservableCollection<int>();
         foreach (var frame in timeline.Info.Frames)
         {
-            var totalTeam1Money = 0;
-            foreach (var participant in Team1)
+            var totalBlueTeamMoney = 0;
+            foreach (var participant in BlueTeam)
             {
                 if (participant.ParticipantId == frame.ParticipantFrames.X1.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X2.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X2.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X2.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X3.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X3.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X3.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X4.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X4.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X4.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X5.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X5.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X5.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X6.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X6.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X6.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X7.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X7.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X7.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X8.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X8.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X8.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X9!.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X9.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X9.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X10!.ParticipantId)
-                    totalTeam1Money += frame.ParticipantFrames.X10.TotalGold;
+                    totalBlueTeamMoney += frame.ParticipantFrames.X10.TotalGold;
             }
 
-            team1Money.Add(totalTeam1Money);
+            blueTeamMoney.Add(totalBlueTeamMoney);
 
 
-            var totalTeam2Money = 0;
-            foreach (var participant in Team2)
+            var totalRedTeamMoney = 0;
+            foreach (var participant in RedTeam)
             {
                 if (participant.ParticipantId == frame.ParticipantFrames.X1.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X2.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X3.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X4.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X5.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X6.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X7.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X8.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X9!.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
                 if (participant.ParticipantId == frame.ParticipantFrames.X10!.ParticipantId)
-                    totalTeam2Money += frame.ParticipantFrames.X1.TotalGold;
+                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
             }
 
-            team2Money.Add(totalTeam2Money);
+            redTeamMoney.Add(totalRedTeamMoney);
         }
 
-        var team1Serie = new LineSeries<int>
+        var blueTeamSerie = new LineSeries<int>
         {
-            Values = team1Money,
+            Values = blueTeamMoney,
             Stroke = new SolidColorPaint(new SKColor(41, 128, 185)),
             GeometrySize = 2
         };
-        var team2Serie = new LineSeries<int>
+        var redTeamSerie = new LineSeries<int>
         {
-            Values = team2Money,
+            Values = redTeamMoney,
             Stroke = new SolidColorPaint(new SKColor(235, 47, 6)),
             GeometrySize = 2
         };
-        GoldChart.Series = new List<ISeries> { team1Serie, team2Serie };
+        GoldChart.Series = new List<ISeries> { blueTeamSerie, redTeamSerie };
 
         var summonerId = 1;
         foreach (var metadataParticipant in timeline.Metadata.Participants)
