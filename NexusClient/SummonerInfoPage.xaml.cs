@@ -65,14 +65,6 @@ public sealed partial class SummonerInfoPage : Page
     ///     Retrieves the last n matches of a summoner.
     /// </summary>
     /// <returns>A list of Match objects representing the last matches of the summoner.</returns>
-    private List<Match> GetLastMatches()
-    {
-        var matches = new List<Match>();
-        var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(SummonerRegionalRoute, LolSummoner.Puuid, 3);
-        foreach (var matchListId in matchListIds)
-            matches.Add(Api.MatchV5().GetMatch(SummonerRegionalRoute, matchListId));
-        return matches;
-    }
 
 
     /// <summary>
@@ -515,7 +507,7 @@ public sealed partial class SummonerInfoPage : Page
     {
         MatchListGrid.Children.Clear();
 
-        var matches = GetLastMatches();
+        var matches = Methods.GetLastMatches(LolSummoner.Puuid, 3);
         var i = 0;
         foreach (var match in matches)
         {

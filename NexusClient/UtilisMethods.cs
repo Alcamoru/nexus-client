@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.UI;
 using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -29,6 +30,16 @@ public class UtilisMethods
     private RegionalRoute SummonerRegionalRoute { get; }
 
     private PlatformRoute SummonerPlatformRoute { get; }
+
+
+    public List<Match> GetLastMatches(string summonerPuuid, int count)
+    {
+        var matches = new List<Match>();
+        var matchListIds = Api.MatchV5().GetMatchIdsByPUUID(SummonerRegionalRoute, summonerPuuid, count);
+        foreach (var matchListId in matchListIds)
+            matches.Add(Api.MatchV5().GetMatch(SummonerRegionalRoute, matchListId));
+        return matches;
+    }
 
     public string GetSummonerName(string summonerId)
     {
