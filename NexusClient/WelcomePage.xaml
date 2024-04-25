@@ -8,120 +8,64 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="using:System"
     mc:Ignorable="d"
     Background="White">
 
-
-    <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
-        <TextBlock x:Name="WelcomeTitleTextBlock"
-                   Margin="0, 20, 0, 150"
-                   Foreground="#34495E"
-                   FontSize="36"
-                   HorizontalAlignment="Center"
-                   Text="Bienvenue" />
-        <Viewbox>
-            <StackPanel
-                Margin="200 0 200 0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center" Orientation="Horizontal"
-                Height="200"
-                Width="900">
-                <TextBox
-                    KeyDown="SummonerNameTextBox_OnKeyDown"
-                    Margin="0 0 30 0"
-                    CornerRadius="10"
-                    FontSize="22"
-                    BorderThickness="0"
-                    Padding="25, 15, 25, 15"
-                    Width="400"
-                    VerticalAlignment="Top"
-                    Foreground="#34495E"
-                    FontWeight="Bold"
-                    PlaceholderForeground="#34495E"
-                    x:Name="SummonerNameTextBox"
-                    PlaceholderText="Nom d'invocateur"
-                    HorizontalAlignment="Center"
-                    Background="#EEEEEE" />
-                <TextBox
-                    KeyDown="SummonerNameTextBox_OnKeyDown"
-                    Margin="0 0 30 0"
-                    CornerRadius="10"
-                    FontSize="22"
-                    BorderThickness="0"
-                    Padding="25, 15, 25, 15"
-                    Width="200"
-                    VerticalAlignment="Top"
-                    Foreground="#34495E"
-                    FontWeight="Bold"
-                    PlaceholderForeground="#34495E"
-                    x:Name="AccountTextBox"
-                    PlaceholderText="#ID"
-                    HorizontalAlignment="Center"
-                    Background="#EEEEEE" />
-                <StackPanel
-                    Orientation="Vertical"
-                    Margin="20 0 0 0">
-                    <Button
-
-                        Width="120"
-                        x:Name="RegionListButton"
-                        Click="RegionListButton_OnClick"
-                        LostFocus="RegionListButton_OnLostFocus"
-
-                        CornerRadius="10"
-                        Background="#EEEEEE"
-                        Padding="25, 15, 25, 15">
-
-                        <TextBlock
-                            x:Name="RegionListButtonTextBlock"
-                            Text="EUW"
-                            FontSize="22"
-                            FontWeight="Bold"
-                            Foreground="#34495E" />
-                    </Button>
-                    <ListView
-                        SelectionChanged="RegionListView_OnSelectionChanged"
-                        x:Name="RegionListView"
-                        Visibility="Collapsed">
-                        <!-- ReSharper disable once InconsistentNaming -->
-                        <ListViewItem
-                            x:Name="EUWViewItem"
-                            Background="#EEEEEE">
-                            <TextBlock Text="EUW"
-                                       Foreground="#34495E" />
-                        </ListViewItem>
-                        <!-- ReSharper disable once InconsistentNaming -->
-                        <ListViewItem
-                            x:Name="NAMViewItem"
-                            Background="#EEEEEE">
-                            <TextBlock Text="NA"
-                                       Foreground="#34495E" />
-                        </ListViewItem>
-                    </ListView>
-                </StackPanel>
-            </StackPanel>
-        </Viewbox>
-        <Viewbox>
-            <TextBlock
-                Margin="300 0 300 0"
-                x:Name="ErrorTextBlock"
-                Foreground="Red"
-                FontSize="24"
-                FontWeight="ExtraBold"
-                HorizontalAlignment="Center" />
-        </Viewbox>
-        <ProgressRing x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="False" />
-        <Button
-            x:Name="SendSummonerNameButton"
-            Click="SendSummonerNameButton_OnClick"
+    <Grid RowDefinitions="*, *, *" Padding="20">
+        <TextBlock
+            FontSize="36"
+            Grid.Row="0"
+            Foreground="#2c3e50"
+            FontWeight="Bold"
             HorizontalAlignment="Center"
-            CornerRadius="10"
-            Background="#EEEEEE"
-            Padding="25, 15, 25, 15">
-            <TextBlock Text="Entrer"
-                       FontSize="22"
-                       FontWeight="Bold"
-                       Foreground="#34495E" />
-        </Button>
-    </StackPanel>
+            Text="Bienvenue sur Nexus Client" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="30"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <TextBox
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                MinWidth="200"
+                x:Name="SummonerNameAutoSuggestBox"
+                PlaceholderText="Nom d'invocateur"
+                KeyDown="SummonerNameTextBox_OnKeyDown">
+
+            </TextBox>
+
+            <TextBox
+                MinWidth="200"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                x:Name="RiotIdAutoSuggestBox"
+                PlaceholderText="ID d'invocateur"
+                KeyDown="SummonerNameTextBox_OnKeyDown">
+            </TextBox>
+
+            <DropDownButton Content="Region"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            x:Name="DropDownButton">
+                <DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem Click="MenuFlyoutItem_OnClick" Text="EUW"></MenuFlyoutItem>
+                        <MenuFlyoutItem Click="MenuFlyoutItem_OnClick" Text="NA"></MenuFlyoutItem>
+                    </MenuFlyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <TextBlock HorizontalAlignment="Center"
+                       FontSize="18"
+                       VerticalAlignment="Center" x:Name="ErrorTextBlock" Foreground="Red" FontWeight="Bold" TextAlignment="Center"></TextBlock>
+            <ProgressRing
+                Margin="20"
+                HorizontalAlignment="Center"
+                          VerticalAlignment="Center" x:Name="WelcomePageProgressRing" Width="50" Height="50" IsActive="False" />
+            <ToggleButton HorizontalAlignment="Center"
+                          VerticalAlignment="Center" Content="Rechercher" Click="ButtonSearch_OnClick">
+            </ToggleButton>
+        </StackPanel>
+    </Grid>
 </Page>
