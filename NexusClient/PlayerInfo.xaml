@@ -92,17 +92,32 @@
 
             </HyperlinkButton>
         </Grid>
-
-        <Grid x:Name="MatchListGrid" Padding="10" Margin="20" CornerRadius="15" Background="#EEEEEE" Grid.Row="1"
-              Grid.Column="1"
-              Grid.RowSpan="2">
+        <Grid Margin="15" Background="Gray" CornerRadius="8" Padding="15" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="8*"></RowDefinition>
             </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Foreground="Black" TextAlignment="Center" Text="Statistiques par champion"></TextBlock>
+            <ScrollViewer Grid.Row="1">
+                <Viewbox>
+                    <Grid Padding="8" x:Name="BestChampionsGrid">
+                    </Grid>
+                </Viewbox>
+            </ScrollViewer>
+        </Grid>
 
+        <Grid Margin="15" Background="Gray" CornerRadius="8" Padding="15" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="8*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Foreground="Black" TextAlignment="Center" Text="Statistiques par champion"></TextBlock>
+            <ScrollViewer Grid.Row="1">
+                <Viewbox>
+                    <Grid Padding="8" x:Name="MatchesGrid">
+                    </Grid>
+                </Viewbox>
+            </ScrollViewer>
         </Grid>
 
     </Grid>
