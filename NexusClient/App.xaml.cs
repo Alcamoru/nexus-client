@@ -35,7 +35,7 @@ public partial class App : Application
 
         var rootFrame = new Frame();
         rootFrame.NavigationFailed += OnNavigationFailed;
-        rootFrame.Navigate(typeof(WelcomePage), args.Arguments);
+        rootFrame.Navigate(typeof(SummonerName), args.Arguments);
 
         m_window.Content = rootFrame;
 
