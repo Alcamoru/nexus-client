@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Page
+    x:Class="NexusClient.WelcomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="White"
+    MinHeight="500"
+    MinWidth="800"
+    NavigationCacheMode="Enabled">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            Margin="20"
+            CornerRadius="8"
+            Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Orientation="Vertical"
+            Background="#1E282D">
+            <TextBlock
+                Margin="10"
+                Text="Tier List" Foreground="White" FontSize="18" TextAlignment="Center" />
+
+            <TextBlock FontSize="24" Foreground="White" HorizontalTextAlignment="Center" VerticalAlignment="Center"
+                       Text="En cours de développement..." />
+            <ProgressRing
+                Margin="20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center" Width="50" Height="50" />
+
+        </StackPanel>
+        <Grid x:Name="MatchListGrid" Padding="10" Margin="20" CornerRadius="15" Background="#F0E6D2" Grid.Row="1"
+              Grid.Column="1"
+              Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+        </Grid>
+
+        <Grid Background="#F0E6D2" Margin="20" CornerRadius="15" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="4*" />
+            </Grid.RowDefinitions>
+            <Viewbox Grid.Row="0">
+                <TextBlock Margin="7" FontWeight="Bold" Text="Leaderboard" Foreground="#2c3e50" FontSize="36"
+                           TextAlignment="Center" />
+            </Viewbox>
+            <Grid x:Name="LeaderBoardGrid" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</Page>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Page
+    x:Class="NexusClient.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="White"
+    MinHeight="500"
+    MinWidth="800"
+    NavigationCacheMode="Enabled">
+
+    <NavigationView
+        x:Name="NavigationView"
+        Loaded="FrameworkElement_OnLoaded"
+        PaneDisplayMode="LeftCompact"
+        IsBackEnabled="True"
+        BackRequested="NavigationView_OnBackRequested"
+        SelectionChanged="NavigationView_OnSelectionChanged">
+        <NavigationView.Resources>
+        </NavigationView.Resources>
+        <NavigationView.MenuItems>
+            <TextBox Margin="35 0 0 0" PlaceholderText="Rechercher un invocateur" />
+            <NavigationViewItem x:Name="Accueil" Content="Accueil" Tag="Accueil" Icon="Play" />
+            <NavigationViewItem Content="Profil" Tag="Profil" Icon="Save" />
+            <NavigationViewItem Content="Tier List" Tag="Tier List" Icon="Refresh" />
+            <NavigationViewItem Content="Builds" Tag="Builds" Icon="Download" />
+        </NavigationView.MenuItems>
+        <Frame x:Name="ContentFrame" />
+    </NavigationView>
+</Page>
