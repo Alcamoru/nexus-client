@@ -46,7 +46,7 @@ namespace NexusClient
 
             var rootFrame = new Frame();
             rootFrame.NavigationFailed += OnNavigationFailed;
-            rootFrame.Navigate(typeof(SummonerName), args.Arguments);
+            rootFrame.Navigate(typeof(SummonerNamePage), args.Arguments);
 
             m_window.Content = rootFrame;
         }

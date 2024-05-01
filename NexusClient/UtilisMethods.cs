@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json.Nodes;
 using Windows.UI;
@@ -10,7 +11,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using static NexusClient.SummonerName;
+using static NexusClient.SummonerNamePage;
 
 namespace NexusClient;
 
@@ -106,7 +107,7 @@ public static class UtilisMethods
     public static Border GetProfileIcon(string summonerId, int cornerRadius = 0, int width = 0)
     {
         var url =
-            $@"C:\\Users\\alcam\\OneDrive\\Bureau\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, summonerId)!.ProfileIconId}.png";
+            $@"ms-appx:///Assets/loldata/14.1.1/img/profileicon/{Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, summonerId)!.ProfileIconId}.png";
         var image = new Image
         {
             Source = new BitmapImage(new Uri(url))

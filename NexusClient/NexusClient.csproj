@@ -38,8 +38,8 @@
     <PackageReference Include="Camille.Enums" Version="3.0.0-nightly-2024-04-22-4d8da4ce47" />
     <PackageReference Include="Camille.RiotGames" Version="3.0.0-nightly-2024-04-22-4d8da4ce47" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WinUI" Version="2.0.0-rc2.1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240404000" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -63,7 +63,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="SummonerName.xaml">
+    <Page Update="SummonerNamePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -73,12 +73,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="PlayerInfo.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="MatchDetail.xaml">
+    <Page Update="MatchDetailPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

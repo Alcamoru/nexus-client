@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using SkiaSharp;
 using Team = Camille.RiotGames.Enums.Team;
-using static NexusClient.SummonerName;
+using static NexusClient.SummonerNamePage;
 using static NexusClient.UtilisMethods;
 
 
@@ -35,9 +35,9 @@ namespace NexusClient;
 /// <summary>
 ///     An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MatchDetail : Page
+public sealed partial class MatchDetailPage : Page
 {
-    public MatchDetail()
+    public MatchDetailPage()
     {
         InitializeComponent();
     }
@@ -519,7 +519,7 @@ public sealed partial class MatchDetail : Page
                 SummonerRegionalRoute,
                 SummonerPlatformRoute
             };
-            Frame.Navigate(typeof(PlayerInfo), parameters, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(ProfilePage), parameters, new DrillInNavigationTransitionInfo());
         }
     }
 

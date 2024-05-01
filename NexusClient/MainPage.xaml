@@ -9,8 +9,7 @@
     mc:Ignorable="d"
     Background="White"
     MinHeight="500"
-    MinWidth="800"
-    NavigationCacheMode="Enabled">
+    MinWidth="800">
 
     <NavigationView
         x:Name="NavigationView"

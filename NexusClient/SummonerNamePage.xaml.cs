@@ -22,9 +22,9 @@ namespace NexusClient;
 /// <summary>
 ///     An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class SummonerName : Page
+public sealed partial class SummonerNamePage : Page
 {
-    public SummonerName()
+    public SummonerNamePage()
     {
         SummonerRegionalRoute = RegionalRoute.EUROPE;
         SummonerPlatformRoute = PlatformRoute.EUW1;
