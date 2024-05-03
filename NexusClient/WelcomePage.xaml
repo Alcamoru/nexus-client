@@ -47,7 +47,7 @@
 
         </Grid>
 
-        <Grid Background="#F0E6D2"  CornerRadius="15" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+        <Grid Background="#F0E6D2" CornerRadius="15" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="4*" />

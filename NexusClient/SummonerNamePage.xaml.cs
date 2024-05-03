@@ -70,9 +70,6 @@ public sealed partial class SummonerNamePage : Page
             if (LolSummoner is null) throw new ArgumentNullException();
 
             await Task.Run(() => { Thread.Sleep(1); });
-            // var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            // localSettings.Values["SummonerName"] = SummonerNameTextBox.Text;
-            // localSettings.Values["RiotID"] = AccountTextBox.Text;
 
             NavigateToSummonerInfoPage();
         }
@@ -91,15 +88,8 @@ public sealed partial class SummonerNamePage : Page
 
     private void NavigateToSummonerInfoPage()
     {
-        var parametersList = new List<object>
-        {
-            Api,
-            LolSummoner,
-            SummonerRegionalRoute,
-            SummonerPlatformRoute
-        };
 
-        Frame.Navigate(typeof(MainPage), parametersList, new DrillInNavigationTransitionInfo());
+        Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
     }
 
     private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)

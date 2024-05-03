@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ using Windows.UI.Core;
 using Windows.UI.Text;
 using Camille.Enums;
 using Camille.RiotGames;
+using Camille.RiotGames.MatchV5;
 using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
@@ -41,27 +41,29 @@ public sealed partial class WelcomePage : Page
     {
         base.OnNavigatedTo(e);
         SetLastMatches();
-        // SetLeaderBoardGrid();
+        SetLeaderBoardGrid();
     }
 
+
     /// <summary>
-    ///     Retrieves the last n matches of a summoner.
+    /// Sets the leader board grid with the provided data.
     /// </summary>
-    /// <returns>A list of Match objects representing the last matches of the summoner.</returns>
-    /// <summary>
-    ///     Sets the leaderboard grid with the top 3 players in the league.
-    /// </summary>
+    /// <remarks>
+    /// This method is called to initialize the leader board grid on the WelcomePage.xaml.
+    /// It takes the necessary data and populates the grid with the leaderboard information.
+    /// </remarks>
     private void SetLeaderBoardGrid()
     {
         LeaderBoardGrid.Children.Clear();
-        var bestPlayersList = Api.LeagueV4().GetChallengerLeagueAsync(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5).Result
-            .Entries;
-        if (bestPlayersList.Length < 3)
-            bestPlayersList = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5)
-                .Entries;
-        if (bestPlayersList.Length < 3)
-            bestPlayersList = Api.LeagueV4().GetMasterLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5)
-                .Entries;
+        var bestPlayersList = Api.LeagueV4().GetChallengerLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5)
+            .Entries.OrderByDescending(item => item.LeaguePoints).ToList();
+        if (bestPlayersList.Count < 3)
+            bestPlayersList.AddRange(Api.LeagueV4()
+                .GetGrandmasterLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5)
+                .Entries.OrderByDescending(item => item.LeaguePoints).ToList());
+        if (bestPlayersList.Count < 3)
+            bestPlayersList.AddRange(Api.LeagueV4().GetMasterLeague(SummonerPlatformRoute, QueueType.RANKED_SOLO_5x5)
+                .Entries.OrderByDescending(item => item.LeaguePoints).ToList());
         var leagueItemsSorted = bestPlayersList.OrderByDescending(item => item.LeaguePoints).ToArray();
 
         var firstPlayer = leagueItemsSorted[0];
@@ -110,7 +112,6 @@ public sealed partial class WelcomePage : Page
 
         Grid.SetRow(rankingViewbox, 0);
         firstGrid.Children.Add(rankingViewbox);
-
 
         var firstProfileIconImage = GetProfileIcon(firstPlayer.SummonerId, 10, 50);
         firstProfileIconImage.BorderBrush = AppColors.Gold4;
@@ -516,14 +517,17 @@ public sealed partial class WelcomePage : Page
 
 
     /// <summary>
-    ///     Sets the last matches data in the UI.
-    ///     This method retrieves the last matches data using the GetLastMatches method
-    ///     and sets it in a Grid control in the UI. It assigns event handlers to the
-    ///     Grid control for handling pointer pressed, pointer entered, and pointer exited
-    ///     events. It populates the Grid control with data such as match information,
-    ///     champion details, game duration, roles, kills, assists, vision score, etc.
+    /// Sets the last matches grid on the WelcomePage.xaml with the last matches data.
     /// </summary>
-    /// <returns>None</returns>
+    /// <remarks>
+    /// This method is called to initialize the last matches grid on the WelcomePage.xaml.
+    /// It clears the existing children of the MatchListGrid and populates it with the last matches information.
+    /// It uses the GetLastMatches method from the UtilisMethods class to fetch the last matches data.
+    /// The number of last matches to show is specified by the 'count' parameter.
+    /// It iterates over each match and creates a Grid element for each match to display the match details.
+    /// The match details include the match mode, participant information, and other match-related information.
+    /// This method also handles the event listeners for mouse pointer events on the match grid elements.
+    /// </remarks>
     private void SetLastMatches()
     {
         MatchListGrid.Children.Clear();
@@ -575,13 +579,14 @@ public sealed partial class WelcomePage : Page
                     Grid.SetColumnSpan(champIconViewBox, 2);
                     matchGrid.Children.Add(champIconViewBox);
 
-                    var titleChampionTextBlock = SetText(participant.ChampionName, 26, participant.Win ? Colors.Blue : Colors.Red);
+                    var titleChampionTextBlock = SetText(participant.ChampionName, 26,
+                        participant.Win ? Colors.Blue : Colors.Red);
                     titleChampionTextBlock.FontWeight = new FontWeight(700);
 
                     var matchWasTimeStamp = DateTime.Now -
-                                                DateTimeOffset.FromUnixTimeMilliseconds(
-                                                    // ReSharper disable once PossibleInvalidOperationException
-                                                    (long)match.Info.GameEndTimestamp);
+                                            DateTimeOffset.FromUnixTimeMilliseconds(
+                                                // ReSharper disable once PossibleInvalidOperationException
+                                                (long)match.Info.GameEndTimestamp);
 
 
                     var matchWasChampionString = "Il y a \n";
@@ -624,9 +629,9 @@ public sealed partial class WelcomePage : Page
 
                     var kdaTextBlock = SetText("KDA", 22, Colors.White);
                     kdaTextBlock.FontWeight = new FontWeight(700);
-                    var kda = new Viewbox()
+                    var kda = new Viewbox
                     {
-                        Child = new StackPanel()
+                        Child = new StackPanel
                         {
                             Children =
                             {
@@ -650,9 +655,9 @@ public sealed partial class WelcomePage : Page
 
                     var kpTextBlock = SetText("KP", 22, Colors.White);
                     kpTextBlock.FontWeight = new FontWeight(700);
-                    var kp = new Viewbox()
+                    var kp = new Viewbox
                     {
-                        Child = new StackPanel()
+                        Child = new StackPanel
                         {
                             Children =
                             {
@@ -669,9 +674,9 @@ public sealed partial class WelcomePage : Page
 
                     var csTextBlock = SetText("CS", 22, Colors.White);
                     csTextBlock.FontWeight = new FontWeight(700);
-                    var cs = new Viewbox()
+                    var cs = new Viewbox
                     {
-                        Child = new StackPanel()
+                        Child = new StackPanel
                         {
                             Children =
                             {
@@ -768,19 +773,19 @@ public sealed partial class WelcomePage : Page
                         { Height = new GridLength(20, GridUnitType.Pixel) });
 
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item0}.png";
-                    var itemImage0 = GetImage(source, 0);
+                    var itemImage0 = GetImage(source);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item1}.png";
-                    var itemImage1 = GetImage(source, 0);
+                    var itemImage1 = GetImage(source);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item2}.png";
-                    var itemImage2 = GetImage(source, 0);
+                    var itemImage2 = GetImage(source);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item3}.png";
-                    var itemImage3 = GetImage(source, 0);
+                    var itemImage3 = GetImage(source);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item4}.png";
-                    var itemImage4 = GetImage(source, 0);
+                    var itemImage4 = GetImage(source);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item5}.png";
-                    var itemImage5 = GetImage(source, 0);
+                    var itemImage5 = GetImage(source);
                     source = $"http://ddragon.leagueoflegends.com/cdn/14.8.1/img/item/{participant.Item6}.png";
-                    var itemImage6 = GetImage(source, 0);
+                    var itemImage6 = GetImage(source);
 
                     Grid.SetColumn(itemImage0, 0);
                     Grid.SetRow(itemImage0, 0);
@@ -804,15 +809,16 @@ public sealed partial class WelcomePage : Page
                     Grid.SetRow(itemImage6, 1);
                     itemsChampionGrid.Children.Add(itemImage6);
 
-                    var itemsViewbox = new Viewbox() {
+                    var itemsViewbox = new Viewbox
+                    {
                         Margin = new Thickness(10),
                         Child =
-                        new StackPanel()
-                        {
-                            Spacing = 5,
-                            Children = { matchDurationTextBlock, itemsChampionGrid }
-                        }
-                         };
+                            new StackPanel
+                            {
+                                Spacing = 5,
+                                Children = { matchDurationTextBlock, itemsChampionGrid }
+                            }
+                    };
 
                     Grid.SetColumn(itemsViewbox, 3);
                     Grid.SetRow(itemsViewbox, 2);
@@ -824,10 +830,14 @@ public sealed partial class WelcomePage : Page
             var matchName = SetText(match.Info.GameMode.ToString().ToLower(), 20,
                 Color.FromArgb(255, 52, 73, 94));
 
-            var finalMatchGrid = new Grid()
+            var finalMatchGrid = new Grid
             {
                 Margin = new Thickness(10),
-                RowDefinitions = { new RowDefinition() {Height = new GridLength(1, GridUnitType.Star)}, new RowDefinition() {Height = new GridLength(6, GridUnitType.Star)} }
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(6, GridUnitType.Star) }
+                }
             };
 
             Grid.SetRow(matchName, 0);
@@ -851,9 +861,9 @@ public sealed partial class WelcomePage : Page
 
         while (originalSource != null)
         {
-            if (originalSource is Grid)
+            if (originalSource is Grid grid)
             {
-                matchGrid = originalSource as Grid;
+                matchGrid = grid;
                 break;
             }
 
@@ -888,7 +898,7 @@ public sealed partial class WelcomePage : Page
             matchGrid!.Children.Add(matchProgressRing);
             await Task.Run(() => { Thread.Sleep(1); });
 
-            Frame.Navigate(typeof(MatchDetailPage), matchGrid.Tag, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(MatchInfoPage), (Match)matchGrid.Tag, new DrillInNavigationTransitionInfo());
         }
     }
 

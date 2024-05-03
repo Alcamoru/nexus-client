@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json.Nodes;
 using Windows.UI;
-using Camille.Enums;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
+using Camille.RiotGames.SummonerV4;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -17,7 +16,6 @@ namespace NexusClient;
 
 public static class UtilisMethods
 {
-
     public static List<Match> GetLastMatches(string summonerPuuid, int count)
     {
         var matches = new List<Match>();
