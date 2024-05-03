@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
+using Camille.RiotGames.SummonerV4;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
@@ -23,7 +25,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using SkiaSharp;
 using Team = Camille.RiotGames.Enums.Team;
-using static NexusClient.SummonerName;
+using static NexusClient.SummonerNamePage;
 using static NexusClient.UtilisMethods;
 
 
@@ -35,9 +37,9 @@ namespace NexusClient;
 /// <summary>
 ///     An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MatchDetail : Page
+public sealed partial class MatchInfoPage : Page
 {
-    public MatchDetail()
+    public MatchInfoPage()
     {
         InitializeComponent();
     }
@@ -51,8 +53,7 @@ public sealed partial class MatchDetail : Page
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
-        if (e.Parameter is not Match match) return;
-        MatchInfo = match;
+        MatchInfo = (Match)e.Parameter;
         BlueTeam = new List<Participant>();
         RedTeam = new List<Participant>();
         SetTeams();
@@ -62,10 +63,6 @@ public sealed partial class MatchDetail : Page
         base.OnNavigatedTo(e);
     }
 
-    private void ButtonBack_OnClick(object sender, RoutedEventArgs e)
-    {
-        Frame.GoBack(new DrillInNavigationTransitionInfo());
-    }
 
     private string GetChampionNameByPuuid(string puuid)
     {
@@ -78,9 +75,8 @@ public sealed partial class MatchDetail : Page
     }
 
     /// <summary>
-    ///     Sets up the participants grid by adding participants' information and styling.
+    /// Sets up the participants grid in the MatchInfoPage.
     /// </summary>
-    /// <returns>None</returns>
     private void SetParticipantsGrid()
     {
         foreach (var participant in MatchInfo.Info.Participants)
@@ -172,7 +168,7 @@ public sealed partial class MatchDetail : Page
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = SetText(GetSummonerName(participant.SummonerId),
+                Child = SetTextWithViewbox(GetSummonerName(participant.SummonerId),
                     20, Color.FromArgb(255, 52, 73, 94))
             };
 
@@ -229,9 +225,9 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(summonersViewbox, 2);
             participantGrid.Children.Add(summonersViewbox);
 
-            var csChampionTextBlock = SetText(
+            var csChampionTextBlock = SetTextWithViewbox(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
@@ -277,9 +273,9 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid, 4);
             participantGrid.Children.Add(innerGrid);
 
-            var kdaChampionTextBlock = SetText(
+            var kdaChampionTextBlock = SetTextWithViewbox(
                 $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
             participantGrid.Children.Add(kdaChampionTextBlock);
@@ -450,17 +446,17 @@ public sealed partial class MatchDetail : Page
             Grid.SetColumn(innerGrid, 4);
             participantGrid.Children.Add(innerGrid);
 
-            var csChampionTextBlock = SetText(
+            var csChampionTextBlock = SetTextWithViewbox(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
 
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
 
-            var kdaChampionTextBlock = SetText(
+            var kdaChampionTextBlock = SetTextWithViewbox(
                 $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
             participantGrid.Children.Add(kdaChampionTextBlock);
@@ -511,15 +507,7 @@ public sealed partial class MatchDetail : Page
             player!.Children.Add(progressRing);
             await Task.Run(() => { Thread.Sleep(1); });
 
-            var parameters = new List<object>
-            {
-                Api,
-                Api.SummonerV4().GetBySummonerId(SummonerPlatformRoute, player.Tag.ToString()!),
-                LolSummoner,
-                SummonerRegionalRoute,
-                SummonerPlatformRoute
-            };
-            Frame.Navigate(typeof(PlayerInfo), parameters, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(ProfilePage), (Summoner)player.Tag, new DrillInNavigationTransitionInfo());
         }
     }
 
@@ -534,9 +522,8 @@ public sealed partial class MatchDetail : Page
 
 
     /// <summary>
-    ///     Sets the match timeline by adding visual elements to the MatchTimelineGrid.
+    /// Sets up the match timeline in the MatchInfoPage.
     /// </summary>
-    /// <returns>None</returns>
     private void SetMatchTimeline()
     {
         var elementNumber = 0;
@@ -645,7 +632,7 @@ public sealed partial class MatchDetail : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var startTextBlock = SetText(" début du match",
+        var startTextBlock = SetTextWithViewbox(" début du match",
             15, Colors.White);
 
         var startStackPanel = new StackPanel
@@ -683,7 +670,7 @@ public sealed partial class MatchDetail : Page
                 var wardImage = GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
 
-                var wardPlacedTextBlock = SetText(" a placé une balise",
+                var wardPlacedTextBlock = SetTextWithViewbox(" a placé une balise",
                     15, Colors.White);
 
 
@@ -730,7 +717,7 @@ public sealed partial class MatchDetail : Page
                     var victimChampionIcon = GetChampionImage(GetChampionNameByPuuid(victimPuuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = SetText(" a eliminé",
+                    var eliminatedTextBlock = SetTextWithViewbox(" a eliminé",
                         15, Colors.White);
 
                     var frameInfoStackPanel = new StackPanel
@@ -769,7 +756,7 @@ public sealed partial class MatchDetail : Page
                     var victimChampionIcon = GetChampionImage(GetChampionNameByPuuid(LolSummoner.Puuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = SetText(" a eliminé",
+                    var eliminatedTextBlock = SetTextWithViewbox(" a eliminé",
                         15, Colors.White);
 
                     var frameInfoStackPanel = new StackPanel
@@ -813,7 +800,7 @@ public sealed partial class MatchDetail : Page
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
-                    var eliminatedTextBlock = SetText(" a participé à l'élimination de ",
+                    var eliminatedTextBlock = SetTextWithViewbox(" a participé à l'élimination de ",
                         15, Colors.White);
 
                     var frameInfoStackPanel = new StackPanel
@@ -852,7 +839,7 @@ public sealed partial class MatchDetail : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var endTextBlock = SetText(" fin du match",
+        var endTextBlock = SetTextWithViewbox(" fin du match",
             15, Colors.White);
 
         endStackPanel.Children.Add(endIcon);
@@ -886,67 +873,67 @@ public sealed partial class MatchDetail : Page
         MatchTimelineGrid.Children.Add(endStackPanel);
     }
 
+
+    /// <summary>
+    /// Sets up the match graph in the MatchInfoPage.
+    /// </summary>
     private void SetMatchGraph()
     {
         var timeline = Api.MatchV5().GetTimeline(SummonerRegionalRoute, MatchInfo.Metadata.MatchId)!;
         var blueTeamMoney = new ObservableCollection<int>();
         var redTeamMoney = new ObservableCollection<int>();
+
+        var summonerGameId = 1;
+        foreach (var metadataParticipant in timeline.Metadata.Participants)
+        {
+            if (metadataParticipant == LolSummoner.Puuid) break;
+
+            summonerGameId++;
+        }
+
+        var playerMinions = new ObservableCollection<int>();
+        var playerXp = new ObservableCollection<int>();
+
         foreach (var frame in timeline.Info.Frames)
         {
+            var participantFrames =
+                new List<MatchTimelineInfoFrameParticipantFrame>
+                {
+                    frame.ParticipantFrames!.X1,
+                    frame.ParticipantFrames.X2,
+                    frame.ParticipantFrames.X3,
+                    frame.ParticipantFrames.X4,
+                    frame.ParticipantFrames.X5,
+                    frame.ParticipantFrames.X6,
+                    frame.ParticipantFrames.X7,
+                    frame.ParticipantFrames.X8,
+                    frame.ParticipantFrames.X9,
+                    frame.ParticipantFrames.X10
+                };
             var totalBlueTeamMoney = 0;
             foreach (var participant in BlueTeam)
-            {
-                if (participant.ParticipantId == frame.ParticipantFrames.X1.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X2.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X2.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X3.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X3.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X4.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X4.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X5.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X5.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X6.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X6.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X7.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X7.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X8.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X8.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X9!.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X9.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X10!.ParticipantId)
-                    totalBlueTeamMoney += frame.ParticipantFrames.X10.TotalGold;
-            }
+            foreach (var participantFrame in participantFrames)
+                if (participant.ParticipantId == participantFrame.ParticipantId)
+                    totalBlueTeamMoney += participantFrame.TotalGold;
 
             blueTeamMoney.Add(totalBlueTeamMoney);
 
 
             var totalRedTeamMoney = 0;
             foreach (var participant in RedTeam)
-            {
-                if (participant.ParticipantId == frame.ParticipantFrames.X1.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X2.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X3.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X4.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X5.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X6.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X7.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X8.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X9!.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-                if (participant.ParticipantId == frame.ParticipantFrames.X10!.ParticipantId)
-                    totalRedTeamMoney += frame.ParticipantFrames.X1.TotalGold;
-            }
+            foreach (var participantFrame in participantFrames)
+                if (participant.ParticipantId == participantFrame.ParticipantId)
+                    totalRedTeamMoney += participantFrame.TotalGold;
 
             redTeamMoney.Add(totalRedTeamMoney);
+
+            foreach (var participantFrame in participantFrames)
+                if (summonerGameId == participantFrame.ParticipantId)
+                {
+                    playerMinions.Add(participantFrame.MinionsKilled +
+                                      participantFrame.JungleMinionsKilled);
+                    playerXp.Add(frame.ParticipantFrames.X1.Xp);
+                }
         }
 
         var blueTeamSerie = new LineSeries<int>
@@ -963,50 +950,6 @@ public sealed partial class MatchDetail : Page
         };
         GoldChart.Series = new List<ISeries> { blueTeamSerie, redTeamSerie };
 
-        var summonerId = 1;
-        foreach (var metadataParticipant in timeline.Metadata.Participants)
-        {
-            if (metadataParticipant == LolSummoner.Puuid) break;
-
-            summonerId++;
-        }
-
-
-        var playerMinions = new ObservableCollection<int>();
-        foreach (var frame in timeline.Info.Frames)
-        {
-            if (summonerId == frame.ParticipantFrames.X1.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X1.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X2.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X2.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X3.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X3.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X4.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X4.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X5.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X5.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X6.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X6.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X7.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X7.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X8.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X8.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X9!.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X9.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-            if (summonerId == frame.ParticipantFrames.X10!.ParticipantId)
-                playerMinions.Add(frame.ParticipantFrames.X10.MinionsKilled +
-                                  frame.ParticipantFrames.X1.JungleMinionsKilled);
-        }
-
         var playerMinionsSeries = new LineSeries<int>
         {
             Values = playerMinions,
@@ -1014,32 +957,6 @@ public sealed partial class MatchDetail : Page
             GeometrySize = 2
         };
         MinionsChart.Series = new List<ISeries> { playerMinionsSeries };
-
-
-        var playerXp = new ObservableCollection<int>();
-        foreach (var frame in timeline.Info.Frames)
-        {
-            if (summonerId == frame.ParticipantFrames.X1.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X1.Xp);
-            if (summonerId == frame.ParticipantFrames.X2.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X2.Xp);
-            if (summonerId == frame.ParticipantFrames.X3.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X3.Xp);
-            if (summonerId == frame.ParticipantFrames.X4.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X4.Xp);
-            if (summonerId == frame.ParticipantFrames.X5.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X5.Xp);
-            if (summonerId == frame.ParticipantFrames.X6.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X6.Xp);
-            if (summonerId == frame.ParticipantFrames.X7.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X7.Xp);
-            if (summonerId == frame.ParticipantFrames.X8.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X8.Xp);
-            if (summonerId == frame.ParticipantFrames.X9!.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X9.Xp);
-            if (summonerId == frame.ParticipantFrames.X10!.ParticipantId)
-                playerXp.Add(frame.ParticipantFrames.X10.Xp);
-        }
 
         var playerXpSeries = new LineSeries<int>
         {
@@ -1049,13 +966,6 @@ public sealed partial class MatchDetail : Page
         };
         XpChart.Series = new List<ISeries> { playerXpSeries };
     }
-
-    // private void SetProfilePicture()
-    // {
-    //     var source =
-    //         $@"C:\\Users\\alcam\\OneDrive\\Developpement\\nexus-client\\NexusClient\\NexusClient\\Assets\\loldata\\14.1.1\\img\\profileicon\\{Api.SummonerV4().GetBySummonerName(SummonerPlatformRoute, LolSummoner.Name)!.ProfileIconId}.png";
-    //     profilePicture = GetImage(source, 10, 60);
-    // }
 
     private void GoldsChartButton_OnClick(object sender, RoutedEventArgs e)
     {

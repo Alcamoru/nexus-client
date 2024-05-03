@@ -22,9 +22,9 @@ namespace NexusClient;
 /// <summary>
 ///     An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class SummonerName : Page
+public sealed partial class SummonerNamePage : Page
 {
-    public SummonerName()
+    public SummonerNamePage()
     {
         SummonerRegionalRoute = RegionalRoute.EUROPE;
         SummonerPlatformRoute = PlatformRoute.EUW1;
@@ -70,9 +70,6 @@ public sealed partial class SummonerName : Page
             if (LolSummoner is null) throw new ArgumentNullException();
 
             await Task.Run(() => { Thread.Sleep(1); });
-            // var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            // localSettings.Values["SummonerName"] = SummonerNameTextBox.Text;
-            // localSettings.Values["RiotID"] = AccountTextBox.Text;
 
             NavigateToSummonerInfoPage();
         }
@@ -91,15 +88,8 @@ public sealed partial class SummonerName : Page
 
     private void NavigateToSummonerInfoPage()
     {
-        var parametersList = new List<object>
-        {
-            Api,
-            LolSummoner,
-            SummonerRegionalRoute,
-            SummonerPlatformRoute
-        };
 
-        Frame.Navigate(typeof(MainPage), parametersList, new DrillInNavigationTransitionInfo());
+        Frame.Navigate(typeof(MainPage), null, new DrillInNavigationTransitionInfo());
     }
 
     private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)

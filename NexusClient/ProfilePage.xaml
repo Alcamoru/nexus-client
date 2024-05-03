@@ -11,11 +11,55 @@
     MinHeight="500"
     MinWidth="800"
     NavigationCacheMode="Enabled">
-    <StackPanel>
-        <TextBlock FontSize="36" FontWeight="Bold" Text="En cours de développement" TextAlignment="Center" />
-        <ProgressRing
-            Margin="20"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center" Width="50" Height="50" />
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid Margin="15" Background="#F0E6D2" CornerRadius="8" Padding="15" Grid.Row="0" Grid.Column="0"
+              Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Foreground="#1E282D" VerticalAlignment="Center" TextAlignment="Center"
+                       Text="Statistiques par champion" FontSize="26" FontWeight="Bold" />
+            <Grid ColumnSpacing="10" Grid.Row="1" Padding="8" ColumnDefinitions="2*, 2*, 2*, 2*, 2*">
+                    <Viewbox Grid.Column="1">
+                        <TextBlock TextAlignment="Center" Text="CS" FontWeight="Bold"></TextBlock>
+                    </Viewbox>
+                    <Viewbox  Grid.Column="2">
+                        <TextBlock TextAlignment="Center" Text="KDA" FontWeight="Bold"></TextBlock>
+                    </Viewbox>
+                    <Viewbox  Grid.Column="3">
+                        <TextBlock TextAlignment="Center" Text="K/D/A" FontWeight="Bold"></TextBlock>
+                    </Viewbox>
+                <Viewbox  Grid.Column="4">
+                    <TextBlock TextAlignment="Center" Text="Winrate" FontWeight="Bold"></TextBlock>
+                </Viewbox>
+                </Grid>
+            <ScrollViewer CornerRadius="10" Background="#1E282D" Grid.Row="2">
+                    <Grid RowSpacing="10" Padding="8" x:Name="BestChampionsGrid" />
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Margin="15" Background="Gray" CornerRadius="8" Padding="15" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="8*" />
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Foreground="Black" TextAlignment="Center" Text="Statistiques par champion" />
+            <ScrollViewer Grid.Row="1">
+                <Viewbox>
+                    <Grid Padding="8" x:Name="MatchesGrid" />
+                </Viewbox>
+            </ScrollViewer>
+        </Grid>
+
+    </Grid>
 </Page>
