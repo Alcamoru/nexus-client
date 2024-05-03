@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using Windows.UI;
+using Windows.UI.Text;
 using Camille.RiotGames;
 using Camille.RiotGames.MatchV5;
 using Camille.RiotGames.SummonerV4;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -204,6 +206,7 @@ public static class UtilisMethods
     /// <param name="text">The text to be displayed.</param>
     /// <param name="fontSize">The font size of the displayed text.</param>
     /// <param name="color">The color of the displayed text.</param>
+    /// <param name="fontWeight"></param>
     /// <param name="horizontalAlignment">
     ///     The horizontal alignment of the TextBlock within the Viewbox. Defaults to
     ///     HorizontalAlignment.Center.
@@ -214,14 +217,15 @@ public static class UtilisMethods
     /// </param>
     /// <param name="stretch">The stretch mode for the Viewbox. Defaults to Stretch.None.</param>
     /// <returns>A Viewbox element with a TextBlock child that displays the specified text.</returns>
-    public static TextBlock SetText(string text, int fontSize,
+    public static Viewbox SetTextWithViewbox(string text, int fontSize,
         Color color,
+        int fontWeight = 400,
         HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
-        VerticalAlignment verticalAlignment = VerticalAlignment.Center,
-        Stretch stretch = Stretch.None)
+        VerticalAlignment verticalAlignment = VerticalAlignment.Center)
     {
         var textBlock = new TextBlock
         {
+            FontWeight = new FontWeight((ushort)fontWeight),
             VerticalAlignment = verticalAlignment,
             HorizontalAlignment = horizontalAlignment,
             Foreground = new SolidColorBrush(color),
@@ -230,6 +234,27 @@ public static class UtilisMethods
             FontSize = fontSize
         };
 
+        return new Viewbox()
+        {
+            Child = textBlock
+        };
+    }
+    public static TextBlock SetText(string text, int fontSize,
+        Color color,
+        int fontWeight = 400,
+        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
+        VerticalAlignment verticalAlignment = VerticalAlignment.Center)
+    {
+        var textBlock = new TextBlock
+        {
+            FontWeight = new FontWeight((ushort)fontWeight),
+            VerticalAlignment = verticalAlignment,
+            HorizontalAlignment = horizontalAlignment,
+            Foreground = new SolidColorBrush(color),
+            TextAlignment = TextAlignment.Center,
+            Text = text,
+            FontSize = fontSize
+        };
         return textBlock;
     }
 }

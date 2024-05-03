@@ -168,7 +168,7 @@ public sealed partial class MatchInfoPage : Page
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                Child = SetText(GetSummonerName(participant.SummonerId),
+                Child = SetTextWithViewbox(GetSummonerName(participant.SummonerId),
                     20, Color.FromArgb(255, 52, 73, 94))
             };
 
@@ -225,9 +225,9 @@ public sealed partial class MatchInfoPage : Page
             Grid.SetColumn(summonersViewbox, 2);
             participantGrid.Children.Add(summonersViewbox);
 
-            var csChampionTextBlock = SetText(
+            var csChampionTextBlock = SetTextWithViewbox(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
@@ -273,9 +273,9 @@ public sealed partial class MatchInfoPage : Page
             Grid.SetColumn(innerGrid, 4);
             participantGrid.Children.Add(innerGrid);
 
-            var kdaChampionTextBlock = SetText(
+            var kdaChampionTextBlock = SetTextWithViewbox(
                 $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
             participantGrid.Children.Add(kdaChampionTextBlock);
@@ -446,17 +446,17 @@ public sealed partial class MatchInfoPage : Page
             Grid.SetColumn(innerGrid, 4);
             participantGrid.Children.Add(innerGrid);
 
-            var csChampionTextBlock = SetText(
+            var csChampionTextBlock = SetTextWithViewbox(
                 $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
 
             Grid.SetColumn(csChampionTextBlock, 3);
             participantGrid.Children.Add(csChampionTextBlock);
 
-            var kdaChampionTextBlock = SetText(
+            var kdaChampionTextBlock = SetTextWithViewbox(
                 $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                15, Color.FromArgb(255, 52, 73, 94), stretch: Stretch.Uniform);
+                15, Color.FromArgb(255, 52, 73, 94));
 
             Grid.SetColumn(kdaChampionTextBlock, 5);
             participantGrid.Children.Add(kdaChampionTextBlock);
@@ -632,7 +632,7 @@ public sealed partial class MatchInfoPage : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var startTextBlock = SetText(" début du match",
+        var startTextBlock = SetTextWithViewbox(" début du match",
             15, Colors.White);
 
         var startStackPanel = new StackPanel
@@ -670,7 +670,7 @@ public sealed partial class MatchInfoPage : Page
                 var wardImage = GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
 
-                var wardPlacedTextBlock = SetText(" a placé une balise",
+                var wardPlacedTextBlock = SetTextWithViewbox(" a placé une balise",
                     15, Colors.White);
 
 
@@ -717,7 +717,7 @@ public sealed partial class MatchInfoPage : Page
                     var victimChampionIcon = GetChampionImage(GetChampionNameByPuuid(victimPuuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = SetText(" a eliminé",
+                    var eliminatedTextBlock = SetTextWithViewbox(" a eliminé",
                         15, Colors.White);
 
                     var frameInfoStackPanel = new StackPanel
@@ -756,7 +756,7 @@ public sealed partial class MatchInfoPage : Page
                     var victimChampionIcon = GetChampionImage(GetChampionNameByPuuid(LolSummoner.Puuid), 7, 40);
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
-                    var eliminatedTextBlock = SetText(" a eliminé",
+                    var eliminatedTextBlock = SetTextWithViewbox(" a eliminé",
                         15, Colors.White);
 
                     var frameInfoStackPanel = new StackPanel
@@ -800,7 +800,7 @@ public sealed partial class MatchInfoPage : Page
                     victimChampionIcon.VerticalAlignment = VerticalAlignment.Center;
 
 
-                    var eliminatedTextBlock = SetText(" a participé à l'élimination de ",
+                    var eliminatedTextBlock = SetTextWithViewbox(" a participé à l'élimination de ",
                         15, Colors.White);
 
                     var frameInfoStackPanel = new StackPanel
@@ -839,7 +839,7 @@ public sealed partial class MatchInfoPage : Page
                 new Uri("ms-appx:///Assets/media/bouton-de-lecture-video.png"))
         };
 
-        var endTextBlock = SetText(" fin du match",
+        var endTextBlock = SetTextWithViewbox(" fin du match",
             15, Colors.White);
 
         endStackPanel.Children.Add(endIcon);

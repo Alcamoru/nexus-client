@@ -35,7 +35,7 @@ public sealed partial class ProfilePage : Page
     {
         Player = (Summoner)e.Parameter;
         base.OnNavigatedTo(e);
-        Matches = GetLastMatches(Player.Id, 20);
+        Matches = GetLastMatches(Player.Puuid, 20);
         SetBestChampions();
         SetLastMatches();
     }
@@ -55,13 +55,15 @@ public sealed partial class ProfilePage : Page
 
         var sortedChampionsPlayed = from entry in championsPlayed orderby entry.Value.Count descending select entry;
         var i = 0;
+
         foreach (var keyValuePair in sortedChampionsPlayed)
         {
             var championGrid = new Grid
             {
                 ColumnDefinitions =
                 {
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }
@@ -73,17 +75,37 @@ public sealed partial class ProfilePage : Page
                 },
                 Padding = new Thickness(8),
                 Background = AppColors.Gold4,
-                CornerRadius = new CornerRadius(10)
+                CornerRadius = new CornerRadius(10),
+                ColumnSpacing = 7
             };
 
-            var championImage = GetChampionImage(keyValuePair.Key);
-            Grid.SetColumn(championImage, 0);
-            Grid.SetRowSpan(championImage, 2);
-            championGrid.Children.Add(championImage);
+            Grid championInfosGrid = new Grid()
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition() { Height = new GridLength(3, GridUnitType.Star) },
+                    new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) }
+                }
+            };
 
-            var championName = SetText(keyValuePair.Key, 14, Colors.White);
-            Grid.SetColumn(championName, 1);
-            championGrid.Children.Add(championName);
+            var championImage = GetChampionImage(keyValuePair.Key, 7, 40);
+            Grid.SetRow(championImage, 0);
+            championInfosGrid.Children.Add(championImage);
+
+            var championName = new Viewbox()
+            {
+                Child = SetTextWithViewbox(keyValuePair.Key, 14, Colors.White)
+            };
+            Grid.SetRow(championName, 1);
+            championInfosGrid.Children.Add(championName);
+
+            var championInfos = new Viewbox()
+            {
+                Child = championInfosGrid
+            };
+
+            Grid.SetRowSpan(championInfos, 2);
+            championGrid.Children.Add(championInfos);
 
             var averageCs = 0;
             var averageKda = 0;
@@ -115,31 +137,39 @@ public sealed partial class ProfilePage : Page
             averageDeaths /= matchNumber;
             averageAssists /= matchNumber;
 
-            var averageCsTextBlock = SetText($"CS {averageCs}", 14, Colors.White);
+
+
+            var averageCsTextBlock = SetTextWithViewbox($"{averageCs}", 14, Colors.White);
+            averageCsTextBlock.Margin = new Thickness(0, 15, 0, 15);
             Grid.SetColumn(averageCsTextBlock, 1);
-            Grid.SetRow(averageCsTextBlock, 1);
+            Grid.SetRow(averageCsTextBlock, 0);
+            Grid.SetRowSpan(averageCsTextBlock, 2);
             championGrid.Children.Add(averageCsTextBlock);
 
-            var averageKdaTextBlock = SetText($"{averageKda} KDA", 14, Colors.White);
+            var averageKdaTextBlock = SetTextWithViewbox($"{averageKda} KDA", 14, Colors.White);
+            averageKdaTextBlock.Margin = new Thickness(0, 15, 0, 15);
             Grid.SetColumn(averageKdaTextBlock, 2);
             Grid.SetRow(averageKdaTextBlock, 0);
+            Grid.SetRowSpan(averageKdaTextBlock, 2);
             championGrid.Children.Add(averageKdaTextBlock);
             var averageKillsDeathsAssistsTextBlock =
-                SetText($"{averageKills}/{averageDeaths}/{averageAssists}", 14, Colors.White);
-            Grid.SetColumn(averageKillsDeathsAssistsTextBlock, 2);
-            Grid.SetRow(averageKillsDeathsAssistsTextBlock, 1);
+                SetTextWithViewbox($"{averageKills}/{averageDeaths}/{averageAssists}", 14, Colors.White);
+            averageKillsDeathsAssistsTextBlock.Margin = new Thickness(0, 15, 0, 15);
+            Grid.SetColumn(averageKillsDeathsAssistsTextBlock, 3);
+            Grid.SetRow(averageKillsDeathsAssistsTextBlock, 0);
+            Grid.SetRowSpan(averageKillsDeathsAssistsTextBlock, 2);
             championGrid.Children.Add(averageKillsDeathsAssistsTextBlock);
-            var winrateTextblock = SetText($"{wins / (wins + losses) * 100} %", 14, Colors.White);
-            Grid.SetColumn(winrateTextblock, 3);
+            var winrateTextblock = SetTextWithViewbox($"{Math.Round((float)(wins / (wins + losses) * 100), 2)} %", 14, Colors.White);
+            Grid.SetColumn(winrateTextblock, 4);
             Grid.SetRow(winrateTextblock, 0);
             championGrid.Children.Add(winrateTextblock);
 
-            var gamesPlayedTextBlock = SetText($"{wins + losses} jouées", 14, Colors.White);
-            Grid.SetColumn(gamesPlayedTextBlock, 3);
+            var gamesPlayedTextBlock = SetTextWithViewbox($"{wins + losses} jouées", 14, Colors.White);
+            Grid.SetColumn(gamesPlayedTextBlock, 4);
             Grid.SetRow(gamesPlayedTextBlock, 1);
             championGrid.Children.Add(gamesPlayedTextBlock);
 
-            BestChampionsGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
+            BestChampionsGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength( 75, GridUnitType.Pixel) });
             Grid.SetRow(championGrid, i);
             BestChampionsGrid.Children.Add(championGrid);
             i++;
@@ -167,7 +197,7 @@ public sealed partial class ProfilePage : Page
                 BorderThickness = new Thickness(1)
             };
 
-            var gameName = SetText(match.Info.GameMode.ToString().ToLower(), 11, Colors.White);
+            var gameName = SetTextWithViewbox(match.Info.GameMode.ToString().ToLower(), 11, Colors.White);
 
             var matchWasTimeStamp = DateTime.Now -
                                     DateTimeOffset.FromUnixTimeMilliseconds(
@@ -182,27 +212,27 @@ public sealed partial class ProfilePage : Page
             else
                 matchWas = $"Il y a {matchWasTimeStamp.Hours} heures";
 
-            var matchWasTextBlock = SetText(matchWas, 11, Colors.White);
+            var matchWasTextBlock = SetTextWithViewbox(matchWas, 11, Colors.White);
 
             var gameTimeStampDuration = DateTimeOffset.FromUnixTimeSeconds(match.Info.GameDuration);
-            var gameDuration = SetText($"{gameTimeStampDuration.Minute}:{gameTimeStampDuration.Second}", 11,
+            var gameDuration = SetTextWithViewbox($"{gameTimeStampDuration.Minute}:{gameTimeStampDuration.Second}", 11,
                 Colors.White);
 
 
             foreach (var participant in match.Info.Participants)
                 if (participant.SummonerId == Player.Id)
                 {
-                    TextBlock winTextBlock;
+                    Viewbox winTextBlock;
 
                     if (participant.Win)
                     {
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
-                        winTextBlock = SetText("Victoire", 11, Colors.White);
+                        winTextBlock = SetTextWithViewbox("Victoire", 11, Colors.White);
                     }
                     else
                     {
                         matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
-                        winTextBlock = SetText("Défaite", 11, Colors.White);
+                        winTextBlock = SetTextWithViewbox("Défaite", 11, Colors.White);
                     }
 
                     var testViewbox = new Viewbox
@@ -264,19 +294,19 @@ public sealed partial class ProfilePage : Page
                     matchGrid.Children.Add(championGrid);
 
                     var killsDeathsAssistsTextBlock =
-                        SetText($"{participant.Kills}/{participant.Deaths}/{participant.Assists}", 14,
+                        SetTextWithViewbox($"{participant.Kills}/{participant.Deaths}/{participant.Assists}", 14,
                             Colors.White);
                     Grid.SetColumn(killsDeathsAssistsTextBlock, 2);
                     Grid.SetRow(killsDeathsAssistsTextBlock, 0);
                     matchGrid.Children.Add(killsDeathsAssistsTextBlock);
-                    TextBlock kdaTextBlock;
+                    Viewbox kdaTextBlock;
                     if (participant.Deaths != 0)
                         kdaTextBlock =
-                            SetText($"{(participant.Kills + participant.Assists) / participant.Deaths} KDA", 14,
+                            SetTextWithViewbox($"{(participant.Kills + participant.Assists) / participant.Deaths} KDA", 14,
                                 Colors.White);
                     else
                         kdaTextBlock =
-                            SetText($"{participant.Kills + participant.Assists} KDA", 14,
+                            SetTextWithViewbox($"{participant.Kills + participant.Assists} KDA", 14,
                                 Colors.White);
 
                     Grid.SetColumn(kdaTextBlock, 2);
@@ -284,7 +314,7 @@ public sealed partial class ProfilePage : Page
                     matchGrid.Children.Add(kdaTextBlock);
 
                     var csTextBlock =
-                        SetText(
+                        SetTextWithViewbox(
                             $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                             14,
                             Colors.White);
@@ -293,7 +323,7 @@ public sealed partial class ProfilePage : Page
                     matchGrid.Children.Add(csTextBlock);
 
                     var visionTextBlock =
-                        SetText($"{participant.VisionScore}", 14,
+                        SetTextWithViewbox($"{participant.VisionScore}", 14,
                             Colors.White);
                     Grid.SetColumn(visionTextBlock, 2);
                     Grid.SetRow(visionTextBlock, 3);

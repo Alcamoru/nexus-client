@@ -100,7 +100,13 @@ public sealed partial class WelcomePage : Page
                 Background = AppColors.White,
                 Children =
                 {
-                    SetText("1", 26, Color.FromArgb(255, 200, 155, 60), stretch: Stretch.None),
+                    new TextBlock( )
+                    {
+                        TextAlignment = TextAlignment.Center,
+                        Text = "1",
+                        FontSize = 26,
+                        Foreground = AppColors.Gold4
+                    },
                     new Rectangle
                     {
                         Width = 25, Height = 2, Fill = new SolidColorBrush(Color.FromArgb(255, 200, 155, 60)),
@@ -116,8 +122,7 @@ public sealed partial class WelcomePage : Page
         var firstProfileIconImage = GetProfileIcon(firstPlayer.SummonerId, 10, 50);
         firstProfileIconImage.BorderBrush = AppColors.Gold4;
         firstProfileIconImage.BorderThickness = new Thickness(2);
-        var summonerNameTextBlock = SetText(GetSummonerName(firstPlayer.SummonerId), 14, Colors.White);
-        summonerNameTextBlock.FontWeight = new FontWeight(700);
+        var summonerNameTextBlock = SetTextWithViewbox(GetSummonerName(firstPlayer.SummonerId), 14, Colors.White, fontWeight: 700);
 
         var firstInfosViewbox = new Viewbox
         {
@@ -144,7 +149,7 @@ public sealed partial class WelcomePage : Page
                 {
                     GetImage("ms-appx:///Assets/emblems/Rank=Challenger.png",
                         0, 70),
-                    SetText($"{firstPlayer.LeaguePoints} LP", 14, Colors.White)
+                    SetTextWithViewbox($"{firstPlayer.LeaguePoints} LP", 14, Colors.White)
                 }
             }
         };
@@ -190,12 +195,12 @@ public sealed partial class WelcomePage : Page
         });
 
 
-        var winRateTextBlock = SetText(
+        var winRateTextBlock = SetTextWithViewbox(
             $"{Math.Round(firstPlayer.Wins / (float)(firstPlayer.Wins + firstPlayer.Losses) * 100)} %",
             14, Colors.White);
         winRateTextBlock.Margin = new Thickness(10);
 
-        var gamesPlayedTextBlock = SetText($"{firstPlayer.Wins + firstPlayer.Losses} games",
+        var gamesPlayedTextBlock = SetTextWithViewbox($"{firstPlayer.Wins + firstPlayer.Losses} games",
             14, Colors.White);
         gamesPlayedTextBlock.Margin = new Thickness(10);
 
@@ -248,7 +253,13 @@ public sealed partial class WelcomePage : Page
                 Background = AppColors.White,
                 Children =
                 {
-                    SetText("2", 22, Color.FromArgb(255, 200, 155, 60), stretch: Stretch.None),
+                    new TextBlock( )
+                    {
+                        TextAlignment = TextAlignment.Center,
+                        Text = "1",
+                        FontSize = 26,
+                        Foreground = AppColors.Gold4
+                    },
                     new Rectangle
                     {
                         Width = 25, Height = 2, Fill = new SolidColorBrush(Color.FromArgb(255, 200, 155, 60)),
@@ -262,9 +273,8 @@ public sealed partial class WelcomePage : Page
         secondGrid.Children.Add(secondRankingViewbox);
 
         var secondProfileIconImage = GetProfileIcon(secondPlayer.SummonerId, 10, 40);
-        var secondSummonerNameTextBlock = SetText(GetSummonerName(secondPlayer.SummonerId),
-            14, Colors.White);
-        secondSummonerNameTextBlock.FontWeight = new FontWeight(700);
+        var secondSummonerNameTextBlock = SetTextWithViewbox(GetSummonerName(secondPlayer.SummonerId),
+            14, Colors.White, fontWeight:700);
 
         var secondInfosViewbox = new Viewbox
         {
@@ -284,9 +294,9 @@ public sealed partial class WelcomePage : Page
 
         var source = "ms-appx:///Assets/emblems/Rank=Challenger.png";
 
-        var secondPlayerLps = SetText($"{secondPlayer.LeaguePoints} LP",
+        var secondPlayerLps = SetTextWithViewbox($"{secondPlayer.LeaguePoints} LP",
             14, Colors.White);
-        secondPlayerLps.Padding = new Thickness(20, 0, 20, 0);
+        secondPlayerLps.Margin = new Thickness(20, 0, 20, 0);
 
         var secondEmblemViewBox = new Viewbox
         {
@@ -340,12 +350,12 @@ public sealed partial class WelcomePage : Page
             CornerRadius = new CornerRadius(3)
         });
 
-        var secondWinRateTextBlock = SetText(
+        var secondWinRateTextBlock = SetTextWithViewbox(
             $"{Math.Round(secondPlayer.Wins / (float)(secondPlayer.Wins + secondPlayer.Losses) * 100)} %",
             14, Colors.White);
         secondWinRateTextBlock.Margin = new Thickness(10);
 
-        var secondGamesPlayedTextBlock = SetText($"{firstPlayer.Wins + firstPlayer.Losses} parties",
+        var secondGamesPlayedTextBlock = SetTextWithViewbox($"{firstPlayer.Wins + firstPlayer.Losses} parties",
             14, Colors.White);
         secondGamesPlayedTextBlock.Margin = new Thickness(10);
 
@@ -395,7 +405,13 @@ public sealed partial class WelcomePage : Page
                 Background = AppColors.White,
                 Children =
                 {
-                    SetText("3", 22, Color.FromArgb(255, 200, 155, 60), stretch: Stretch.None),
+                    new TextBlock( )
+                    {
+                        TextAlignment = TextAlignment.Center,
+                        Text = "1",
+                        FontSize = 26,
+                        Foreground = AppColors.Gold4
+                    },
                     new Rectangle
                     {
                         Width = 25, Height = 2, Fill = new SolidColorBrush(Color.FromArgb(255, 200, 155, 60)),
@@ -412,9 +428,8 @@ public sealed partial class WelcomePage : Page
 
         var thirdProfileIconImage = GetProfileIcon(firstPlayer.SummonerId, 10, 40);
 
-        var thirdSummonerNameTextBlock = SetText(GetSummonerName(thirdPlayer.SummonerId),
-            14, Colors.White);
-        thirdSummonerNameTextBlock.FontWeight = new FontWeight(700);
+        var thirdSummonerNameTextBlock = SetTextWithViewbox(GetSummonerName(thirdPlayer.SummonerId),
+            14, Colors.White, fontWeight:700);
 
         var thirdLeaderBoardViewBox = new Viewbox
         {
@@ -432,9 +447,9 @@ public sealed partial class WelcomePage : Page
 
         source = "ms-appx:///Assets/emblems/Rank=Challenger.png";
 
-        var thirdPlayerLps = SetText($"{thirdPlayer.LeaguePoints} LP",
+        var thirdPlayerLps = SetTextWithViewbox($"{thirdPlayer.LeaguePoints} LP",
             14, Colors.White);
-        thirdPlayerLps.Padding = new Thickness(20, 0, 20, 0);
+        thirdPlayerLps.Margin = new Thickness(20, 0, 20, 0);
 
         var thirdEmblemViewBox = new Viewbox
         {
@@ -487,11 +502,11 @@ public sealed partial class WelcomePage : Page
             CornerRadius = new CornerRadius(3)
         });
 
-        var thirdWinRateTextBlock = SetText($"{thirdPlayer.LeaguePoints} LP",
+        var thirdWinRateTextBlock = SetTextWithViewbox($"{thirdPlayer.LeaguePoints} LP",
             14, Colors.White);
         thirdWinRateTextBlock.Margin = new Thickness(10);
 
-        var thirdGamesPlayedTextBlock = SetText($"{firstPlayer.Wins + firstPlayer.Losses} parties",
+        var thirdGamesPlayedTextBlock = SetTextWithViewbox($"{firstPlayer.Wins + firstPlayer.Losses} parties",
             14, Colors.White);
         thirdGamesPlayedTextBlock.Margin = new Thickness(10);
 
@@ -579,9 +594,8 @@ public sealed partial class WelcomePage : Page
                     Grid.SetColumnSpan(champIconViewBox, 2);
                     matchGrid.Children.Add(champIconViewBox);
 
-                    var titleChampionTextBlock = SetText(participant.ChampionName, 26,
-                        participant.Win ? Colors.Blue : Colors.Red);
-                    titleChampionTextBlock.FontWeight = new FontWeight(700);
+                    var titleChampionTextBlock = SetTextWithViewbox(participant.ChampionName, 26,
+                        participant.Win ? Colors.Blue : Colors.Red, fontWeight:700);
 
                     var matchWasTimeStamp = DateTime.Now -
                                             DateTimeOffset.FromUnixTimeMilliseconds(
@@ -598,8 +612,8 @@ public sealed partial class WelcomePage : Page
                         matchWasChampionString += $"{matchWasTimeStamp.Minutes} minutes";
 
 
-                    var matchWasTextBlock = SetText(matchWasChampionString,
-                        22, Colors.White, stretch: Stretch.Uniform);
+                    var matchWasTextBlock = SetTextWithViewbox(matchWasChampionString,
+                        22, Colors.White);
 
 
                     var titleChampionViewBox = new Viewbox
@@ -627,17 +641,16 @@ public sealed partial class WelcomePage : Page
                     Grid.SetColumnSpan(roleLogo, 2);
                     matchGrid.Children.Add(roleLogo);
 
-                    var kdaTextBlock = SetText("KDA", 22, Colors.White);
-                    kdaTextBlock.FontWeight = new FontWeight(700);
+                    var kdaTextBlock = SetTextWithViewbox("KDA", 22, Colors.White, fontWeight:700);
                     var kda = new Viewbox
                     {
                         Child = new StackPanel
                         {
                             Children =
                             {
-                                kdaTextBlock, SetText(
+                                kdaTextBlock, SetTextWithViewbox(
                                     $"{participant.Kills} | {participant.Deaths} | {participant.Assists}",
-                                    14, Colors.White, stretch: Stretch.Uniform)
+                                    14, Colors.White)
                             }
                         }
                     };
@@ -653,17 +666,16 @@ public sealed partial class WelcomePage : Page
                         if (team.TeamId == participant.TeamId)
                             teamKills = team.Objectives.Champion.Kills;
 
-                    var kpTextBlock = SetText("KP", 22, Colors.White);
-                    kpTextBlock.FontWeight = new FontWeight(700);
+                    var kpTextBlock = SetTextWithViewbox("KP", 22, Colors.White, fontWeight:700);
                     var kp = new Viewbox
                     {
                         Child = new StackPanel
                         {
                             Children =
                             {
-                                kpTextBlock, SetText(
+                                kpTextBlock, SetTextWithViewbox(
                                     $"{Math.Round((float)(participant.Kills + participant.Assists) / teamKills * 100)} %",
-                                    14, Colors.White, stretch: Stretch.Uniform)
+                                    14, Colors.White)
                             }
                         }
                     };
@@ -672,17 +684,16 @@ public sealed partial class WelcomePage : Page
                     Grid.SetColumnSpan(kp, 3);
                     matchGrid.Children.Add(kp);
 
-                    var csTextBlock = SetText("CS", 22, Colors.White);
-                    csTextBlock.FontWeight = new FontWeight(700);
+                    var csTextBlock = SetTextWithViewbox("CS", 22, Colors.White, fontWeight:700);
                     var cs = new Viewbox
                     {
                         Child = new StackPanel
                         {
                             Children =
                             {
-                                csTextBlock, SetText(
+                                csTextBlock, SetTextWithViewbox(
                                     $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled}",
-                                    14, Colors.White, stretch: Stretch.Uniform)
+                                    14, Colors.White)
                             }
                         }
                     };
@@ -752,7 +763,7 @@ public sealed partial class WelcomePage : Page
                                        DateTimeOffset.FromUnixTimeMilliseconds(match.Info.GameStartTimestamp);
 
 
-                    var matchDurationTextBlock = SetText(
+                    var matchDurationTextBlock = SetTextWithViewbox(
                         $"{gameDuration.Minutes}:{gameDuration.Seconds}",
                         14, Colors.White);
 
@@ -827,7 +838,7 @@ public sealed partial class WelcomePage : Page
                     matchGrid.Children.Add(itemsViewbox);
                 }
 
-            var matchName = SetText(match.Info.GameMode.ToString().ToLower(), 20,
+            var matchName = SetTextWithViewbox(match.Info.GameMode.ToString().ToLower(), 20,
                 Color.FromArgb(255, 52, 73, 94));
 
             var finalMatchGrid = new Grid

@@ -38,30 +38,23 @@ public sealed partial class MainPage : Page
     {
         var selectedItem = (NavigationViewItem)args.SelectedItem;
         var selectedItemTag = (string)selectedItem.Tag;
-        var parametersList = new List<object>
-        {
-            Api,
-            LolSummoner,
-            SummonerRegionalRoute,
-            SummonerPlatformRoute
-        };
         switch (selectedItemTag)
         {
             case "Accueil":
                 sender.Header = "Accueil";
-                ContentFrame.Navigate(typeof(WelcomePage), parametersList, new DrillInNavigationTransitionInfo());
+                ContentFrame.Navigate(typeof(WelcomePage), null, new DrillInNavigationTransitionInfo());
                 break;
             case "Profil":
                 sender.Header = "Profil";
-                ContentFrame.Navigate(typeof(ProfilePage), parametersList, new DrillInNavigationTransitionInfo());
+                ContentFrame.Navigate(typeof(ProfilePage), LolSummoner, new DrillInNavigationTransitionInfo());
                 break;
             case "Tier List":
                 sender.Header = "Tier List";
-                ContentFrame.Navigate(typeof(TierListPage), parametersList, new DrillInNavigationTransitionInfo());
+                ContentFrame.Navigate(typeof(TierListPage), null, new DrillInNavigationTransitionInfo());
                 break;
             case "Builds":
                 sender.Header = "Builds";
-                ContentFrame.Navigate(typeof(BuildsPage), parametersList, new DrillInNavigationTransitionInfo());
+                ContentFrame.Navigate(typeof(BuildsPage), null, new DrillInNavigationTransitionInfo());
                 break;
         }
     }
