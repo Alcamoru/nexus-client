@@ -35,8 +35,6 @@
             </Viewbox>
 
             <ScrollViewer CornerRadius="10" Grid.Row="1">
-
-                <Viewbox>
                     <Grid Padding="8" x:Name="MatchTimelineGrid" Background="#1E282D">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -48,7 +46,6 @@
 
 
                     </Grid>
-                </Viewbox>
             </ScrollViewer>
 
         </Grid>

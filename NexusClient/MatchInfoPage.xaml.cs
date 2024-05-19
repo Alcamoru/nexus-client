@@ -666,30 +666,35 @@ public sealed partial class MatchInfoPage : Page
 
 
                 var source =
-                    @"C:\Users\alcam\OneDrive\Bureau\Developpement\nexus-client\NexusClient\NexusClient\Assets\loldata\14.1.1\img\item\3340.png";
+                    @"ms-appx:///Assets/loldata/14.1.1/img/item/3340.png";
                 var wardImage = GetImage(source, 7, 40);
                 wardImage.VerticalAlignment = VerticalAlignment.Center;
 
-                var wardPlacedTextBlock = SetTextWithViewbox(" a placé une balise",
-                    15, Colors.White);
+                var wardPlacedTextBlock = SetText(" a placé une balise",
+                    22, Colors.White);
 
 
-                var frameInfoStackPanel = new StackPanel
+                var frameInfoGrid = new Grid()
                 {
-                    Spacing = 10.0,
+                    ColumnSpacing = 5,
                     Margin = new Thickness(10, 0, 0, 0),
-                    Orientation = Orientation.Horizontal,
-                    Children = { championIcon, wardPlacedTextBlock, wardImage }
+                    ColumnDefinitions = { new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
                 };
-                Grid.SetColumn(frameInfoStackPanel, 1);
-                Grid.SetRow(frameInfoStackPanel, elementNumber);
+                Grid.SetColumn(championIcon, 0);
+                frameInfoGrid.Children.Add(championIcon);
+                Grid.SetColumn(wardPlacedTextBlock, 1);
+                frameInfoGrid.Children.Add(wardPlacedTextBlock);
+                Grid.SetColumn(wardImage, 2);
+                frameInfoGrid.Children.Add(wardImage);
+                Grid.SetColumn(frameInfoGrid, 1);
+                Grid.SetRow(frameInfoGrid, elementNumber);
 
 
                 SetPositiveEvent();
 
                 elementNumber += 1;
 
-                MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                MatchTimelineGrid.Children.Add(frameInfoGrid);
                 var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                 MatchTimelineGrid.RowDefinitions.Add(row);
                 precedentEventIsPositive = true;
@@ -720,21 +725,27 @@ public sealed partial class MatchInfoPage : Page
                     var eliminatedTextBlock = SetTextWithViewbox(" a eliminé",
                         15, Colors.White);
 
-                    var frameInfoStackPanel = new StackPanel
+
+                    var frameInfoGrid = new Grid()
                     {
-                        Spacing = 10,
+                        ColumnSpacing = 5,
                         Margin = new Thickness(10, 0, 0, 0),
-                        Orientation = Orientation.Horizontal,
-                        Children = { killerChampionIcon, eliminatedTextBlock, victimChampionIcon }
+                        ColumnDefinitions = { new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
                     };
-                    Grid.SetColumn(frameInfoStackPanel, 1);
-                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+                    Grid.SetColumn(killerChampionIcon, 0);
+                    frameInfoGrid.Children.Add(killerChampionIcon);
+                    Grid.SetColumn(eliminatedTextBlock, 1);
+                    frameInfoGrid.Children.Add(eliminatedTextBlock);
+                    Grid.SetColumn(victimChampionIcon, 2);
+                    frameInfoGrid.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoGrid, 1);
+                    Grid.SetRow(frameInfoGrid, elementNumber);
 
                     SetPositiveEvent();
 
                     elementNumber += 1;
 
-                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    MatchTimelineGrid.Children.Add(frameInfoGrid);
                     var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                     MatchTimelineGrid.RowDefinitions.Add(row);
                     precedentEventIsPositive = true;
@@ -759,21 +770,26 @@ public sealed partial class MatchInfoPage : Page
                     var eliminatedTextBlock = SetTextWithViewbox(" a eliminé",
                         15, Colors.White);
 
-                    var frameInfoStackPanel = new StackPanel
+                    var frameInfoGrid = new Grid()
                     {
-                        Spacing = 10,
+                        ColumnSpacing = 5,
                         Margin = new Thickness(10, 0, 0, 0),
-                        Orientation = Orientation.Horizontal,
-                        Children = { killerChampionIcon, eliminatedTextBlock, victimChampionIcon }
+                        ColumnDefinitions = { new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
                     };
-                    Grid.SetColumn(frameInfoStackPanel, 1);
-                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+                    Grid.SetColumn(killerChampionIcon, 0);
+                    frameInfoGrid.Children.Add(killerChampionIcon);
+                    Grid.SetColumn(eliminatedTextBlock, 1);
+                    frameInfoGrid.Children.Add(eliminatedTextBlock);
+                    Grid.SetColumn(victimChampionIcon, 2);
+                    frameInfoGrid.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoGrid, 1);
+                    Grid.SetRow(frameInfoGrid, elementNumber);
 
                     SetNegativeEvent();
 
                     elementNumber += 1;
 
-                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    MatchTimelineGrid.Children.Add(frameInfoGrid);
                     var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                     MatchTimelineGrid.RowDefinitions.Add(row);
                     precedentEventIsPositive = false;
@@ -803,22 +819,27 @@ public sealed partial class MatchInfoPage : Page
                     var eliminatedTextBlock = SetTextWithViewbox(" a participé à l'élimination de ",
                         15, Colors.White);
 
-                    var frameInfoStackPanel = new StackPanel
+                    var frameInfoGrid = new Grid()
                     {
-                        Spacing = 10,
+                        ColumnSpacing = 5,
                         Margin = new Thickness(10, 0, 0, 0),
-                        Orientation = Orientation.Horizontal,
-                        Children = { summonerChampionIcon, eliminatedTextBlock, victimChampionIcon }
+                        ColumnDefinitions = { new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition() },
                     };
-                    Grid.SetColumn(frameInfoStackPanel, 1);
-                    Grid.SetRow(frameInfoStackPanel, elementNumber);
+                    Grid.SetColumn(summonerChampionIcon, 0);
+                    frameInfoGrid.Children.Add(summonerChampionIcon);
+                    Grid.SetColumn(eliminatedTextBlock, 1);
+                    frameInfoGrid.Children.Add(eliminatedTextBlock);
+                    Grid.SetColumn(victimChampionIcon, 2);
+                    frameInfoGrid.Children.Add(victimChampionIcon);
+                    Grid.SetColumn(frameInfoGrid, 1);
+                    Grid.SetRow(frameInfoGrid, elementNumber);
 
 
                     SetPositiveEvent();
 
                     elementNumber += 1;
 
-                    MatchTimelineGrid.Children.Add(frameInfoStackPanel);
+                    MatchTimelineGrid.Children.Add(frameInfoGrid);
                     var row = new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) };
                     MatchTimelineGrid.RowDefinitions.Add(row);
                     precedentEventIsPositive = true;

@@ -215,7 +215,6 @@ public static class UtilisMethods
     ///     The vertical alignment of the TextBlock within the Viewbox. Defaults to
     ///     VerticalAlignment.Center.
     /// </param>
-    /// <param name="stretch">The stretch mode for the Viewbox. Defaults to Stretch.None.</param>
     /// <returns>A Viewbox element with a TextBlock child that displays the specified text.</returns>
     public static Viewbox SetTextWithViewbox(string text, int fontSize,
         Color color,
