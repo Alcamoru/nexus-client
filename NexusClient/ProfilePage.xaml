@@ -48,16 +48,14 @@
             </ScrollViewer>
         </Grid>
 
-        <Grid Margin="15" Background="Gray" CornerRadius="8" Padding="15" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+        <Grid Margin="15" Background="#F0E6D2" CornerRadius="8" Padding="15" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="8*" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Foreground="Black" TextAlignment="Center" Text="Statistiques par champion" />
+            <TextBlock Grid.Row="0" Foreground="#1E282D" VerticalAlignment="Center" TextAlignment="Center" Text="Derniers matchs" FontSize="26" FontWeight="Bold"/>
             <ScrollViewer Grid.Row="1">
-                <Viewbox>
-                    <Grid Padding="8" x:Name="MatchesGrid" />
-                </Viewbox>
+                <Grid Padding="8" x:Name="MatchesGrid" />
             </ScrollViewer>
         </Grid>
 

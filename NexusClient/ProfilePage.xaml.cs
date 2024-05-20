@@ -183,14 +183,17 @@ public sealed partial class ProfilePage : Page
         {
             var matchGrid = new Grid
             {
-                CornerRadius = new CornerRadius(5),
+                Background = AppColors.GreyCool,
+                CornerRadius = new CornerRadius(12),
                 Padding = new Thickness(8),
+                RowSpacing = 15,
                 ColumnDefinitions =
                 {
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                    new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) }
                 },
                 RowDefinitions = { new RowDefinition(), new RowDefinition(), new RowDefinition(), new RowDefinition() },
                 BorderBrush = new SolidColorBrush(Colors.Gray),
@@ -226,36 +229,42 @@ public sealed partial class ProfilePage : Page
 
                     if (participant.Win)
                     {
-                        matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 41, 128, 185));
-                        winTextBlock = SetTextWithViewbox("Victoire", 11, Colors.White);
+                        winTextBlock = SetTextWithViewbox("Victoire", 26, Colors.Blue, fontWeight:700);
                     }
                     else
                     {
-                        matchGrid.Background = new SolidColorBrush(Color.FromArgb(255, 235, 47, 6));
-                        winTextBlock = SetTextWithViewbox("Défaite", 11, Colors.White);
+                        winTextBlock = SetTextWithViewbox("Défaite", 26, Colors.Red, fontWeight: 700);
+
                     }
 
-                    var testViewbox = new Viewbox
+                    var gameInfoViewbox = new Viewbox
                     {
                         Child = new StackPanel
                         {
                             Orientation = Orientation.Vertical,
-                            Children = { gameName, matchWasTextBlock, gameDuration, winTextBlock }
+                            Children = { gameName, matchWasTextBlock, gameDuration }
                         }
                     };
 
-                    Grid.SetRowSpan(testViewbox, 4);
-                    matchGrid.Children.Add(testViewbox);
+                    Grid.SetRowSpan(winTextBlock, 4);
+                    Grid.SetColumn(winTextBlock, 0);
+                    matchGrid.Children.Add(winTextBlock);
+
+                    Grid.SetRowSpan(gameInfoViewbox, 4);
+                    Grid.SetColumn(gameInfoViewbox, 1);
+                    matchGrid.Children.Add(gameInfoViewbox);
 
                     var championImage = GetChampionImage(participant.ChampionName, 5);
                     var championGrid = new Grid
                     {
+                        ColumnSpacing = 0,
                         CornerRadius = new CornerRadius(5),
-                        RowDefinitions = { new RowDefinition(), new RowDefinition() },
+                        RowDefinitions = { new RowDefinition() {Height = new GridLength(30, GridUnitType.Pixel)}, new RowDefinition(){Height = new GridLength(30, GridUnitType.Pixel)} },
                         ColumnDefinitions =
                         {
-                            new ColumnDefinition(), new ColumnDefinition(), new ColumnDefinition(),
-                            new ColumnDefinition()
+                            new ColumnDefinition() {Width = new GridLength(30, GridUnitType.Pixel)}, new ColumnDefinition(){Width = new GridLength(30, GridUnitType.Pixel)}
+                            , new ColumnDefinition() {Width = new GridLength(30, GridUnitType.Pixel)},
+                            new ColumnDefinition() {Width = new GridLength(30, GridUnitType.Pixel)}
                         }
                     };
 
@@ -289,14 +298,19 @@ public sealed partial class ProfilePage : Page
                     Grid.SetRow(perksImages[1], 1);
                     championGrid.Children.Add(perksImages[1]);
 
-                    Grid.SetColumn(championGrid, 1);
-                    Grid.SetRowSpan(championGrid, 4);
-                    matchGrid.Children.Add(championGrid);
+
+                    Viewbox test2Viewbox = new Viewbox()
+                    {
+                        Child = championGrid
+                    };
+                    Grid.SetColumn(test2Viewbox, 2);
+                    Grid.SetRowSpan(test2Viewbox, 4);
+                    matchGrid.Children.Add(test2Viewbox);
 
                     var killsDeathsAssistsTextBlock =
                         SetTextWithViewbox($"{participant.Kills}/{participant.Deaths}/{participant.Assists}", 14,
                             Colors.White);
-                    Grid.SetColumn(killsDeathsAssistsTextBlock, 2);
+                    Grid.SetColumn(killsDeathsAssistsTextBlock, 3);
                     Grid.SetRow(killsDeathsAssistsTextBlock, 0);
                     matchGrid.Children.Add(killsDeathsAssistsTextBlock);
                     Viewbox kdaTextBlock;
@@ -309,7 +323,7 @@ public sealed partial class ProfilePage : Page
                             SetTextWithViewbox($"{participant.Kills + participant.Assists} KDA", 14,
                                 Colors.White);
 
-                    Grid.SetColumn(kdaTextBlock, 2);
+                    Grid.SetColumn(kdaTextBlock, 3);
                     Grid.SetRow(kdaTextBlock, 1);
                     matchGrid.Children.Add(kdaTextBlock);
 
@@ -318,14 +332,14 @@ public sealed partial class ProfilePage : Page
                             $"{participant.TotalMinionsKilled + participant.TotalAllyJungleMinionsKilled + participant.TotalEnemyJungleMinionsKilled} CS",
                             14,
                             Colors.White);
-                    Grid.SetColumn(csTextBlock, 2);
+                    Grid.SetColumn(csTextBlock, 3);
                     Grid.SetRow(csTextBlock, 2);
                     matchGrid.Children.Add(csTextBlock);
 
                     var visionTextBlock =
                         SetTextWithViewbox($"{participant.VisionScore}", 14,
                             Colors.White);
-                    Grid.SetColumn(visionTextBlock, 2);
+                    Grid.SetColumn(visionTextBlock, 3);
                     Grid.SetRow(visionTextBlock, 3);
                     matchGrid.Children.Add(visionTextBlock);
 
@@ -379,13 +393,13 @@ public sealed partial class ProfilePage : Page
                     Grid.SetRow(itemImage6, 1);
                     itemsGrid.Children.Add(itemImage6);
 
-                    Grid.SetColumn(itemsGrid, 3);
+                    Grid.SetColumn(itemsGrid, 4);
                     Grid.SetRowSpan(itemsGrid, 4);
                     matchGrid.Children.Add(itemsGrid);
                 }
 
 
-            MatchesGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(75, GridUnitType.Pixel) });
+            MatchesGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(100, GridUnitType.Pixel) });
             Grid.SetRow(matchGrid, i);
             MatchesGrid.Children.Add(matchGrid);
             i++;
